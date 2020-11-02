@@ -5,7 +5,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Util.*;
 
+<<<<<<< HEAD
 @Autonomous(name= "TeleOop", group= "Autonomous")
+=======
+@TeleOp(name= "TeleOop", group= "TeleOp")
+>>>>>>> Initial commit
 //@Disabled
 public class StarterTeleop extends LinearOpMode {
 
@@ -22,8 +26,11 @@ public class StarterTeleop extends LinearOpMode {
 
         robot.init(hardwareMap);
 
+<<<<<<< HEAD
         telemetry.addData("Say", "Hello Driver");    //
         telemetry.update();
+=======
+>>>>>>> Initial commit
 
         waitForStart();
 
@@ -35,9 +42,15 @@ public class StarterTeleop extends LinearOpMode {
             twist  = gamepad1.right_stick_x * TELEOP_LIMITER;
 
             robot.leftFrontMotor.setPower(drive + strafe + twist);
+<<<<<<< HEAD
             robot.leftFrontMotor.setPower(drive - strafe + twist);
             robot.leftFrontMotor.setPower(drive - strafe - twist);
             robot.leftFrontMotor.setPower(drive + strafe - twist);
+=======
+            robot.leftBackMotor.setPower(drive - strafe + twist);
+            robot.rightFrontMotor.setPower(drive - strafe - twist);
+            robot.rightBackMotor.setPower(drive + strafe - twist);
+>>>>>>> Initial commit
         }
     }
 }
