@@ -63,7 +63,6 @@ public class HardwarePresets{
         imu = HwMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters1);
 
-<<<<<<< HEAD
         composeTelemetry();
 
         telemetry.addLine()
@@ -153,7 +152,6 @@ public class HardwarePresets{
 
     static String formatDegrees(double degrees) {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
-=======
        // composeTelemetry();
 
 //        telemetry.addLine()
@@ -243,6 +241,5 @@ public class HardwarePresets{
 //
 //    static String formatDegrees(double degrees) {
 //        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
->>>>>>> Initial commit
     }
 }
