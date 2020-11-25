@@ -78,7 +78,7 @@ public class StarterTeleop extends LinearOpMode {
 
             //Mecanum Drive
             double x = gamepad1.left_stick_x;
-            double y = gamepad1.left_stick_y;
+            double y = -gamepad1.left_stick_y;
             double turn = gamepad1.right_stick_x;
             double heading;
 
@@ -86,21 +86,20 @@ public class StarterTeleop extends LinearOpMode {
                 heading = 0;
             else if(x >= 0)
                 heading = Math.PI - Math.atan(y / x);
-
             else
                 heading = -Math.atan(y / x);
 
             double pow = Math.sqrt(Math.pow(x, 6) + Math.pow(y, 6));
             Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-            heading -= (angles.firstAngle + Math.PI / 4.0);
+            heading -= (-angles.firstAngle + Math.PI / 4.0);
 
-            double pow1 = Math.sqrt(2) * pow * Math.cos(heading + gyroVariation);
-            double pow2 = Math.sqrt(2) * pow * Math.sin(heading + gyroVariation);
+            double pow1 = Math.sqrt(2) * pow * Math.cos(heading + gyroVariation);//negative 1
+            double pow2 = Math.sqrt(2) * pow * Math.sin(heading + gyroVariation);//positive 1
 
-            robot.leftFrontMotor.setPower((turn + pow1) * TELEOP_LIMITER);
-            robot.leftBackMotor.setPower(-(turn + pow2) * TELEOP_LIMITER);
-            robot.rightFrontMotor.setPower((pow1 - turn) * TELEOP_LIMITER);
-            robot.rightBackMotor.setPower(-(pow2 - turn) * TELEOP_LIMITER);
+            robot.leftFrontMotor.setPower((turn + pow2) * TELEOP_LIMITER);//n
+            robot.leftBackMotor.setPower((turn + pow1) * TELEOP_LIMITER);//p
+            robot.rightFrontMotor.setPower((pow1 - turn) * TELEOP_LIMITER);//n
+            robot.rightBackMotor.setPower((pow2 - turn) * TELEOP_LIMITER);//p
 
             if(gamepad1.x){
                 gyroVariation = angles.firstAngle;
