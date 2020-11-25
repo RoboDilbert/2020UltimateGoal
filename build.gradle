@@ -9,11 +9,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-<<<<<<< HEAD
-        classpath 'com.android.tools.build:gradle:4.0.2'
-=======
+
         classpath 'com.android.tools.build:gradle:4.1.0'
->>>>>>> Initial commit
     }
 }
 

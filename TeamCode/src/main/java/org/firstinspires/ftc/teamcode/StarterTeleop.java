@@ -1,14 +1,23 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Util.*;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+import java.util.Locale;
+
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
 @TeleOp(name= "TeleOop", group= "TeleOp")
 //@Disabled
@@ -20,25 +29,44 @@ public class StarterTeleop extends LinearOpMode {
     public double drive = 0;
     public double strafe = 0;
     public double twist = 0;
-    public final double TELEOP_LIMITER = 0.6;
+    public final double TELEOP_LIMITER = 0.5;
     public float gyroVariation = 0;
+
+
 
     @Override
     public void runOpMode(){
 
         robot.init(hardwareMap);
 
-        telemetry.addData("Say", "Hello Driver");    //
-        telemetry.update();
+        telemetry.addLine()
+                .addData("heading", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return formatAngle(robot.angles.angleUnit, robot.angles.firstAngle);
+                    }
+                })
+                .addData("roll", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return formatAngle(robot.angles.angleUnit, robot.angles.secondAngle);
+                    }
+                })
+                .addData("pitch", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return formatAngle(robot.angles.angleUnit, robot.angles.thirdAngle);
+                    }
+                });
 
         waitForStart();
 
         while(opModeIsActive()){
 
             //Mecanum Drive
-            double x = gamepad1.left_stick_x;
+            double x = -gamepad1.left_stick_x;
             double y = gamepad1.left_stick_y;
-            double turn = -gamepad1.right_stick_x;
+            double turn = gamepad1.right_stick_x;
             double heading;
 
             if(x == 0 && y == 0)
@@ -47,7 +75,7 @@ public class StarterTeleop extends LinearOpMode {
                 heading = Math.PI - Math.atan(y / x);
 
             else
-                heading = - Math.atan(y / x);
+                heading = -Math.atan(y / x);
 
             double pow = Math.sqrt(Math.pow(x, 6) + Math.pow(y, 6));
             Orientation angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
@@ -56,10 +84,15 @@ public class StarterTeleop extends LinearOpMode {
             double pow1 = Math.sqrt(2) * pow * Math.cos(heading + gyroVariation);
             double pow2 = Math.sqrt(2) * pow * Math.sin(heading + gyroVariation);
 
-            robot.leftFrontMotor.setPower(turn + pow1);
-            robot.leftBackMotor.setPower(turn + pow2);
-            robot.rightFrontMotor.setPower(pow1 - turn);
-            robot.rightBackMotor.setPower(pow2 - turn);
+            robot.leftFrontMotor.setPower((turn + pow1) * TELEOP_LIMITER);
+            robot.leftBackMotor.setPower(-(turn + pow2) * TELEOP_LIMITER);
+            robot.rightFrontMotor.setPower((pow1 - turn) * TELEOP_LIMITER);
+            robot.rightBackMotor.setPower(-(pow2 - turn) * TELEOP_LIMITER);
+
+            if(gamepad1.x){
+                gyroVariation = angles.firstAngle;
+            }
+
 
 //            drive  = gamepad1.left_stick_y * TELEOP_LIMITER;
 //            strafe = gamepad1.left_stick_x * TELEOP_LIMITER;
@@ -70,5 +103,73 @@ public class StarterTeleop extends LinearOpMode {
 //            robot.rightFrontMotor.setPower(drive - strafe - twist);
 //            robot.rightBackMotor.setPower(drive + strafe - twist);
         }
+    }
+
+    public void composeTelemetry () {
+
+        telemetry.addAction(new Runnable() {
+            @Override
+            public void run() {
+                robot.angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                robot.gravity = robot.imu.getGravity();
+            }
+        });
+        telemetry.addLine()
+                .addData("status", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return robot.imu.getSystemStatus().toShortString();
+                    }
+                })
+                .addData("calib", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return robot.imu.getCalibrationStatus().toString();
+                    }
+                });
+        telemetry.addLine()
+                .addData("heading", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return formatAngle(robot.angles.angleUnit, robot.angles.firstAngle);
+                    }
+                })
+                .addData("roll", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return formatAngle(robot.angles.angleUnit, robot.angles.secondAngle);
+                    }
+                })
+                .addData("pitch", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return formatAngle(robot.angles.angleUnit, robot.angles.thirdAngle);
+                    }
+                });
+
+        telemetry.addLine()
+                .addData("grvty", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return robot.gravity.toString();
+                    }
+                })
+                .addData("mag", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return String.format(Locale.getDefault(), "%.3f",
+                                Math.sqrt(robot.gravity.xAccel * robot.gravity.xAccel
+                                        + robot.gravity.yAccel * robot.gravity.yAccel
+                                        + robot.gravity.zAccel * robot.gravity.zAccel));
+                    }
+                });
+    }
+
+    static String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    static String formatDegrees(double degrees) {
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 }
