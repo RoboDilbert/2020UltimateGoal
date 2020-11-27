@@ -8,8 +8,10 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorREV2mDistance;
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -31,6 +33,10 @@ public class HardwarePresets{
     public DcMotor rightFrontMotor;
     public DcMotor rightBackMotor;
 
+
+    //2m distance sensors
+    public DistanceSensor laserboi;
+    public DistanceSensor pewpewboi;
     //Color Sensors
     public ColorSensor cranberi;
 
@@ -50,6 +56,8 @@ public class HardwarePresets{
         rightFrontMotor = HwMap.dcMotor.get("rightFrontMotor");
         rightBackMotor = HwMap.dcMotor.get("rightBackMotor");
 
+        laserboi = HwMap.get(DistanceSensor.class, "laserboi");
+        pewpewboi = HwMap.get(DistanceSensor.class, "pewpewboi");
         cranberi = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "cranberi");
 
         BNO055IMU.Parameters parameters1 = new BNO055IMU.Parameters();

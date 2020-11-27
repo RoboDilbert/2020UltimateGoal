@@ -5,12 +5,17 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorREV2mDistance;
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Util.*;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -25,7 +30,6 @@ public class StarterTeleop extends LinearOpMode {
 
     HardwarePresets robot = new HardwarePresets();
     //Constants constant = new Constants();
-
     public double drive = 0;
     public double strafe = 0;
     public double twist = 0;
@@ -52,30 +56,40 @@ public class StarterTeleop extends LinearOpMode {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters1);
 
-        telemetry.addLine()
-                .addData("heading", new Func<String>() {
-                    @Override
-                    public String value() {
-                        return formatAngle(angles.angleUnit, angles.firstAngle);
-                    }
-                })
-                .addData("roll", new Func<String>() {
-                    @Override
-                    public String value() {
-                        return formatAngle(angles.angleUnit, angles.secondAngle);
-                    }
-                })
-                .addData("pitch", new Func<String>() {
-                    @Override
-                    public String value() {
-                        return formatAngle(angles.angleUnit, angles.thirdAngle);
-                    }
-                });
+//        telemetry.addLine()
+//                .addData("heading", new Func<String>() {
+//                    @Override
+//                    public String value() {
+//                        return formatAngle(angles.angleUnit, angles.firstAngle);
+//                    }
+//                })
+//                .addData("roll", new Func<String>() {
+//                    @Override
+//                    public String value() {
+//                        return formatAngle(angles.angleUnit, angles.secondAngle);
+//                    }
+//                })
+//                .addData("pitch", new Func<String>() {
+//                    @Override
+//                    public String value() {
+//                        return formatAngle(angles.angleUnit, angles.thirdAngle);
+//                    }
+//                });
 
         waitForStart();
 
         while(opModeIsActive()){
 
+            // 2m Distance sensor stuff
+            DistanceSensor sensorRange;
+            sensorRange = hardwareMap.get(DistanceSensor.class, "laserboi");
+            DistanceSensor sensorRange2;
+            sensorRange2 = hardwareMap.get(DistanceSensor.class, "pewpewboi");
+            //colorsensor stuff
+            NormalizedColorSensor colorSensor;
+            colorSensor = hardwareMap.get(NormalizedColorSensor.class, "cranberi");
+            NormalizedRGBA colors = colorSensor.getNormalizedColors();
+            robot.cranberi.enableLed(true);
             //Mecanum Drive
             double x = gamepad1.left_stick_x;
             double y = -gamepad1.left_stick_y;
@@ -104,8 +118,13 @@ public class StarterTeleop extends LinearOpMode {
             if(gamepad1.x){
                 gyroVariation = angles.firstAngle;
             }
-
-
+            telemetry.addLine()
+                    .addData("Red", "%.3f", colors.red * 255)
+                    .addData("Blue", "%.3f", colors.blue * 255)
+                    .addData("Alpha", "%.3f", colors.alpha * 255);
+            telemetry.addData("range1", String.format("%.3f m", sensorRange.getDistance(DistanceUnit.METER)));
+            telemetry.addData("range2", String.format("%.3f m", sensorRange2.getDistance(DistanceUnit.METER)));
+            telemetry.update();
 //            drive  = gamepad1.left_stick_y * TELEOP_LIMITER;
 //            strafe = gamepad1.left_stick_x * TELEOP_LIMITER;
 //            twist  = gamepad1.right_stick_x * TELEOP_LIMITER;
@@ -118,6 +137,7 @@ public class StarterTeleop extends LinearOpMode {
     }
 
     public void composeTelemetry () {
+
 
         telemetry.addAction(new Runnable() {
             @Override
@@ -175,6 +195,7 @@ public class StarterTeleop extends LinearOpMode {
                                         + gravity.zAccel * gravity.zAccel));
                     }
                 });
+
     }
 
     static String formatAngle(AngleUnit angleUnit, double angle) {
