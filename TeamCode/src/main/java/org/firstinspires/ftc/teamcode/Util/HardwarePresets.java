@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode.Util;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Func;
@@ -18,6 +20,12 @@ import java.util.Locale;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
 public class HardwarePresets{
+
+    //2m distance sensors
+    public DistanceSensor laserboi;
+    public DistanceSensor pewpewboi;
+    //Color Sensors
+    public ColorSensor cranberi;
 
     public HardwareMap HwMap;
 
@@ -40,6 +48,10 @@ public class HardwarePresets{
         leftBackMotor = HwMap.dcMotor.get("leftBackMotor");
         rightFrontMotor = HwMap.dcMotor.get("rightFrontMotor");
         rightBackMotor = HwMap.dcMotor.get("rightBackMotor");
+
+        laserboi = HwMap.get(DistanceSensor.class, "laserboi");
+        pewpewboi = HwMap.get(DistanceSensor.class, "pewpewboi");
+        cranberi = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "cranberi");
 
         leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);

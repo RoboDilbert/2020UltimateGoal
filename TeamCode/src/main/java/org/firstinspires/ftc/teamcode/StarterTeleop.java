@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
+
 import org.firstinspires.ftc.robotcontroller.external.samples.SensorREV2mDistance;
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -39,6 +40,9 @@ public class StarterTeleop extends LinearOpMode {
     public BNO055IMU imu;
     public Orientation angles;
     public Acceleration gravity;
+
+    public Rolling Distance1 = new Rolling(20);
+    public Rolling Distance2 = new Rolling (20);
 
     @Override
     public void runOpMode(){
@@ -83,8 +87,11 @@ public class StarterTeleop extends LinearOpMode {
             // 2m Distance sensor stuff
             DistanceSensor sensorRange;
             sensorRange = hardwareMap.get(DistanceSensor.class, "laserboi");
+            Distance1.add(sensorRange.getDistance(DistanceUnit.METER));
             DistanceSensor sensorRange2;
             sensorRange2 = hardwareMap.get(DistanceSensor.class, "pewpewboi");
+            Distance2.add(sensorRange2.getDistance(DistanceUnit.METER));
+
             //colorsensor stuff
             NormalizedColorSensor colorSensor;
             colorSensor = hardwareMap.get(NormalizedColorSensor.class, "cranberi");
@@ -122,8 +129,8 @@ public class StarterTeleop extends LinearOpMode {
                     .addData("Red", "%.3f", colors.red * 255)
                     .addData("Blue", "%.3f", colors.blue * 255)
                     .addData("Alpha", "%.3f", colors.alpha * 255);
-            telemetry.addData("range1", String.format("%.3f m", sensorRange.getDistance(DistanceUnit.METER)));
-            telemetry.addData("range2", String.format("%.3f m", sensorRange2.getDistance(DistanceUnit.METER)));
+            telemetry.addData("range1", String.format("%.3f m",Distance1.getAverage() ));
+            telemetry.addData("range2", String.format("%.3f m",Distance2.getAverage() ));
             telemetry.update();
 //            drive  = gamepad1.left_stick_y * TELEOP_LIMITER;
 //            strafe = gamepad1.left_stick_x * TELEOP_LIMITER;
@@ -205,4 +212,6 @@ public class StarterTeleop extends LinearOpMode {
     static String formatDegrees(double degrees) {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
+
+
 }
