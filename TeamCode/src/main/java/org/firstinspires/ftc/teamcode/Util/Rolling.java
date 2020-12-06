@@ -15,6 +15,9 @@ public class Rolling {
     }
 
     public void add(double x) {
+        if(x > 200){
+            return;
+        }
         total -= samples[index];
         samples[index] = x;
         total += x;
@@ -25,4 +28,5 @@ public class Rolling {
     public double getAverage() {
         return total / size;
     }
+
 }
