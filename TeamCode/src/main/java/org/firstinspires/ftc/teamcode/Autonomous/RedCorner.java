@@ -4,8 +4,12 @@ import android.hardware.Sensor;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -16,6 +20,8 @@ import org.firstinspires.ftc.teamcode.Util.HardwarePresets;
 import org.firstinspires.ftc.teamcode.Util.SensorColor;
 
 import java.util.Locale;
+
+@Autonomous(name= "RedCorner", group= "Autonomous")
 
 public class RedCorner extends LinearOpMode {
 
@@ -70,29 +76,30 @@ public class RedCorner extends LinearOpMode {
         Thread.sleep(1000);
         color.DriveToLine("RED");
 
+
         //If A, drop thingo
 
         //If B, go white, red, a little farther, turn, drop boyo, straighten back out
-        color.DriveToLine("WHITE");
-        Thread.sleep(1000);
-        color.DriveToLine("RED");
-        Thread.sleep(1000);
-        drive.Turn("TURN_LEFT", 0.2, 90);
-        Thread.sleep(1000);
-        drive.Turn("TURN_RIGHT", 0.2, 90);
-
-        //If C, go white red, red, drop boyo
-        color.DriveToLine("RED");
-        Thread.sleep(1000);
-        color.DriveToLine("RED");
-        Thread.sleep(1000);
-        drive.setRunMode("RUN_TO_POSITION");
-        Thread.sleep(50);
-        drive.Drive("FORWARD", 200, 0.2);
-        Thread.sleep(1000);
-
-        //Drive backwards to white
-        color.DriveToLine("WHITE");
+//        color.DriveToLine("WHITE");
+//        Thread.sleep(1000);
+//        color.DriveToLine("RED");
+//        Thread.sleep(1000);
+//        drive.Turn("TURN_LEFT", 0.2, 90);
+//        Thread.sleep(1000);
+//        drive.Turn("TURN_RIGHT", 0.2, 90);
+//
+//        //If C, go white red, red, drop boyo
+//        color.DriveToLine("RED");
+//        Thread.sleep(1000);
+//        color.DriveToLine("RED");
+//        Thread.sleep(1000);
+//        drive.setRunMode("RUN_TO_POSITION");
+//        Thread.sleep(50);
+//        drive.Drive("FORWARD", 200, 0.2);
+//        Thread.sleep(1000);
+//
+//        //Drive backwards to white
+//        color.DriveToLine("WHITE");
 
     }
 

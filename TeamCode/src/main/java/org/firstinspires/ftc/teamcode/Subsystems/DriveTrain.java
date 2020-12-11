@@ -6,6 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class DriveTrain extends HardwarePresets{
 
+    public DriveTrain(){
+
+    }
 
     public void Drive(String input, int encoderTicks, double power){
         if(input.equals("STRAFE_LEFT")){

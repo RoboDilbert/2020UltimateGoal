@@ -32,7 +32,7 @@ public class HardwarePresets{
     //Color Sensors
     public ColorSensor cranberi;
 
-    public HardwareMap HwMap;
+    public static HardwareMap HwMap;
 
     public DcMotor leftFrontMotor;
     public DcMotor leftBackMotor;

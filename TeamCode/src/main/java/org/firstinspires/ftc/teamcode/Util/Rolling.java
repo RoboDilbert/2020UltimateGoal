@@ -28,5 +28,4 @@ public class Rolling {
     public double getAverage() {
         return total / size;
     }
-
 }
