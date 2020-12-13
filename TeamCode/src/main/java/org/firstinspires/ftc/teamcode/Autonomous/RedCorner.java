@@ -12,9 +12,11 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.internal.opmode.TelemetryImpl;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.Util.HardwarePresets;
 import org.firstinspires.ftc.teamcode.Util.SensorColor;
@@ -28,6 +30,7 @@ public class RedCorner extends LinearOpMode {
     HardwarePresets robot = new HardwarePresets();
     SensorColor color = new SensorColor();
     DriveTrain drive = new DriveTrain();
+    //private Telemetry telemetry = new TelemetryImpl(this);
 
     public BNO055IMU imu;
     public Orientation angles;
@@ -47,34 +50,63 @@ public class RedCorner extends LinearOpMode {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters1);
 
-        telemetry.addLine()
-                .addData("heading", new Func<String>() {
-                    @Override
-                    public String value() {
-                        return formatAngle(angles.angleUnit, angles.firstAngle);
-                    }
-                })
-                .addData("roll", new Func<String>() {
-                    @Override
-                    public String value() {
-                        return formatAngle(angles.angleUnit, angles.secondAngle);
-                    }
-                })
-                .addData("pitch", new Func<String>() {
-                    @Override
-                    public String value() {
-                        return formatAngle(angles.angleUnit, angles.thirdAngle);
-                    }
-                });
+//        telemetry.addLine()
+//                .addData("heading", new Func<String>() {
+//                    @Override
+//                    public String value() {
+//                        return formatAngle(angles.angleUnit, angles.firstAngle);
+//                    }
+//                })
+//                .addData("roll", new Func<String>() {
+//                    @Override
+//                    public String value() {
+//                        return formatAngle(angles.angleUnit, angles.secondAngle);
+//                    }
+//                })
+//                .addData("pitch", new Func<String>() {
+//                    @Override
+//                    public String value() {
+//                        return formatAngle(angles.angleUnit, angles.thirdAngle);
+//                    }
+//                });
 
         waitForStart();
 
         //Shoot shot
         //View stack and pick zone
         //Drive forward until we see red line
-        drive.setRunMode("RUN_USING_ENCODER");
+        //drive.setRunMode("RUN_USING_ENCODER");
+        robot.leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.leftBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //drive.setRunMode("RUN_USING_ENCODER");
         Thread.sleep(1000);
-        color.DriveToLine("RED");
+        NormalizedColorSensor colorSensor;
+        colorSensor = robot.HwMap.get(NormalizedColorSensor.class, "cranberi");
+        robot.cranberi.enableLed(true);
+        NormalizedRGBA colors = colorSensor.getNormalizedColors();
+
+        while(colors.red < 5 || colors.blue > 2){
+
+                telemetry.addLine()
+                        .addData("Red", "%.3f", colors.red * 255)
+                        .addData("Blue", "%.3f", colors.blue * 255)
+                        .addData("Alpha", "%.3f", colors.alpha * 255);
+
+            robot.leftFrontMotor.setPower(0.2);
+            robot.rightFrontMotor.setPower(0.2);
+            robot.leftBackMotor.setPower(0.2);
+            robot.rightBackMotor.setPower(0.2);
+
+            colors = colorSensor.getNormalizedColors();
+        }
+        robot.leftFrontMotor.setPower(0);
+        robot.rightFrontMotor.setPower(0);
+        robot.leftBackMotor.setPower(0);
+        robot.rightBackMotor.setPower(0);
+        //color.DriveToLine("RED");
+
 
 
         //If A, drop thingo
@@ -110,4 +142,5 @@ public class RedCorner extends LinearOpMode {
     static String formatDegrees(double degrees) {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
+
 }
