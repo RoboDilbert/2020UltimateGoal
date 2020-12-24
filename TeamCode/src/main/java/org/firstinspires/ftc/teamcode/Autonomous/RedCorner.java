@@ -85,37 +85,19 @@ public class RedCorner extends LinearOpMode {
         NormalizedColorSensor colorSensor;
         colorSensor = robot.HwMap.get(NormalizedColorSensor.class, "cranberi");
         robot.cranberi.enableLed(true);
-        NormalizedRGBA colors = colorSensor.getNormalizedColors();
 
-        while(colors.red < 5 || colors.blue > 2){
-
-                telemetry.addLine()
-                        .addData("Red", "%.3f", colors.red * 255)
-                        .addData("Blue", "%.3f", colors.blue * 255)
-                        .addData("Alpha", "%.3f", colors.alpha * 255);
-
-            robot.leftFrontMotor.setPower(0.2);
-            robot.rightFrontMotor.setPower(0.2);
-            robot.leftBackMotor.setPower(0.2);
-            robot.rightBackMotor.setPower(0.2);
-
-            colors = colorSensor.getNormalizedColors();
-        }
-        robot.leftFrontMotor.setPower(0);
-        robot.rightFrontMotor.setPower(0);
-        robot.leftBackMotor.setPower(0);
-        robot.rightBackMotor.setPower(0);
-        //color.DriveToLine("RED");
-
-
+        color.DriveToLine("RED");
+        Thread.sleep(1000);
 
         //If A, drop thingo
 
         //If B, go white, red, a little farther, turn, drop boyo, straighten back out
-//        color.DriveToLine("WHITE");
-//        Thread.sleep(1000);
-//        color.DriveToLine("RED");
-//        Thread.sleep(1000);
+        color.DriveToLine("WHITE");
+        Thread.sleep(1000);
+        color.DriveToLine("RED");
+        Thread.sleep(1000);
+        color.DriveToLine("RED");
+        Thread.sleep(1000);
 //        drive.Turn("TURN_LEFT", 0.2, 90);
 //        Thread.sleep(1000);
 //        drive.Turn("TURN_RIGHT", 0.2, 90);
@@ -142,5 +124,4 @@ public class RedCorner extends LinearOpMode {
     static String formatDegrees(double degrees) {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
-
 }

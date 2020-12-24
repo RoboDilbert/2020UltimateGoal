@@ -95,7 +95,6 @@ public class StarterTeleop extends LinearOpMode {
             //colorsensor stuff
             NormalizedColorSensor colorSensor;
             colorSensor = hardwareMap.get(NormalizedColorSensor.class, "cranberi");
-            NormalizedRGBA colors = colorSensor.getNormalizedColors();
             robot.cranberi.enableLed(true);
 
             //Mecanum Drive
@@ -126,10 +125,11 @@ public class StarterTeleop extends LinearOpMode {
             if(gamepad1.x){
                 gyroVariation = angles.firstAngle;
             }
+
             telemetry.addLine()
-                    .addData("Red", "%.3f", colors.red * 255)
-                    .addData("Blue", "%.3f", colors.blue * 255)
-                    .addData("Alpha", "%.3f", colors.alpha * 255);
+                    .addData("Red", "%.3f", (double) robot.cranberi.red())
+                    .addData("Blue", "%.3f", (double) robot.cranberi.blue())
+                    .addData("Alpha", "%.3f", (double) robot.cranberi.alpha());
 
             telemetry.addData("range1", String.format("%.3f m",Distance1.getAverage() + cal1));
             telemetry.addData("range2", String.format("%.3f m",Distance2.getAverage() + cal2));
@@ -138,14 +138,6 @@ public class StarterTeleop extends LinearOpMode {
             telemetry.addData("skewAngle", String.format("%.3f °",180*(Math.atan((Distance2.getAverage()-Distance1.getAverage())/0.15))/Math.PI));
 
             telemetry.update();
-//            drive  = gamepad1.left_stick_y * TELEOP_LIMITER;
-//            strafe = gamepad1.left_stick_x * TELEOP_LIMITER;
-//            twist  = gamepad1.right_stick_x * TELEOP_LIMITER;
-//
-//            robot.leftFrontMotor.setPower(drive + strafe + twist);
-//            robot.leftBackMotor.setPower(drive - strafe + twist);
-//            robot.rightFrontMotor.setPower(drive - strafe - twist);
-//            robot.rightBackMotor.setPower(drive + strafe - twist);
         }
     }
     static String formatAngle(AngleUnit angleUnit, double angle) {
@@ -155,6 +147,4 @@ public class StarterTeleop extends LinearOpMode {
     static String formatDegrees(double degrees) {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
-
-
 }
