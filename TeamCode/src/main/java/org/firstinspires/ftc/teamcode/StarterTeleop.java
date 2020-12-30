@@ -64,26 +64,6 @@ public class StarterTeleop extends LinearOpMode {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters1);
 
-//        telemetry.addLine()
-//                .addData("heading", new Func<String>() {
-//                    @Override
-//                    public String value() {
-//                        return formatAngle(angles.angleUnit, angles.firstAngle);
-//                    }
-//                })
-//                .addData("roll", new Func<String>() {
-//                    @Override
-//                    public String value() {
-//                        return formatAngle(angles.angleUnit, angles.secondAngle);
-//                    }
-//                })
-//                .addData("pitch", new Func<String>() {
-//                    @Override
-//                    public String value() {
-//                        return formatAngle(angles.angleUnit, angles.thirdAngle);
-//                    }
-//                });
-
         waitForStart();
 
         while(opModeIsActive()){

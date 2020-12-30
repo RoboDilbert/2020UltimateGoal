@@ -70,23 +70,6 @@ public class HardwarePresets extends LinearOpMode {
         leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        //Initialize Gyro
-        BNO055IMU.Parameters parameters1 = new BNO055IMU.Parameters();
-        parameters1.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters1.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters1.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters1.loggingEnabled = true;
-        parameters1.loggingTag = "IMU";
-        parameters1.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        imu = HwMap.get(BNO055IMU.class, "imu");
-
-
-        imu.initialize(parameters1);
-
-       // composeTelemetry();
-
     }
 
     public void composeTelemetry () {

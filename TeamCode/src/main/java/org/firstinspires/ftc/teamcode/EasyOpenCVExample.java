@@ -91,8 +91,8 @@ public class EasyOpenCVExample extends LinearOpMode {
             NONE
         }
 
-        /*
-         * Some color constants
+         /*
+          ome color constants
          */
         static final Scalar BLUE = new Scalar(0, 0, 255);
         static final Scalar GREEN = new Scalar(0, 255, 0);
