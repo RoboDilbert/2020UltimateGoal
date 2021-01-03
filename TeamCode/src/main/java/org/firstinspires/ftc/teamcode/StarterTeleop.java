@@ -111,10 +111,10 @@ public class StarterTeleop extends LinearOpMode {
                     .addData("Blue", "%.3f", (double) robot.cranberi.blue())
                     .addData("Alpha", "%.3f", (double) robot.cranberi.alpha());
 
-            telemetry.addData("range1", String.format("%.3f m",Distance1.getAverage() + cal1));
-            telemetry.addData("range2", String.format("%.3f m",Distance2.getAverage() + cal2));
-//            telemetry.addData("range1", String.format("%.3f cm", robot.laserboi.getDistance(DistanceUnit.CM)));
-//            telemetry.addData("range2", String.format("%.3f m", robot.pewpewboi.getDistance(DistanceUnit.CM)));
+            telemetry.addData("range1", String.format("%.3f cm",Distance1.getAverage() + cal1));
+            telemetry.addData("range2", String.format("%.3f cm",Distance2.getAverage() + cal2));
+            telemetry.addData("laserboi", String.format("%.3f cm", robot.laserboi.getDistance(DistanceUnit.CM)));
+            telemetry.addData("pewpewboi", String.format("%.3f m", robot.pewpewboi.getDistance(DistanceUnit.CM)));
             telemetry.addData("skewAngle", String.format("%.3f °",180*(Math.atan((Distance2.getAverage()-Distance1.getAverage())/0.15))/Math.PI));
 
             telemetry.update();

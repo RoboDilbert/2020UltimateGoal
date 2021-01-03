@@ -12,9 +12,11 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.Util.HardwarePresets;
+import org.firstinspires.ftc.teamcode.Util.Rolling;
 import org.firstinspires.ftc.teamcode.Util.SensorColor;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -43,6 +45,8 @@ public class BlueComplete extends LinearOpMode {
     public BNO055IMU imu;
     public Orientation angles;
     public Acceleration gravity;
+
+    public Rolling Distance1 = new Rolling(20);
 
     OpenCvCamera webcam;
     SkystoneDeterminationPipeline pipeline;
@@ -77,7 +81,9 @@ public class BlueComplete extends LinearOpMode {
 
         waitForStart();
 
+        drive.setRunMode("STOP_AND_RESET_ENCODER");
         drive.setRunMode("RUN_USING_ENCODER");
+
         Thread.sleep(50);
         NormalizedColorSensor colorSensor;
         colorSensor = robot.HwMap.get(NormalizedColorSensor.class, "cranberi");
@@ -89,6 +95,12 @@ public class BlueComplete extends LinearOpMode {
 
         pipeline.position = SkystoneDeterminationPipeline.RingPosition.FOUR;
 
+        telemetry.addData("Position", pipeline.position);
+        telemetry.addData("laserboi", String.format("%.3f cm", robot.laserboi.getDistance(DistanceUnit.CM)));
+        telemetry.addData("Red", "%.3f", (double) robot.cranberi.red());
+        telemetry.addData("Average of ouh", pipeline.avg1);
+        telemetry.update();
+
         //Drive forward and pick up ringos
         if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.NONE || pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
             //TODO Spin intake motor
@@ -98,13 +110,20 @@ public class BlueComplete extends LinearOpMode {
             sleep(50);
         }
         else{
+            drive.Drive("FORWARD", 1000, 0.3);
+            sleep(100);
             //TODO Spin Intake
-            drive.Drive("FORWARD", 1100, 0.3);
+            drive.Drive("FORWARD", 300, 0.15);
+            telemetry.addData("Status", "Lineyo");
+            telemetry.update();
+            //TODO add color sensor for rings
             sleep(100);
-            drive.Drive("FORWARD", 300, 0.1);
+            drive.setRunMode("RUN_USING_ENCODER");
+            sleep(50);
+            color.DriveToLine("WHITE");
             sleep(100);
-            drive.Drive("FORWARD", 800, 0.3);
-            sleep(100);
+            drive.Drive("REVERSE", 400, 0.3);
+            sleep(50);
         }
 
         //Shoot extra picked up rings
@@ -113,7 +132,7 @@ public class BlueComplete extends LinearOpMode {
         if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.NONE){
             telemetry.addData("Status", "no blocko");
             telemetry.update();
-            drive.Drive("STRAFE_LEFT", 800, 0.2);
+            drive.Drive("STRAFE_LEFT", 1200, 0.4);
             sleep(100);
         }
         else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
@@ -127,27 +146,45 @@ public class BlueComplete extends LinearOpMode {
         else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.FOUR){
             telemetry.addData("Status", "blocko is 4'0");
             telemetry.update();
-            drive.setRunMode("STOP_AND_RESET_ENCODERS");
-            robot.leftFrontMotor.setTargetPosition(1000);
-            robot.leftBackMotor.setTargetPosition(1000);
-            robot.rightFrontMotor.setTargetPosition(1000);
-            robot.rightBackMotor.setTargetPosition(1000);
-            drive.setRunMode("RUN_TO_POSITION");
-
-            while(drive.anyDriveMotorsBusy()){
-                robot.leftFrontMotor.setPower(-0.2);
-                robot.leftBackMotor.setPower(-0.2);
-                robot.rightFrontMotor.setPower(-0.3);
-                robot.rightBackMotor.setPower(0.3);
-            }
+            sleep(100);
+            drive.Drive("FORWARD_LEFT", 500, .3);
+            sleep(100);
+            drive.setRunMode("RUN_USING_ENCODER");
             color.DriveToLine("RED");
             sleep(100);
         }
-        sleep(10000000);
 
         //Drop boyo
 
+
         //Backup to white line
+
+
+        if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
+            drive.Drive("STRAFE_LEFT", 1200, 0.4);
+            Thread.sleep(100);
+        }
+
+
+        //left off with it indexing wrong
+        while(Distance1.index < 19){
+            Distance1.add(robot.pewpewboi.getDistance(DistanceUnit.CM));
+            telemetry.addData("Average Distance indexing", Distance1.getAverage());
+            telemetry.update();
+        }
+
+        while(Distance1.getAverage() > 20){
+            Distance1.add(robot.pewpewboi.getDistance(DistanceUnit.CM));
+            telemetry.addData("Average Distance driving", Distance1.getAverage());
+            telemetry.update();
+            drive.setRunMode("RUN_USING_ENCODER");
+            drive.leftFrontMotor.setPower(-0.4);
+            drive.leftBackMotor.setPower(-0.4);
+            drive.rightFrontMotor.setPower(-0.4);
+            drive.rightBackMotor.setPower(-0.4);
+        }
+
+        drive.Drive("STRAFE_RIGHT" , 1200, .3);
 
     }
 
@@ -174,8 +211,8 @@ public class BlueComplete extends LinearOpMode {
         static final int REGION_WIDTH = 44;
         static final int REGION_HEIGHT = 60;
 
-        final int FOUR_RING_THRESHOLD = 150;
-        final int ONE_RING_THRESHOLD = 135;
+        final int FOUR_RING_THRESHOLD = 140;
+        final int ONE_RING_THRESHOLD = 130;//135
 
         Point region1_pointA = new Point(
                 REGION1_TOPLEFT_ANCHOR_POINT.x,
@@ -193,7 +230,7 @@ public class BlueComplete extends LinearOpMode {
         int avg1;
 
         // Volatile since accessed by OpMode thread w/o synchronization
-        private volatile SkystoneDeterminationPipeline.RingPosition position = SkystoneDeterminationPipeline.RingPosition.FOUR;
+        private volatile SkystoneDeterminationPipeline.RingPosition position = SkystoneDeterminationPipeline.RingPosition.NONE;
 
         /*
          * This function takes the RGB frame, converts to YCrCb,
@@ -224,7 +261,7 @@ public class BlueComplete extends LinearOpMode {
                     BLUE, // The color the rectangle is drawn in
                     2); // Thickness of the rectangle lines
 
-            position = SkystoneDeterminationPipeline.RingPosition.FOUR; // Record our analysis
+            //position = SkystoneDeterminationPipeline.RingPosition.NONE; // Record our analysis
             if (avg1 > FOUR_RING_THRESHOLD) {
                 position = SkystoneDeterminationPipeline.RingPosition.FOUR;
             } else if (avg1 > ONE_RING_THRESHOLD) {
