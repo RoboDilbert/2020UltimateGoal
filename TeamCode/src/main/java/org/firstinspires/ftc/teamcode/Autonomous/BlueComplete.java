@@ -147,7 +147,7 @@ public class BlueComplete extends LinearOpMode {
             telemetry.addData("Status", "blocko is 4'0");
             telemetry.update();
             sleep(100);
-            drive.Drive("FORWARD_LEFT", 500, .3);
+            drive.Drive("FORWARD_LEFT", 350, .2);
             sleep(100);
             drive.setRunMode("RUN_USING_ENCODER");
             color.DriveToLine("RED");
@@ -166,14 +166,21 @@ public class BlueComplete extends LinearOpMode {
         }
 
 
+        drive.Drive("REVERSE", 2500, 0.4);
+
         //left off with it indexing wrong
-        while(Distance1.index < 19){
+
+
+        drive.Drive("STRAFE_RIGHT" , 500, .3);
+
+        //takes too long to index
+        while(Distance1.index < 10){
             Distance1.add(robot.pewpewboi.getDistance(DistanceUnit.CM));
             telemetry.addData("Average Distance indexing", Distance1.getAverage());
             telemetry.update();
         }
-
-        while(Distance1.getAverage() > 20){
+        //doesnt read distance up close
+        while(Distance1.getAverage() > 15){
             Distance1.add(robot.pewpewboi.getDistance(DistanceUnit.CM));
             telemetry.addData("Average Distance driving", Distance1.getAverage());
             telemetry.update();
@@ -184,7 +191,7 @@ public class BlueComplete extends LinearOpMode {
             drive.rightBackMotor.setPower(-0.4);
         }
 
-        drive.Drive("STRAFE_RIGHT" , 1200, .3);
+
 
     }
 

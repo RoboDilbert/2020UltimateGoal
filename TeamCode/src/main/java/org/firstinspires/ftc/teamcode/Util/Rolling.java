@@ -21,12 +21,22 @@ public class Rolling {
         total -= samples[index];
         samples[index] = x;
         total += x;
-        index++;
-        if (index == size)
+        if (++index == size)
             index = 0;// cheaper than modulus
     }
 
     public double getAverage() {
-        return total / size;
+        boolean full = true;
+        for (int i = 0; i < size; i++) {
+            if(samples[i] == 0d){
+                full = false;
+            }
+        }
+        if(full) {
+            return total / size;
+        }
+        else{
+            return total/index;
+        }
     }
 }
