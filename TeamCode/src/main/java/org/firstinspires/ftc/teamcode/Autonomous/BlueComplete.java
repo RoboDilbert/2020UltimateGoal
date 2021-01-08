@@ -167,7 +167,7 @@ public class BlueComplete extends LinearOpMode {
 
 
         //left off with it indexing wrong
-        while(Distance1.index < 19){
+        while(Distance1.index < 5){
             Distance1.add(robot.pewpewboi.getDistance(DistanceUnit.CM));
             telemetry.addData("Average Distance indexing", Distance1.getAverage());
             telemetry.update();

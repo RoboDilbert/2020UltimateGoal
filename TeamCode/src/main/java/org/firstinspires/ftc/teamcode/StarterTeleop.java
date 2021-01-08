@@ -64,6 +64,8 @@ public class StarterTeleop extends LinearOpMode {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters1);
 
+        robot.vibrator.setPosition(0.53);
+
         waitForStart();
 
         while(opModeIsActive()){
@@ -102,9 +104,24 @@ public class StarterTeleop extends LinearOpMode {
             robot.rightFrontMotor.setPower((pow1 - turn) * TELEOP_LIMITER);//n
             robot.rightBackMotor.setPower((pow2 - turn) * TELEOP_LIMITER);//p
 
-            if(gamepad1.x){
-                gyroVariation = angles.firstAngle;
-            }
+//            if(gamepad1.x){
+//                gyroVariation = angles.firstAngle;
+//            }
+
+            if(gamepad1.a)
+                robot.grapfroot.setPower(1);
+
+            if(gamepad1.y)
+                robot.grapfroot.setPower(0);
+
+            if (gamepad1.b) {
+                robot.vibrator.setPosition(0.53);
+                sleep(50);
+                robot.vibrator.setPosition(0.42);
+                sleep(25);
+            }else
+                robot.vibrator.setPosition(.53);
+
 
             telemetry.addLine()
                     .addData("Red", "%.3f", (double) robot.cranberi.red())
@@ -116,7 +133,7 @@ public class StarterTeleop extends LinearOpMode {
             telemetry.addData("laserboi", String.format("%.3f cm", robot.laserboi.getDistance(DistanceUnit.CM)));
             telemetry.addData("pewpewboi", String.format("%.3f m", robot.pewpewboi.getDistance(DistanceUnit.CM)));
             telemetry.addData("skewAngle", String.format("%.3f °",180*(Math.atan((Distance2.getAverage()-Distance1.getAverage())/0.15))/Math.PI));
-
+            telemetry.addData("Vibrator:", robot.vibrator.getPosition());
             telemetry.update();
         }
     }
