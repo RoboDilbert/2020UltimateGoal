@@ -87,6 +87,20 @@ public class DriveTrain extends HardwarePresets{
                 rightBackMotor.setPower(power * -.5);
             }
         }
+        if(input.equals("SLIGHTLY_LEFT")){
+            leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() - encoderTicks);
+            leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() - encoderTicks);
+            rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() - (2 * encoderTicks));
+            rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() - (2 * encoderTicks));
+            setRunMode("RUN_TO_POSITION");
+
+            while(anyDriveMotorsBusy()){
+                leftFrontMotor.setPower(power * -0.8);
+                leftBackMotor.setPower(power * -0.8);
+                rightFrontMotor.setPower(power * -1.6);
+                rightBackMotor.setPower(power * -1.6);
+            }
+        }
         leftFrontMotor.setPower(0);
         leftBackMotor.setPower(0);
         rightFrontMotor.setPower(0);

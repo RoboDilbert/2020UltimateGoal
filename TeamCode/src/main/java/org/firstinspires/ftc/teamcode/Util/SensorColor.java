@@ -30,7 +30,7 @@ public class SensorColor extends HardwarePresets {
             rightBackMotor.setPower(0);
         }
         else if(color.equals("WHITE")) {
-            while(cranberi.red() < 175){//480, 680
+            while(cranberi.red() < 190){//480, 680
                 telemetry.update();
                 leftFrontMotor.setPower(0.4);
                 rightFrontMotor.setPower(0.4);
