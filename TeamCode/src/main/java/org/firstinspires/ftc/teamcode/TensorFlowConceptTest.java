@@ -45,6 +45,9 @@ public class TensorFlowConceptTest extends LinearOpMode {
             // (typically 16/9).
             tfod.setZoom(1, 16.0/9.0);
         }
+
+        waitForStart();
+
         if (opModeIsActive()) {
             while (opModeIsActive()) {
                 if (tfod != null) {
