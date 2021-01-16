@@ -26,19 +26,10 @@ public class TensorFlowConceptTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-
-
-        initVuforia();
-        initTfod();
-//        vuforia.getCamera().createCaptureSession();
-//
-//        CameraPreview camPre = new CameraPreview(, vuforia.getCamera(),false);
-//        camPre.startCamera();
         initVuforia();
         initTfod();
 
         vision.enable();
-
 
         if (tfod != null) {
             tfod.activate();
