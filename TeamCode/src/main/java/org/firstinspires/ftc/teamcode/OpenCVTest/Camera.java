@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpenCVTest;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -18,6 +19,7 @@ import org.firstinspires.ftc.teamcode.OpenCVTest.*;
  * visit https://github.com/OpenFTC/EasyOpenCV/tree/master/examples/src/main/java/org/openftc/easyopencv/examples
  */
 @TeleOp
+@Disabled
 public class Camera extends HardwarePresets {
 
     UGRectDetector webcam;

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpenCVTest;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.opencv.core.Core;
