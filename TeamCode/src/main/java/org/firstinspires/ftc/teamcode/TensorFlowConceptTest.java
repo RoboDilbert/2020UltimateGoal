@@ -10,10 +10,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.Came
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaLocalizerImpl;
+import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.Util.HardwarePresets;
+
 import com.vuforia.Vuforia;
 
 @TeleOp(name = "TensorFlowTest", group = "TeleOp")
-public class TensorFlowConceptTest extends LinearOpMode {
+public class TensorFlowConceptTest extends HardwarePresets {
 
     private static MasterVision vision;
     private static VuforiaLocalizer.Parameters parameters;
@@ -23,13 +26,18 @@ public class TensorFlowConceptTest extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Quad";
     private static final String LABEL_SECOND_ELEMENT = "Single";
+    private static double power;
+
+    DriveTrain drive = new DriveTrain();
 
     @Override
     public void runOpMode() throws InterruptedException {
 
 
+        super.init(hardwareMap);
         initVuforia();
         initTfod();
+        drive.setRunMode("RUN_USING_ENCODER");
 
         vision = new MasterVision(parameters, hardwareMap, true, MasterVision.TFLiteAlgorithm.INFER_NONE);
         vision.enable();
@@ -43,13 +51,14 @@ public class TensorFlowConceptTest extends LinearOpMode {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(1, 16.0/9.0);
+            tfod.setZoom(1, 16.0 / 9.0);
         }
 
         waitForStart();
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
+                vision.enable();
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
@@ -66,19 +75,49 @@ public class TensorFlowConceptTest extends LinearOpMode {
                                     recognition.getLeft(), recognition.getTop());
                             telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                                     recognition.getRight(), recognition.getBottom());
+                            telemetry.addData("power", power);
+
+                            if (updatedRecognitions.size() > 0){
+                                if (recognition.getLeft() > 500) {
+                                    power = (Math.pow((recognition.getLeft() - 488) / 1000, 2));
+                                    drive.leftBackMotor.setPower(power);
+                                    drive.leftFrontMotor.setPower(power);
+                                    drive.rightBackMotor.setPower(-power);
+                                    drive.rightFrontMotor.setPower(-power);
+                                    if (power < 0.03) {
+                                        drive.leftBackMotor.setPower(0);
+                                        drive.leftFrontMotor.setPower(0);
+                                        drive.rightBackMotor.setPower(0);
+                                        drive.rightFrontMotor.setPower(0);
+                                    }
+                                }
+                                if (recognition.getLeft() < 460) {
+                                    power = Math.pow((488 - recognition.getLeft()) / 1000, 2);
+                                    drive.leftBackMotor.setPower(-power);
+                                    drive.leftFrontMotor.setPower(-power);
+                                    drive.rightBackMotor.setPower(power);
+                                    drive.rightFrontMotor.setPower(power);
+                                    if (power < 0.03) {
+                                        drive.leftBackMotor.setPower(0);
+                                        drive.leftFrontMotor.setPower(0);
+                                        drive.rightBackMotor.setPower(0);
+                                        drive.rightFrontMotor.setPower(0);
+                                    }
+                                }
+                            }
+                            else{
+                                drive.leftBackMotor.setPower(0);
+                                drive.leftFrontMotor.setPower(0);
+                                drive.rightBackMotor.setPower(0);
+                                drive.rightFrontMotor.setPower(0);
+                            }
                         }
                         telemetry.update();
                     }
                 }
             }
         }
-
-//        while (!opModeIsActive() && !isStopRequested()) {
-//            telemetry.addData("status", "waiting for start command...");
-//            telemetry.update();
-//        }
     }
-
 
     private void initVuforia() {
         /*

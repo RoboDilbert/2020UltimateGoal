@@ -27,7 +27,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 
 public class HardwarePresets extends LinearOpMode {
 
-    public void runOpMode(){}
+    public void runOpMode() throws InterruptedException {}
 
     //2m distance sensors
     public DistanceSensor laserboi ;
