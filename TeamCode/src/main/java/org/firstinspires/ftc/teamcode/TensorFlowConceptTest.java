@@ -16,6 +16,7 @@ import com.vuforia.Vuforia;
 public class TensorFlowConceptTest extends LinearOpMode {
 
     private static MasterVision vision;
+    private static VuforiaLocalizer.Parameters parameters;
     private static TFObjectDetector tfod;
     private static VuforiaLocalizer vuforia;
     private static final String VUFORIA_KEY = "AW/D0F3/////AAABmT6CO76ZukEWtNAvh1kty819QDEF9SG9ZxbfUcbjoxBCe0UcoTGK19TZdmHtWDwxhrL4idOt1tdJE+h9YGDtZ7U/njHEqSZ7jflzurT4j/WXTCjeTCSf0oMqcgduLTDNz+XEXMbPSlnHbO9ZnEZBun7HHr6N06kpYu6QZmG6WRvibuKCe5IeZJ21RoIeCsdp3ho/f/+QQLlnqaa1dw6i4xMFM0e2IaxujhQiWnd4by23CkMPvzKhy6YP3wPBq+awpzEPLDZcD8l1i0SqmX7HNpmw4kXBrWzEimAzp1aqONVau4kIwCGwJFusMdErw9IL7KQ5VqMKN4Xl67s0pwotoXsA+5SlWQAIodipYKZnPzwO";
@@ -26,9 +27,11 @@ public class TensorFlowConceptTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
+
         initVuforia();
         initTfod();
 
+        vision = new MasterVision(parameters, hardwareMap, true, MasterVision.TFLiteAlgorithm.INFER_NONE);
         vision.enable();
 
         if (tfod != null) {
@@ -79,7 +82,7 @@ public class TensorFlowConceptTest extends LinearOpMode {
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
 
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraDirection = CameraDirection.BACK;
