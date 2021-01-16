@@ -42,7 +42,6 @@ public class DriveTrain extends HardwarePresets{
                 leftBackMotor.setPower(power);
                 rightFrontMotor.setPower(power);
                 rightBackMotor.setPower(-power);
-
             }
         }
         if(input.equals("FORWARD")){
@@ -99,6 +98,20 @@ public class DriveTrain extends HardwarePresets{
                 leftBackMotor.setPower(power * -0.8);
                 rightFrontMotor.setPower(power * -1.6);
                 rightBackMotor.setPower(power * -1.6);
+            }
+        }
+        if(input.equals("FORWARD_LEFT")){
+            leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() - encoderTicks);
+            leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + (6 * encoderTicks));
+            rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + (6 * encoderTicks));
+            rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() - encoderTicks);
+            setRunMode("RUN_TO_POSITION");
+
+            while(anyDriveMotorsBusy()){
+                leftFrontMotor.setPower(power * -.5);
+                leftBackMotor.setPower(power * 3);
+                rightFrontMotor.setPower(power * 3);
+                rightBackMotor.setPower(power * -.5);
             }
         }
         leftFrontMotor.setPower(0);

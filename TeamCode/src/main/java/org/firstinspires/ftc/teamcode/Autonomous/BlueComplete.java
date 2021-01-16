@@ -93,7 +93,7 @@ public class BlueComplete extends LinearOpMode {
 
         //TODO Shoot the preloaded rings
 
-        //pipeline.position = SkystoneDeterminationPipeline.RingPosition.FOUR;
+        pipeline.position = SkystoneDeterminationPipeline.RingPosition.FOUR;
 
         telemetry.addData("Position", pipeline.position);
         telemetry.addData("laserboi", String.format("%.3f cm", robot.laserboi.getDistance(DistanceUnit.CM)));
@@ -112,6 +112,16 @@ public class BlueComplete extends LinearOpMode {
         else{
             drive.Drive("FORWARD", 1000, 0.3);
             sleep(100);
+            //TODO Spin Intake
+            drive.Drive("FORWARD", 300, 0.15);
+            telemetry.addData("Status", "Lineyo");
+            telemetry.update();
+            //TODO add color sensor for rings
+            drive.Drive("FORWARD", 1000, 0.3);
+            sleep(100);
+            drive.setRunMode("RUN_USING_ENCODER");
+            sleep(50);
+            color.DriveToLine("WHITE");
             //TODO Spin Intake
             drive.Drive("FORWARD", 300, 0.15);
             telemetry.addData("Status", "Lineyo");
@@ -158,6 +168,40 @@ public class BlueComplete extends LinearOpMode {
 
 
         //Backup to white line
+
+
+        if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
+            drive.Drive("STRAFE_LEFT", 1200, 0.4);
+            Thread.sleep(100);
+        }
+
+
+        drive.Drive("REVERSE", 2500, 0.4);
+
+        //left off with it indexing wrong
+
+
+        drive.Drive("STRAFE_RIGHT" , 500, .3);
+
+        //takes too long to index
+        while(Distance1.index < 10){
+            Distance1.add(robot.pewpewboi.getDistance(DistanceUnit.CM));
+            telemetry.addData("Average Distance indexing", Distance1.getAverage());
+            telemetry.update();
+        }
+        //doesnt read distance up close
+        while(Distance1.getAverage() > 15){
+            Distance1.add(robot.pewpewboi.getDistance(DistanceUnit.CM));
+            telemetry.addData("Average Distance driving", Distance1.getAverage());
+            telemetry.update();
+            drive.setRunMode("RUN_USING_ENCODER");
+            drive.leftFrontMotor.setPower(-0.4);
+            drive.leftBackMotor.setPower(-0.4);
+            drive.rightFrontMotor.setPower(-0.4);
+            drive.rightBackMotor.setPower(-0.4);
+        }
+
+
 
 
         if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
