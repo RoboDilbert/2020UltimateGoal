@@ -9,10 +9,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaLocalizerImpl;
+
+import com.vuforia.Vuforia;
 
 @TeleOp(name = "TensorFlowTest", group = "TeleOp")
 public class TensorFlowConceptTest extends LinearOpMode {
 
+    private static MasterVision vision;
     private static TFObjectDetector tfod;
     private static VuforiaLocalizer vuforia;
     private static final String VUFORIA_KEY = null;
@@ -25,6 +29,9 @@ public class TensorFlowConceptTest extends LinearOpMode {
 
         initVuforia();
         initTfod();
+
+        vision.enable();
+
 
         if (tfod != null) {
             tfod.activate();
