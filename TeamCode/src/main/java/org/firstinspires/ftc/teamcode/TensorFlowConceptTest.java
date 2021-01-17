@@ -26,9 +26,11 @@ public class TensorFlowConceptTest extends HardwarePresets {
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Quad";
     private static final String LABEL_SECOND_ELEMENT = "Single";
-    private static double power;
+    private static double leftPower;
+    private static double rightPower;
 
     DriveTrain drive = new DriveTrain();
+    TFObjectDetector.Parameters param = new TFObjectDetector.Parameters();;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -75,44 +77,41 @@ public class TensorFlowConceptTest extends HardwarePresets {
                                     recognition.getLeft(), recognition.getTop());
                             telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                                     recognition.getRight(), recognition.getBottom());
-                            telemetry.addData("power", power);
+                            telemetry.addData("power", leftPower);
 
-                            if (updatedRecognitions.size() > 0){
-                                if (recognition.getLeft() > 500) {
-                                    power = (Math.pow((recognition.getLeft() - 488) / 1000, 2));
-                                    drive.leftBackMotor.setPower(power);
-                                    drive.leftFrontMotor.setPower(power);
-                                    drive.rightBackMotor.setPower(-power);
-                                    drive.rightFrontMotor.setPower(-power);
-                                    if (power < 0.03) {
-                                        drive.leftBackMotor.setPower(0);
-                                        drive.leftFrontMotor.setPower(0);
-                                        drive.rightBackMotor.setPower(0);
-                                        drive.rightFrontMotor.setPower(0);
-                                    }
+                            if (recognition.getLeft() > 500) {
+                                leftPower = (Math.pow((recognition.getLeft() - 400) / 1000, 1.2) * 2);
+                                rightPower = -(Math.pow((recognition.getLeft() - 400) / 1000, 1.2) * 2);
+                                if (Math.abs(leftPower) < 0.03) {
+                                    leftPower = 0;
+                                    rightPower = 0;
                                 }
-                                if (recognition.getLeft() < 460) {
-                                    power = Math.pow((488 - recognition.getLeft()) / 1000, 2);
-                                    drive.leftBackMotor.setPower(-power);
-                                    drive.leftFrontMotor.setPower(-power);
-                                    drive.rightBackMotor.setPower(power);
-                                    drive.rightFrontMotor.setPower(power);
-                                    if (power < 0.03) {
-                                        drive.leftBackMotor.setPower(0);
-                                        drive.leftFrontMotor.setPower(0);
-                                        drive.rightBackMotor.setPower(0);
-                                        drive.rightFrontMotor.setPower(0);
-                                    }
+
+                            }
+                            else if (recognition.getLeft() < 460) {
+                                leftPower = -(Math.pow((460 - recognition.getLeft()) / 1000, 1.2) * 2);
+                                rightPower = (Math.pow((460 - recognition.getLeft()) / 1000, 1.2) * 2);
+                                if (Math.abs(leftPower) < 0.03) {
+                                    leftPower = 0;
+                                    rightPower = 0;
                                 }
                             }
                             else{
-                                drive.leftBackMotor.setPower(0);
-                                drive.leftFrontMotor.setPower(0);
-                                drive.rightBackMotor.setPower(0);
-                                drive.rightFrontMotor.setPower(0);
+                                leftPower = 0;
+                                rightPower = 0;
                             }
                         }
+                        drive.leftBackMotor.setPower(leftPower);
+                        drive.leftFrontMotor.setPower(leftPower);
+                        drive.rightBackMotor.setPower(rightPower);
+                        drive.rightFrontMotor.setPower(rightPower);
                         telemetry.update();
+                    }
+                    else{
+                        drive.leftBackMotor.setPower(0);
+                        drive.leftFrontMotor.setPower(0);
+                        drive.rightBackMotor.setPower(0);
+                        drive.rightFrontMotor.setPower(0);
                     }
                 }
             }
@@ -139,6 +138,8 @@ public class TensorFlowConceptTest extends HardwarePresets {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.timingBufferSize = 1;
+        tfodParameters.maxFrameRate = 100;
         tfodParameters.minResultConfidence = 0.8f; // minimum confidence in object detection 80%
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
