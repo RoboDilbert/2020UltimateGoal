@@ -64,6 +64,8 @@ public class StarterTeleop extends LinearOpMode {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters1);
 
+        robot.vibrator.setPosition(0.53);
+
         waitForStart();
 
         while(opModeIsActive()){
@@ -102,21 +104,36 @@ public class StarterTeleop extends LinearOpMode {
             robot.rightFrontMotor.setPower((pow1 - turn) * TELEOP_LIMITER);//n
             robot.rightBackMotor.setPower((pow2 - turn) * TELEOP_LIMITER);//p
 
-            if(gamepad1.x){
-                gyroVariation = angles.firstAngle;
-            }
+//            if(gamepad1.x){
+//                gyroVariation = angles.firstAngle;
+//            }
+
+            if(gamepad1.a)
+                robot.grapfroot.setPower(1);
+
+            if(gamepad1.y)
+                robot.grapfroot.setPower(0);
+
+            if (gamepad1.b) {
+                robot.vibrator.setPosition(0.53);
+                sleep(50);
+                robot.vibrator.setPosition(0.42);
+                sleep(25);
+            }else
+                robot.vibrator.setPosition(.53);
+
 
             telemetry.addLine()
                     .addData("Red", "%.3f", (double) robot.cranberi.red())
                     .addData("Blue", "%.3f", (double) robot.cranberi.blue())
                     .addData("Alpha", "%.3f", (double) robot.cranberi.alpha());
 
-            telemetry.addData("range1", String.format("%.3f m",Distance1.getAverage() + cal1));
-            telemetry.addData("range2", String.format("%.3f m",Distance2.getAverage() + cal2));
-//            telemetry.addData("range1", String.format("%.3f cm", robot.laserboi.getDistance(DistanceUnit.CM)));
-//            telemetry.addData("range2", String.format("%.3f m", robot.pewpewboi.getDistance(DistanceUnit.CM)));
+            telemetry.addData("range1", String.format("%.3f cm",Distance1.getAverage() + cal1));
+            telemetry.addData("range2", String.format("%.3f cm",Distance2.getAverage() + cal2));
+            telemetry.addData("laserboi", String.format("%.3f cm", robot.laserboi.getDistance(DistanceUnit.CM)));
+            telemetry.addData("pewpewboi", String.format("%.3f m", robot.pewpewboi.getDistance(DistanceUnit.CM)));
             telemetry.addData("skewAngle", String.format("%.3f °",180*(Math.atan((Distance2.getAverage()-Distance1.getAverage())/0.15))/Math.PI));
-
+            telemetry.addData("Vibrator:", robot.vibrator.getPosition());
             telemetry.update();
         }
     }

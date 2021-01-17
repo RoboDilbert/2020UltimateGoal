@@ -117,6 +117,16 @@ public class BlueComplete extends LinearOpMode {
             telemetry.addData("Status", "Lineyo");
             telemetry.update();
             //TODO add color sensor for rings
+            drive.Drive("FORWARD", 1000, 0.3);
+            sleep(100);
+            drive.setRunMode("RUN_USING_ENCODER");
+            sleep(50);
+            color.DriveToLine("WHITE");
+            //TODO Spin Intake
+            drive.Drive("FORWARD", 300, 0.15);
+            telemetry.addData("Status", "Lineyo");
+            telemetry.update();
+            //TODO add color sensor for rings
             sleep(100);
             drive.setRunMode("RUN_USING_ENCODER");
             sleep(50);
@@ -193,6 +203,47 @@ public class BlueComplete extends LinearOpMode {
 
 
 
+
+        if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
+            drive.Drive("STRAFE_LEFT", 1200, 0.4);
+            Thread.sleep(100);
+        }
+
+
+        //left off with it indexing wrong
+
+
+
+
+        if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.NONE){
+            drive.Drive("REVERSE", 1000, 0.4);
+        }
+        else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
+            drive.Drive("REVERSE", 1750, 0.4);
+        }
+        else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.FOUR){
+            drive.Drive("REVERSE", 2500, 0.4);
+        }
+
+
+        drive.Drive("STRAFE_RIGHT" , 500, .3);
+
+        while(Distance1.index < 5){
+            Distance1.add(robot.pewpewboi.getDistance(DistanceUnit.CM));
+            telemetry.addData("Average Distance indexing", Distance1.getAverage());
+            telemetry.update();
+        }
+
+        while(Distance1.getAverage() > 10){
+            Distance1.add(robot.pewpewboi.getDistance(DistanceUnit.CM));
+            telemetry.addData("Average Distance driving", Distance1.getAverage());
+            telemetry.update();
+            drive.setRunMode("RUN_USING_ENCODER");
+            drive.leftFrontMotor.setPower(-0.4);
+            drive.leftBackMotor.setPower(-0.4);
+            drive.rightFrontMotor.setPower(-0.4);
+            drive.rightBackMotor.setPower(-0.4);
+        }
     }
 
     public static class SkystoneDeterminationPipeline extends OpenCvPipeline {
@@ -219,7 +270,7 @@ public class BlueComplete extends LinearOpMode {
         static final int REGION_HEIGHT = 60;
 
         final int FOUR_RING_THRESHOLD = 140;
-        final int ONE_RING_THRESHOLD = 130;//135
+        final int ONE_RING_THRESHOLD = 127;//135
 
         Point region1_pointA = new Point(
                 REGION1_TOPLEFT_ANCHOR_POINT.x,

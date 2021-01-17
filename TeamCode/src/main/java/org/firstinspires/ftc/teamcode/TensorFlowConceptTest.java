@@ -10,10 +10,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.Came
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaLocalizerImpl;
+import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.Util.HardwarePresets;
+
 import com.vuforia.Vuforia;
 
 @TeleOp(name = "TensorFlowTest", group = "TeleOp")
-public class TensorFlowConceptTest extends LinearOpMode {
+public class TensorFlowConceptTest extends HardwarePresets {
 
     private static MasterVision vision;
     private static VuforiaLocalizer.Parameters parameters;
@@ -23,17 +26,23 @@ public class TensorFlowConceptTest extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Quad";
     private static final String LABEL_SECOND_ELEMENT = "Single";
+    private static double leftPower;
+    private static double rightPower;
+
+    DriveTrain drive = new DriveTrain();
+    TFObjectDetector.Parameters param = new TFObjectDetector.Parameters();;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
 
+        super.init(hardwareMap);
         initVuforia();
         initTfod();
+        drive.setRunMode("RUN_USING_ENCODER");
 
         vision = new MasterVision(parameters, hardwareMap, true, MasterVision.TFLiteAlgorithm.INFER_NONE);
         vision.enable();
-
 
         if (tfod != null) {
             tfod.activate();
@@ -44,10 +53,14 @@ public class TensorFlowConceptTest extends LinearOpMode {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(1, 16.0/9.0);
+            tfod.setZoom(1, 16.0 / 9.0);
         }
+
+        waitForStart();
+
         if (opModeIsActive()) {
             while (opModeIsActive()) {
+                vision.enable();
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
@@ -59,13 +72,46 @@ public class TensorFlowConceptTest extends LinearOpMode {
                         int i = 0;
                         for (Recognition recognition : updatedRecognitions) {
                             telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                            telemetry.addData(String.format("Confidence (%d)", i), recognition.getConfidence());
+                            telemetry.addData(String.format("confidence (%d)", i), recognition.getConfidence());
                             telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
                                     recognition.getLeft(), recognition.getTop());
                             telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                                     recognition.getRight(), recognition.getBottom());
+                            telemetry.addData("power", leftPower);
+
+                            if (recognition.getLeft() > 500) {
+                                leftPower = (Math.pow((recognition.getLeft() - 400) / 1000, 1.2) * 2);
+                                rightPower = -(Math.pow((recognition.getLeft() - 400) / 1000, 1.2) * 2);
+                                if (Math.abs(leftPower) < 0.03) {
+                                    leftPower = 0;
+                                    rightPower = 0;
+                                }
+
+                            }
+                            else if (recognition.getLeft() < 460) {
+                                leftPower = -(Math.pow((460 - recognition.getLeft()) / 1000, 1.2) * 2);
+                                rightPower = (Math.pow((460 - recognition.getLeft()) / 1000, 1.2) * 2);
+                                if (Math.abs(leftPower) < 0.03) {
+                                    leftPower = 0;
+                                    rightPower = 0;
+                                }
+                            }
+                            else{
+                                leftPower = 0;
+                                rightPower = 0;
+                            }
                         }
+                        drive.leftBackMotor.setPower(leftPower);
+                        drive.leftFrontMotor.setPower(leftPower);
+                        drive.rightBackMotor.setPower(rightPower);
+                        drive.rightFrontMotor.setPower(rightPower);
                         telemetry.update();
+                    }
+                    else{
+                        drive.leftBackMotor.setPower(0);
+                        drive.leftFrontMotor.setPower(0);
+                        drive.rightBackMotor.setPower(0);
+                        drive.rightFrontMotor.setPower(0);
                     }
                 }
             }
@@ -74,7 +120,6 @@ public class TensorFlowConceptTest extends LinearOpMode {
 
 
     }
-
 
     private void initVuforia() {
         /*
@@ -96,6 +141,8 @@ public class TensorFlowConceptTest extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.timingBufferSize = 1;
+        tfodParameters.maxFrameRate = 100;
         tfodParameters.minResultConfidence = 0.8f; // minimum confidence in object detection 80%
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);

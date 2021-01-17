@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -26,7 +27,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 
 public class HardwarePresets extends LinearOpMode {
 
-    public void runOpMode(){}
+    public void runOpMode() throws InterruptedException {}
 
     //2m distance sensors
     public DistanceSensor laserboi ;
@@ -42,6 +43,9 @@ public class HardwarePresets extends LinearOpMode {
     public DcMotor rightFrontMotor;
     public DcMotor rightBackMotor;
 
+    public DcMotor grapfroot;
+    public Servo vibrator;
+
     public BNO055IMU imu;
     public Orientation angles;
     public Acceleration gravity;
@@ -56,6 +60,9 @@ public class HardwarePresets extends LinearOpMode {
         leftBackMotor = HwMap.dcMotor.get("leftBackMotor");
         rightFrontMotor = HwMap.dcMotor.get("rightFrontMotor");
         rightBackMotor = HwMap.dcMotor.get("rightBackMotor");
+
+        grapfroot = HwMap.dcMotor.get("grapfroot");
+        vibrator = HwMap.servo.get("vibrator");
 
         laserboi = HwMap.get(DistanceSensor.class, "laserboi");
         pewpewboi = HwMap.get(DistanceSensor.class, "pewpewboi");
