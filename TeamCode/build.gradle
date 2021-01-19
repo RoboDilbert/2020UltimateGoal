@@ -13,12 +13,17 @@
 
 // Include common definitions from above.
 apply from: '../build.common.gradle'
+apply plugin: 'kotlin-android'
 
 repositories {
     maven { url = "https://dl.bintray.com/first-tech-challenge/ftcsdk/" }
+    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+    mavenCentral()
 }
 
 dependencies {
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
     implementation 'org.openftc:easyopencv:1.4.2'
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

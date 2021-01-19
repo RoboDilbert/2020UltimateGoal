@@ -21,6 +21,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -37,7 +38,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-@TeleOp(name = "cameraWork?", group = "TeleOp")
+@TeleOp(name = "CameraTest", group = "TeleOp")
+@Disabled
 public class EasyOpenCVExample extends LinearOpMode {
     OpenCvCamera webcam;
     SkystoneDeterminationPipeline pipeline;
@@ -64,7 +66,6 @@ public class EasyOpenCVExample extends LinearOpMode {
         webcam.resumeViewport();
 
         while (opModeIsActive()) {
-
             telemetry.addData("Frame Count", webcam.getFrameCount());
             telemetry.addData("FPS", String.format("%.2f", webcam.getFps()));
             telemetry.addData("Total frame time ms", webcam.getTotalFrameTimeMs());
@@ -73,6 +74,7 @@ public class EasyOpenCVExample extends LinearOpMode {
             telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
             telemetry.addData("Analysis", pipeline.getAnalysis());
             telemetry.addData("Position", pipeline.position);
+            telemetry.addData("Average of ouh", pipeline.avg1);
             telemetry.addData("ID", cameraMonitorViewId);
             telemetry.update();
 
@@ -91,22 +93,21 @@ public class EasyOpenCVExample extends LinearOpMode {
             NONE
         }
 
-        /*
-         * Some color constants
+         /*
+          ome color constants
          */
         static final Scalar BLUE = new Scalar(0, 0, 255);
-        static final Scalar GREEN = new Scalar(0, 255, 0);
 
         /*
          * The core values which define the location and size of the sample regions
          */
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(138,90);
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(110,70);
 
-        static final int REGION_WIDTH = 44;
-        static final int REGION_HEIGHT = 60;
+        static final int REGION_WIDTH = 100;
+        static final int REGION_HEIGHT = 100;
 
-        final int FOUR_RING_THRESHOLD = 150;
-        final int ONE_RING_THRESHOLD = 135;
+        final int FOUR_RING_THRESHOLD = 140;
+        final int ONE_RING_THRESHOLD = 127;
 
         Point region1_pointA = new Point(
                 REGION1_TOPLEFT_ANCHOR_POINT.x,
@@ -124,7 +125,7 @@ public class EasyOpenCVExample extends LinearOpMode {
         int avg1;
 
         // Volatile since accessed by OpMode thread w/o synchronization
-        private volatile RingPosition position = RingPosition.FOUR;
+        private volatile RingPosition position = RingPosition.NONE;
 
         /*
          * This function takes the RGB frame, converts to YCrCb,

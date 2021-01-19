@@ -4,7 +4,7 @@ public class Rolling {
 
     private int size;
     private double total = 0d;
-    private int index = 0;
+    public static int index = 0;
     private double samples[];
 
     public Rolling(int size) {
@@ -22,10 +22,21 @@ public class Rolling {
         samples[index] = x;
         total += x;
         if (++index == size)
-            index = 0; // cheaper than modulus
+            index = 0;// cheaper than modulus
     }
 
     public double getAverage() {
-        return total / size;
+        boolean full = true;
+        for (int i = 0; i < size; i++) {
+            if(samples[i] == 0d){
+                full = false;
+            }
+        }
+        if(full) {
+            return total / size;
+        }
+        else{
+            return total/index;
+        }
     }
 }
