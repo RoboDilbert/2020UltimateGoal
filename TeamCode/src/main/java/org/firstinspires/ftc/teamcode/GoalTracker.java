@@ -32,6 +32,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.vuforia.DataSet;
+import com.vuforia.ObjectTracker;
+import com.vuforia.TrackerManager;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -140,6 +143,19 @@ public class GoalTracker extends HardwarePresets {
          * We can pass Vuforia the handle to a camera preview resource (on the RC phone);
          * If no camera monitor is desired, use the parameter-less constructor instead (commented out below).
          */
+//        TrackerManager trackerManager = (TrackerManager)TrackerManager.getInstance();
+//        ObjectTracker objectTracker = TrackerManager.getInstance().getTracker("ObjectTracker");
+//
+//        DataSet dataset = objectTracker.createDataSet();
+//        //Load and activate the dataset if it exists.
+//        if( DataSet.exists ( "blue_goal_UG",0) )
+//        {
+//            dataset.load( "blue_goal_UG",0 );
+//            objectTracker.activateDataSet( dataset );
+//        }
+//
+//        //Start the object tracker.
+//        objectTracker.start();
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
@@ -162,6 +178,7 @@ public class GoalTracker extends HardwarePresets {
         // Load the data sets for the trackable objects. These particular data
         // sets are stored in the 'assets' part of our application.
         VuforiaTrackables targetsUltimateGoal = this.vuforia.loadTrackablesFromAsset("UltimateGoal");
+
         VuforiaTrackable blueTowerGoalTarget = targetsUltimateGoal.get(0);
         blueTowerGoalTarget.setName("Blue Tower Goal Target");
         VuforiaTrackable redTowerGoalTarget = targetsUltimateGoal.get(1);
