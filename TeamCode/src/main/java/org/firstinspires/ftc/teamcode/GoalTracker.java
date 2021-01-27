@@ -140,13 +140,13 @@ public class GoalTracker extends HardwarePresets {
          * We can pass Vuforia the handle to a camera preview resource (on the RC phone);
          * If no camera monitor is desired, use the parameter-less constructor instead (commented out below).
          */
-        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-//        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-//        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+//        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+//                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+//        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
-        parameters = new VuforiaLocalizer.Parameters();
+        //parameters = new VuforiaLocalizer.Parameters();
 //        vision = new MasterVision(parameters, hardwareMap, true, MasterVision.TFLiteAlgorithm.INFER_NONE);
 //        vision.enable();
 
@@ -174,24 +174,25 @@ public class GoalTracker extends HardwarePresets {
         frontWallTarget.setName("Front Wall Target");
 
 
-        tfodParameters.timingBufferSize = 10;
-        tfodParameters.maxFrameRate = 100;
-        tfodParameters.minResultConfidence = 0.8f; // minimum confidence in object detection 80%
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+//        tfodParameters.timingBufferSize = 10;
+//        tfodParameters.maxFrameRate = 100;
+//        tfodParameters.minResultConfidence = 0.8f; // minimum confidence in object detection 80%
+//        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 
-        if (tfod != null) {
-            tfod.activate();
-
-            // The TensorFlow software will scale the input images from the camera to a lower resolution.
-            // This can result in lower detection accuracy at longer distances (> 55cm or 22").
-            // If your target is at distance greater than 50 cm (20") you can adjust the magnification value
-            // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
-            // should be set to the value of the images used to create the TensorFlow Object Detection model
-            // (typically 16/9).
-            tfod.setZoom(1, 16.0 / 9.0);
-        }
+//        if (tfod != null) {
+//            tfod.activate();
+//
+//            // The TensorFlow software will scale the input images from the camera to a lower resolution.
+//            // This can result in lower detection accuracy at longer distances (> 55cm or 22").
+//            // If your target is at distance greater than 50 cm (20") you can adjust the magnification value
+//            // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
+//            // should be set to the value of the images used to create the TensorFlow Object Detection model
+//            // (typically 16/9).
+//            tfod.setZoom(1, 16.0 / 9.0);
+//        }
+        targetsUltimateGoal.activate();
         waitForStart();
-
+        //targetsUltimateGoal.activate();
         // For convenience, gather together all the trackable objects in one easily-iterable collection */
         List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
         allTrackables.addAll(targetsUltimateGoal);
@@ -289,7 +290,7 @@ public class GoalTracker extends HardwarePresets {
         // Tap the preview window to receive a fresh image.
 
         targetsUltimateGoal.activate();
-        while (!isStopRequested()) {
+        while (opModeIsActive()) {
 
             // check all the trackable targets to see which one (if any) is visible.
             targetVisible = false;

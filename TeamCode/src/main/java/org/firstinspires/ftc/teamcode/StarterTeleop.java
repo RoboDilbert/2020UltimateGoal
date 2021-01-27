@@ -6,11 +6,14 @@ import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
-
-
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import org.firstinspires.ftc.robotcontroller.external.samples.SensorREV2mDistance;
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -19,6 +22,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Util.*;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -36,17 +40,25 @@ public class StarterTeleop extends LinearOpMode {
     public double drive = 0;
     public double strafe = 0;
     public double twist = 0;
-    public final double TELEOP_LIMITER = 0.5;
+    public final double TELEOP_LIMITER = 1.0;
     public float gyroVariation = 0;
 
     public BNO055IMU imu;
     public Orientation angles;
     public Acceleration gravity;
 
+    public static double NEW_P = 30.0;//18.6
+    public static double NEW_I = 2.0;
+    public static double NEW_D = 0.4;
+    public static double NEW_F = 0;
+
     public Rolling Distance1 = new Rolling(20);
     public Rolling Distance2 = new Rolling (20);
     public double cal1 = 0;
     public double cal2 = 0;
+
+    public Intake mainIntake;
+    public boolean gamepadA = false;
 
     @Override
     public void runOpMode(){
@@ -64,11 +76,27 @@ public class StarterTeleop extends LinearOpMode {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters1);
 
+        mainIntake = new Intake();
+
         robot.vibrator.setPosition(0.53);
 
+
+        robot.grapfroot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.grapfroot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.grapfroot.setDirection(DcMotorSimple.Direction.REVERSE);
         waitForStart();
 
         while(opModeIsActive()){
+
+            // get the PID coefficients for the RUN_USING_ENCODER  modes.
+            PIDFCoefficients pidOrig = robot.grapfroot.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            // change coefficients using methods included with DcMotorEx class.
+            PIDFCoefficients pidNew = new PIDFCoefficients(NEW_P, NEW_I, NEW_D, NEW_F);
+            robot.grapfroot.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidNew);
+
+            // re-read coefficients and verify change.
+            PIDCoefficients pidModified = robot.grapfroot.getPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
 
             // 2m Distance sensor stuff
             Distance1.add(robot.laserboi.getDistance(DistanceUnit.CM));
@@ -104,23 +132,62 @@ public class StarterTeleop extends LinearOpMode {
             robot.rightFrontMotor.setPower((pow1 - turn) * TELEOP_LIMITER);//n
             robot.rightBackMotor.setPower((pow2 - turn) * TELEOP_LIMITER);//p
 
+//            robot.leftFrontMotor.setPower(gamepad1.left_stick_y);
+//            robot.leftBackMotor.setPower(gamepad1.left_stick_y);
+//            robot.rightFrontMotor.setPower(gamepad1.left_stick_y);
+//            robot.rightBackMotor.setPower(gamepad1.left_stick_y);
 //            if(gamepad1.x){
 //                gyroVariation = angles.firstAngle;
 //            }
+//            if (gamepad1.a){
+//               gamepadA = !gamepadA;
+//            }
+////            if(gamepadA){
+////                mainIntake.intake();
+////            }
+//            if(gamepad1.b){
+//                mainIntake.backwards();
+//            }
+//            if(gamepad1.x){
+//                mainIntake.intakeTwo();
+//            }
+//            if(gamepad1.y){
+//                mainIntake.releaseAll();
+//            }
 
-            if(gamepad1.a)
-                robot.grapfroot.setPower(1);
+            if(gamepad1.x){
+                robot.frontIntakeMotor.setPower(0.85);
+                robot.rearIntakeMotor.setPower(0.85);
+            }
+            if(gamepad1.b){
+                robot.frontIntakeMotor.setPower(-0.85);
+                robot.rearIntakeMotor.setPower(-0.85);
+            }
+
+            if(gamepad1.a) {
+                robot.grapfroot.setPower(0.55);
+            }
 
             if(gamepad1.y)
                 robot.grapfroot.setPower(0);
 
-            if (gamepad1.b) {
-                robot.vibrator.setPosition(0.53);
+            if(gamepad1.dpad_down){
+                robot.frontIntakeMotor.setPower(0);
+                robot.rearIntakeMotor.setPower(0);
+            }
+            if(gamepad1.dpad_up){
+                robot.leftFrontMotor.setPower(.5);
+                robot.leftBackMotor.setPower(.5);
+                robot.rightFrontMotor.setPower(.5);
+                robot.rightBackMotor.setPower(.5);
+            }
+            if (gamepad1.dpad_right) {
+                robot.vibrator.setPosition(0.60);
                 sleep(50);
-                robot.vibrator.setPosition(0.42);
-                sleep(25);
+                robot.vibrator.setPosition(0.49);
+                sleep(50);
             }else
-                robot.vibrator.setPosition(.53);
+                robot.vibrator.setPosition(.60);
 
 
             telemetry.addLine()
@@ -134,6 +201,13 @@ public class StarterTeleop extends LinearOpMode {
             telemetry.addData("pewpewboi", String.format("%.3f m", robot.pewpewboi.getDistance(DistanceUnit.CM)));
             telemetry.addData("skewAngle", String.format("%.3f °",180*(Math.atan((Distance2.getAverage()-Distance1.getAverage())/0.15))/Math.PI));
             telemetry.addData("Vibrator:", robot.vibrator.getPosition());
+            telemetry.addData("Inake Array Size:", mainIntake.rings.lastIndexOf(true)) ;
+            telemetry.addData("grapfroot encoder", robot.grapfroot.getCurrentPosition());
+            telemetry.addData("Runtime", "%.03f", getRuntime());
+            telemetry.addData("P,I,D (orig)", "%.04f, %.04f, %.0f",
+                    pidOrig.p, pidOrig.i, pidOrig.d);
+            telemetry.addData("P,I,D (modified)", "%.04f, %.04f, %.04f",
+                    pidModified.p, pidModified.i, pidModified.d);
             telemetry.update();
         }
     }

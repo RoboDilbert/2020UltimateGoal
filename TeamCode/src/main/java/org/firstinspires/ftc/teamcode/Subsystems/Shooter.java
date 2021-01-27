@@ -12,6 +12,8 @@ public class Shooter extends HardwarePresets{
 
     }
     public void Shoot(double power){
+        grapfroot.setPower(power);
+
 
    }
 }

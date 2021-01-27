@@ -6,6 +6,7 @@ import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
@@ -28,25 +29,33 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 public class HardwarePresets extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {}
-
-    //2m distance sensors
-    public DistanceSensor laserboi ;
-    public DistanceSensor pewpewboi;
-
-    //Color Sensors
-    public ColorSensor cranberi;
-
     public static HardwareMap HwMap;
 
-    public DcMotor leftFrontMotor;
-    public DcMotor leftBackMotor;
-    public DcMotor rightFrontMotor;
-    public DcMotor rightBackMotor;
+    //2m distance sensors
+    public DistanceSensor laserboi; //Control hub, I2C Bus 2
+    public DistanceSensor pewpewboi; //Control hub, I2C Bus 3
 
-    public DcMotor grapfroot;
-    public Servo vibrator;
+    //Color Sensors
+    public ColorSensor cranberi; //Control hub, I2C Bus 1
+    public ColorSensor orngi; //Expansion hub, I2C Bus 1
+    //public ColorSensor tanjereen;
 
-    public BNO055IMU imu;
+    //Motors
+    public DcMotor leftFrontMotor; //Expansion hub, port 0
+    public DcMotor leftBackMotor; //Expansion hub, port 1
+    public DcMotor rightFrontMotor; //Expansion hub, port 3
+    public DcMotor rightBackMotor; //Expansion hub, port 2
+
+    public DcMotor frontIntakeMotor; //Control hub, port 1
+    public DcMotor rearIntakeMotor; //Control hub, port 2
+
+    public DcMotorEx grapfroot; //Control hub, port 0
+
+    //Servo
+    public Servo vibrator; //Control hub, port  0
+
+    //Other
+    public BNO055IMU imu; //Control hub, I2C Bus 0
     public Orientation angles;
     public Acceleration gravity;
 
@@ -56,22 +65,28 @@ public class HardwarePresets extends LinearOpMode {
     public void init(HardwareMap hwm){
         //Set up Drive Train Motors
         HwMap = hwm;
+
+        frontIntakeMotor = HwMap.dcMotor.get("frontIntakeMotor");
+        rearIntakeMotor = HwMap.dcMotor.get("rearIntakeMotor");
+
         leftFrontMotor = HwMap.dcMotor.get("leftFrontMotor");
         leftBackMotor = HwMap.dcMotor.get("leftBackMotor");
         rightFrontMotor = HwMap.dcMotor.get("rightFrontMotor");
         rightBackMotor = HwMap.dcMotor.get("rightBackMotor");
 
-        grapfroot = HwMap.dcMotor.get("grapfroot");
+        grapfroot = (DcMotorEx)HwMap.get(DcMotor.class, "grapfroot");
         vibrator = HwMap.servo.get("vibrator");
 
         laserboi = HwMap.get(DistanceSensor.class, "laserboi");
         pewpewboi = HwMap.get(DistanceSensor.class, "pewpewboi");
         cranberi = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "cranberi");
+//        orngi = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "orngi");
+//        tanjereen = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "tanjereen");
 
-        leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
