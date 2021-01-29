@@ -209,7 +209,7 @@ public class GoalTracker extends HardwarePresets {
 //        }
         targetsUltimateGoal.activate();
         waitForStart();
-
+        //targetsUltimateGoal.activate();
         // For convenience, gather together all the trackable objects in one easily-iterable collection */
         List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
         allTrackables.addAll(targetsUltimateGoal);
@@ -307,7 +307,7 @@ public class GoalTracker extends HardwarePresets {
         // Tap the preview window to receive a fresh image.
 
         targetsUltimateGoal.activate();
-        while (!isStopRequested()) {
+        while (opModeIsActive()) {
 
             // check all the trackable targets to see which one (if any) is visible.
             targetVisible = false;
