@@ -80,6 +80,10 @@ public class StarterTeleop extends LinearOpMode {
 
         robot.vibrator.setPosition(0.53);
 
+        robot.frontIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rearIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
         robot.leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -146,16 +150,15 @@ public class StarterTeleop extends LinearOpMode {
 //            robot.rightFrontMotor.setPower((pow1 - turn) * TELEOP_LIMITER);//n
 //            robot.rightBackMotor.setPower((pow2 - turn) * TELEOP_LIMITER);//p
 
-            //Grant's bullshit
-            double speed = Math.hypot(-gamepad1.left_stick_x, gamepad1.left_stick_y);
+            //Grant's bullshit mecanum
+            double speed = Math.sqrt(2) * Math.hypot(-gamepad1.left_stick_x, gamepad1.left_stick_y);
             double heading = Math.atan2(-gamepad1.left_stick_x, gamepad1.left_stick_y);
             double rotation = -gamepad1.right_stick_x;
 
-
             Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
 
-            double adjustedXHeading = Math.cos(heading + (Math.PI / 4)); //double adjustedXHeading = Math.cos(heading - ((Math.PI / 4) - angles.firstAngle) + gyroVariation);
-            double adjustedYHeading = Math.sin(heading + (Math.PI / 4)); //double adjustedYHeading = Math.sin(heading - ((Math.PI / 4) - angles.firstAngle) + gyroVariation);//
+            double adjustedXHeading = Math.cos(heading /*+ angles.firstAngle*/ + (Math.PI / 4));
+            double adjustedYHeading = Math.sin(heading + /*+ angles.firstAngle*/ + (Math.PI / 4));
 
             robot.leftFrontMotor.setPower((speed * adjustedYHeading + rotation) * TELEOP_LIMITER);
             robot.rightFrontMotor.setPower((speed * adjustedXHeading - rotation) * TELEOP_LIMITER);
@@ -175,20 +178,12 @@ public class StarterTeleop extends LinearOpMode {
 ////            if(gamepadA){
 ////                mainIntake.intake();
 ////            }
-            if(gamepad1.b){
-                mainIntake.backwards();
-            }
             if(gamepad1.x){
-                mainIntake.intakeTwo();
+//                mainIntake.intakeTwo();
+                robot.frontIntakeMotor.setPower(.85);
+                robot.rearIntakeMotor.setPower(.85);
             }
-            if(gamepad1.y){
-                mainIntake.releaseAll();
-            }
-
-            if(gamepad1.x){
-                robot.frontIntakeMotor.setPower(0.85);
-                robot.rearIntakeMotor.setPower(0.85);
-            }
+//
             if(gamepad1.b){
                 robot.frontIntakeMotor.setPower(-0.85);
                 robot.rearIntakeMotor.setPower(-0.85);
@@ -205,17 +200,17 @@ public class StarterTeleop extends LinearOpMode {
                 robot.frontIntakeMotor.setPower(0);
                 robot.rearIntakeMotor.setPower(0);
             }
-            if(gamepad1.dpad_up){
-                robot.leftFrontMotor.setPower(.5);
-                robot.leftBackMotor.setPower(.5);
-                robot.rightFrontMotor.setPower(.5);
-                robot.rightBackMotor.setPower(.5);
-            }
+//            if(gamepad1.dpad_up){
+//                robot.leftFrontMotor.setPower(.5);
+//                robot.leftBackMotor.setPower(.5);
+//                robot.rightFrontMotor.setPower(.5);
+//                robot.rightBackMotor.setPower(.5);
+//            }
             if (gamepad1.dpad_right) {
-                robot.vibrator.setPosition(0.60);
-                sleep(50);
-                robot.vibrator.setPosition(0.49);
-                sleep(50);
+                robot.vibrator.setPosition(0.65);
+                sleep(150);
+                robot.vibrator.setPosition(0.45);
+                sleep(75);
             }else
                 robot.vibrator.setPosition(.60);
 
