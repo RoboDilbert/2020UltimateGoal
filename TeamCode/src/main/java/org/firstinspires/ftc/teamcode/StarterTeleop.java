@@ -40,7 +40,7 @@ public class StarterTeleop extends LinearOpMode {
     public double drive = 0;
     public double strafe = 0;
     public double twist = 0;
-    public final double TELEOP_LIMITER = 1.0;
+    public final double TELEOP_LIMITER = 0.4;
     public float gyroVariation = 0;
 
     public BNO055IMU imu;
@@ -80,6 +80,15 @@ public class StarterTeleop extends LinearOpMode {
 
         robot.vibrator.setPosition(0.53);
 
+        robot.leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.leftBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         robot.grapfroot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.grapfroot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -96,7 +105,7 @@ public class StarterTeleop extends LinearOpMode {
             robot.grapfroot.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidNew);
 
             // re-read coefficients and verify change.
-            PIDCoefficients pidModified = robot.grapfroot.getPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+            PIDFCoefficients pidModified = robot.grapfroot.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
 
             // 2m Distance sensor stuff
             Distance1.add(robot.laserboi.getDistance(DistanceUnit.CM));
@@ -107,30 +116,51 @@ public class StarterTeleop extends LinearOpMode {
             colorSensor = hardwareMap.get(NormalizedColorSensor.class, "cranberi");
             robot.cranberi.enableLed(true);
 
+            NormalizedColorSensor colorSensor2;
+            colorSensor2 = hardwareMap.get(NormalizedColorSensor.class, "orngi");
+            robot.orngi.enableLed(true);
+
+
             //Mecanum Drive
-            double x = gamepad1.left_stick_x;
-            double y = -gamepad1.left_stick_y;
-            double turn = gamepad1.right_stick_x;
-            double heading;
+//            double x = gamepad1.left_stick_x;
+//            double y = -gamepad1.left_stick_y;
+//            double turn = gamepad1.right_stick_x;
+//            double heading;
+//
+//            if(x == 0 && y == 0)
+//                heading = 0;
+//            else if(x >= 0)
+//                heading = Math.PI - Math.atan(y / x);
+//            else
+//                heading = -Math.atan(y / x);
+//
+//            double pow = Math.sqrt(Math.pow(x, 6) + Math.pow(y, 6));
+//            Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+//            heading -= (-angles.firstAngle + Math.PI / 4.0);
+//
+//            double pow1 = Math.sqrt(2) * pow * Math.cos(heading + gyroVariation);//negative 1
+//            double pow2 = Math.sqrt(2) * pow * Math.sin(heading + gyroVariation);//positive 1
+//
+//            robot.leftFrontMotor.setPower((turn + pow2) * TELEOP_LIMITER);//n
+//            robot.leftBackMotor.setPower((turn + pow1) * TELEOP_LIMITER);//p
+//            robot.rightFrontMotor.setPower((pow1 - turn) * TELEOP_LIMITER);//n
+//            robot.rightBackMotor.setPower((pow2 - turn) * TELEOP_LIMITER);//p
 
-            if(x == 0 && y == 0)
-                heading = 0;
-            else if(x >= 0)
-                heading = Math.PI - Math.atan(y / x);
-            else
-                heading = -Math.atan(y / x);
+            //Grant's bullshit
+            double speed = Math.hypot(-gamepad1.left_stick_x, gamepad1.left_stick_y);
+            double heading = Math.atan2(-gamepad1.left_stick_x, gamepad1.left_stick_y);
+            double rotation = -gamepad1.right_stick_x;
 
-            double pow = Math.sqrt(Math.pow(x, 6) + Math.pow(y, 6));
+
             Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-            heading -= (-angles.firstAngle + Math.PI / 4.0);
 
-            double pow1 = Math.sqrt(2) * pow * Math.cos(heading + gyroVariation);//negative 1
-            double pow2 = Math.sqrt(2) * pow * Math.sin(heading + gyroVariation);//positive 1
+            double adjustedXHeading = Math.cos(heading + (Math.PI / 4)); //double adjustedXHeading = Math.cos(heading - ((Math.PI / 4) - angles.firstAngle) + gyroVariation);
+            double adjustedYHeading = Math.sin(heading + (Math.PI / 4)); //double adjustedYHeading = Math.sin(heading - ((Math.PI / 4) - angles.firstAngle) + gyroVariation);//
 
-            robot.leftFrontMotor.setPower((turn + pow2) * TELEOP_LIMITER);//n
-            robot.leftBackMotor.setPower((turn + pow1) * TELEOP_LIMITER);//p
-            robot.rightFrontMotor.setPower((pow1 - turn) * TELEOP_LIMITER);//n
-            robot.rightBackMotor.setPower((pow2 - turn) * TELEOP_LIMITER);//p
+            robot.leftFrontMotor.setPower((speed * adjustedYHeading + rotation) * TELEOP_LIMITER);
+            robot.rightFrontMotor.setPower((speed * adjustedXHeading - rotation) * TELEOP_LIMITER);
+            robot.leftBackMotor.setPower((speed * adjustedXHeading + rotation) * TELEOP_LIMITER);
+            robot.rightBackMotor.setPower((speed * adjustedYHeading - rotation) * TELEOP_LIMITER);
 
 //            robot.leftFrontMotor.setPower(gamepad1.left_stick_y);
 //            robot.leftBackMotor.setPower(gamepad1.left_stick_y);
@@ -145,15 +175,15 @@ public class StarterTeleop extends LinearOpMode {
 ////            if(gamepadA){
 ////                mainIntake.intake();
 ////            }
-//            if(gamepad1.b){
-//                mainIntake.backwards();
-//            }
-//            if(gamepad1.x){
-//                mainIntake.intakeTwo();
-//            }
-//            if(gamepad1.y){
-//                mainIntake.releaseAll();
-//            }
+            if(gamepad1.b){
+                mainIntake.backwards();
+            }
+            if(gamepad1.x){
+                mainIntake.intakeTwo();
+            }
+            if(gamepad1.y){
+                mainIntake.releaseAll();
+            }
 
             if(gamepad1.x){
                 robot.frontIntakeMotor.setPower(0.85);
@@ -190,18 +220,39 @@ public class StarterTeleop extends LinearOpMode {
                 robot.vibrator.setPosition(.60);
 
 
-            telemetry.addLine()
-                    .addData("Red", "%.3f", (double) robot.cranberi.red())
-                    .addData("Blue", "%.3f", (double) robot.cranberi.blue())
-                    .addData("Alpha", "%.3f", (double) robot.cranberi.alpha());
+//            telemetry.addLine()
+//                    .addData("Red", "%.3f", (double) robot.cranberi.red())
+//                    .addData("Blue", "%.3f", (double) robot.cranberi.blue())
+//                    .addData("Alpha", "%.3f", (double) robot.cranberi.alpha());
 
-            telemetry.addData("range1", String.format("%.3f cm",Distance1.getAverage() + cal1));
-            telemetry.addData("range2", String.format("%.3f cm",Distance2.getAverage() + cal2));
-            telemetry.addData("laserboi", String.format("%.3f cm", robot.laserboi.getDistance(DistanceUnit.CM)));
-            telemetry.addData("pewpewboi", String.format("%.3f m", robot.pewpewboi.getDistance(DistanceUnit.CM)));
-            telemetry.addData("skewAngle", String.format("%.3f °",180*(Math.atan((Distance2.getAverage()-Distance1.getAverage())/0.15))/Math.PI));
+            //telemetry.addLine()
+//                    .addData("Red", "%.3f", (double) robot.orngi.red())
+//                    .addData("Blue", "%.3f", (double) robot.orngi.blue())
+//                    .addData("Alpha", "%.3f", (double) robot.orngi.alpha());
+
+//            telemetry.addData("range1", String.format("%.3f cm",Distance1.getAverage() + cal1));
+//            telemetry.addData("range2", String.format("%.3f cm",Distance2.getAverage() + cal2));
+//            telemetry.addData("laserboi", String.format("%.3f cm", robot.laserboi.getDistance(DistanceUnit.CM)));
+//            telemetry.addData("pewpewboi", String.format("%.3f m", robot.pewpewboi.getDistance(DistanceUnit.CM)));
+//            telemetry.addData("skewAngle", String.format("%.3f °",180*(Math.atan((Distance2.getAverage()-Distance1.getAverage())/0.15))/Math.PI));
+            telemetry.addData("left front encoder", robot.leftFrontMotor.getCurrentPosition());
+            telemetry.addData("left back encoder", robot.leftBackMotor.getCurrentPosition());
+            telemetry.addData("right front encoder", robot.rightFrontMotor.getCurrentPosition());
+            telemetry.addData("right back encoder", robot.rightBackMotor.getCurrentPosition());
+            telemetry.addLine();
+
+//            telemetry.addData("Pow", pow);
+//            telemetry.addData("Pow1", pow1);
+//            telemetry.addData("Pow2", pow2);
+
+            telemetry.addData("left front power", robot.leftFrontMotor.getPower());
+            telemetry.addData("left back power", robot.leftBackMotor.getPower());
+            telemetry.addData("right front power", robot.rightFrontMotor.getPower());
+            telemetry.addData("right back power", robot.rightBackMotor.getPower());
+            telemetry.addLine();
+
             telemetry.addData("Vibrator:", robot.vibrator.getPosition());
-            telemetry.addData("Inake Array Size:", mainIntake.rings.lastIndexOf(true)) ;
+            //telemetry.addData("Inake Array Size:", mainIntake.rings.lastIndexOf(true)) ;
             telemetry.addData("grapfroot encoder", robot.grapfroot.getCurrentPosition());
             telemetry.addData("Runtime", "%.03f", getRuntime());
             telemetry.addData("P,I,D (orig)", "%.04f, %.04f, %.0f",

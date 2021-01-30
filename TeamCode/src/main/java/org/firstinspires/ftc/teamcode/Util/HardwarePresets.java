@@ -80,13 +80,18 @@ public class HardwarePresets extends LinearOpMode {
         laserboi = HwMap.get(DistanceSensor.class, "laserboi");
         pewpewboi = HwMap.get(DistanceSensor.class, "pewpewboi");
         cranberi = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "cranberi");
-//        orngi = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "orngi");
+        orngi = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "orngi");
 //        tanjereen = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "tanjereen");
 
-        leftFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+//        leftFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+//        leftBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+//        rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+//        rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+//
+        leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
