@@ -40,7 +40,7 @@ public class StarterTeleop extends LinearOpMode {
     public double drive = 0;
     public double strafe = 0;
     public double twist = 0;
-    public final double TELEOP_LIMITER = 0.4;
+    public final double TELEOP_LIMITER = 0.8;
     public float gyroVariation = 0;
 
     public BNO055IMU imu;
@@ -149,21 +149,35 @@ public class StarterTeleop extends LinearOpMode {
 //            robot.leftBackMotor.setPower((turn + pow1) * TELEOP_LIMITER);//p
 //            robot.rightFrontMotor.setPower((pow1 - turn) * TELEOP_LIMITER);//n
 //            robot.rightBackMotor.setPower((pow2 - turn) * TELEOP_LIMITER);//p
-
+//
             //Grant's bullshit mecanum
             double speed = Math.sqrt(2) * Math.hypot(-gamepad1.left_stick_x, gamepad1.left_stick_y);
-            double heading = Math.atan2(-gamepad1.left_stick_x, gamepad1.left_stick_y);
+            double command = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) + Math.PI/2;
             double rotation = -gamepad1.right_stick_x;
 
             Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-
-            double adjustedXHeading = Math.cos(heading /*+ angles.firstAngle*/ + (Math.PI / 4));
-            double adjustedYHeading = Math.sin(heading + /*+ angles.firstAngle*/ + (Math.PI / 4));
+            double adjustedXHeading = Math.cos(command + angles.firstAngle + Math.PI/4);
+            double adjustedYHeading = Math.sin(command + angles.firstAngle + Math.PI/4);
 
             robot.leftFrontMotor.setPower((speed * adjustedYHeading + rotation) * TELEOP_LIMITER);
             robot.rightFrontMotor.setPower((speed * adjustedXHeading - rotation) * TELEOP_LIMITER);
             robot.leftBackMotor.setPower((speed * adjustedXHeading + rotation) * TELEOP_LIMITER);
             robot.rightBackMotor.setPower((speed * adjustedYHeading - rotation) * TELEOP_LIMITER);
+
+//            final double v1 = -gamepad1.left_stick_y + gamepad1.right_stick_x + gamepad1.left_stick_x;
+//            final double v2 = -gamepad1.left_stick_y + gamepad1.right_stick_x - gamepad1.left_stick_x;
+//            final double v3 = -gamepad1.left_stick_y - gamepad1.right_stick_x - gamepad1.left_stick_x;
+//            final double v4 = -gamepad1.left_stick_y - gamepad1.right_stick_x + gamepad1.left_stick_x;
+//
+//            robot.leftFrontMotor.setPower(v1);
+//            robot.leftBackMotor.setPower(v2);
+//            robot.rightFrontMotor.setPower(v3);
+//            robot.rightBackMotor.setPower(v4);
+//
+//            robot.leftFrontMotor.setPower(.5);
+//            robot.leftBackMotor.setPower(.5);
+//            robot.rightFrontMotor.setPower(.5);
+//            robot.rightBackMotor.setPower(.5);
 
 //            robot.leftFrontMotor.setPower(gamepad1.left_stick_y);
 //            robot.leftBackMotor.setPower(gamepad1.left_stick_y);
@@ -211,7 +225,8 @@ public class StarterTeleop extends LinearOpMode {
                 sleep(150);
                 robot.vibrator.setPosition(0.45);
                 sleep(75);
-            }else
+            }
+            else
                 robot.vibrator.setPosition(.60);
 
 
@@ -244,6 +259,10 @@ public class StarterTeleop extends LinearOpMode {
             telemetry.addData("left back power", robot.leftBackMotor.getPower());
             telemetry.addData("right front power", robot.rightFrontMotor.getPower());
             telemetry.addData("right back power", robot.rightBackMotor.getPower());
+            telemetry.addData("leftstick y value: ", gamepad1.left_stick_y);
+            telemetry.addData("leftstick x value: ", gamepad1.left_stick_x);
+            telemetry.addData("current angle: ", angles.firstAngle);
+            telemetry.addData("command heading: ", command);
             telemetry.addLine();
 
             telemetry.addData("Vibrator:", robot.vibrator.getPosition());

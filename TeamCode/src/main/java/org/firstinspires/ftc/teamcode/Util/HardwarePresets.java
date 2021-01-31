@@ -76,7 +76,7 @@ public class HardwarePresets extends LinearOpMode {
 
         grapfroot = (DcMotorEx)HwMap.get(DcMotor.class, "grapfroot");
         vibrator = HwMap.servo.get("vibrator");
-
+//
         laserboi = HwMap.get(DistanceSensor.class, "laserboi");
         pewpewboi = HwMap.get(DistanceSensor.class, "pewpewboi");
         cranberi = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "cranberi");
