@@ -40,7 +40,7 @@ public class StarterTeleop extends LinearOpMode {
     public double drive = 0;
     public double strafe = 0;
     public double twist = 0;
-    public final double TELEOP_LIMITER = 0.8;
+    public final double TELEOP_LIMITER = 0.5;
     public float gyroVariation = 0;
 
     public BNO055IMU imu;
@@ -150,7 +150,7 @@ public class StarterTeleop extends LinearOpMode {
 //            robot.rightFrontMotor.setPower((pow1 - turn) * TELEOP_LIMITER);//n
 //            robot.rightBackMotor.setPower((pow2 - turn) * TELEOP_LIMITER);//p
 //
-            //Grant's bullshit mecanum
+            //Drive
             double speed = Math.sqrt(2) * Math.hypot(-gamepad1.left_stick_x, gamepad1.left_stick_y);
             double command = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) + Math.PI/2;
             double rotation = -gamepad1.right_stick_x;
