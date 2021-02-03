@@ -34,6 +34,7 @@ public class HardwarePresets extends LinearOpMode {
     //2m distance sensors
     public DistanceSensor laserboi; //Control hub, I2C Bus 2
     public DistanceSensor pewpewboi; //Control hub, I2C Bus 3
+    public DistanceSensor indexSensor;
 
     //Color Sensors
     public ColorSensor cranberi; //Control hub, I2C Bus 1
@@ -80,7 +81,8 @@ public class HardwarePresets extends LinearOpMode {
         laserboi = HwMap.get(DistanceSensor.class, "laserboi");
         pewpewboi = HwMap.get(DistanceSensor.class, "pewpewboi");
         cranberi = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "cranberi");
-        orngi = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "orngi");
+//        orngi = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "orngi");
+        indexSensor = HwMap.get(DistanceSensor.class, "indexSensor");
 //        tanjereen = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "tanjereen");
 
 //        leftFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -97,6 +99,8 @@ public class HardwarePresets extends LinearOpMode {
         leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
     }
 
     public void composeTelemetry () {

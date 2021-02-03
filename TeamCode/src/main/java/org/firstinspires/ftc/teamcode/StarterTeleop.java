@@ -32,9 +32,9 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 
 @TeleOp(name= "TeleOop", group= "TeleOp")
 //@Disabled
-public class StarterTeleop extends LinearOpMode {
+public class StarterTeleop extends HardwarePresets {
 
-    HardwarePresets robot = new HardwarePresets();
+    public static HardwarePresets robot = new HardwarePresets();
     //Constants constant = new Constants();
 
     public double drive = 0;
@@ -80,6 +80,8 @@ public class StarterTeleop extends LinearOpMode {
 
         robot.vibrator.setPosition(0.53);
 
+        boolean intake = false;
+
         robot.frontIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rearIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -120,9 +122,9 @@ public class StarterTeleop extends LinearOpMode {
             colorSensor = hardwareMap.get(NormalizedColorSensor.class, "cranberi");
             robot.cranberi.enableLed(true);
 
-            NormalizedColorSensor colorSensor2;
-            colorSensor2 = hardwareMap.get(NormalizedColorSensor.class, "orngi");
-            robot.orngi.enableLed(true);
+//            NormalizedColorSensor colorSensor2;
+//            colorSensor2 = hardwareMap.get(NormalizedColorSensor.class, "orngi");
+//            robot.orngi.enableLed(true);
 
 
             //Mecanum Drive
@@ -186,21 +188,27 @@ public class StarterTeleop extends LinearOpMode {
 //            if(gamepad1.x){
 //                gyroVariation = angles.firstAngle;
 //            }
-//            if (gamepad1.a){
-//               gamepadA = !gamepadA;
+
+            if (gamepad1.x){
+               intake = !intake;
+            }
+//            if(gamepadA){
+//                mainIntake.intake();
 //            }
-////            if(gamepadA){
-////                mainIntake.intake();
-////            }
-            if(gamepad1.x){
-//                mainIntake.intakeTwo();
-                robot.frontIntakeMotor.setPower(.85);
-                robot.rearIntakeMotor.setPower(.85);
+
+
+            if(intake){
+                mainIntake.intake();
+            }
+
+            if(!intake){
+                robot.frontIntakeMotor.setPower(0);
+                robot.rearIntakeMotor.setPower(0);
             }
 //
             if(gamepad1.b){
-                robot.frontIntakeMotor.setPower(-0.85);
-                robot.rearIntakeMotor.setPower(-0.85);
+                robot.frontIntakeMotor.setPower(-1);
+                robot.rearIntakeMotor.setPower(-1);
             }
 
             if(gamepad1.a) {
@@ -221,10 +229,7 @@ public class StarterTeleop extends LinearOpMode {
 //                robot.rightBackMotor.setPower(.5);
 //            }
             if (gamepad1.dpad_right) {
-                robot.vibrator.setPosition(0.65);
-                sleep(150);
-                robot.vibrator.setPosition(0.45);
-                sleep(75);
+                mainIntake.releaseOne();
             }
             else
                 robot.vibrator.setPosition(.60);
@@ -235,7 +240,7 @@ public class StarterTeleop extends LinearOpMode {
 //                    .addData("Blue", "%.3f", (double) robot.cranberi.blue())
 //                    .addData("Alpha", "%.3f", (double) robot.cranberi.alpha());
 
-            //telemetry.addLine()
+//            telemetry.addLine()
 //                    .addData("Red", "%.3f", (double) robot.orngi.red())
 //                    .addData("Blue", "%.3f", (double) robot.orngi.blue())
 //                    .addData("Alpha", "%.3f", (double) robot.orngi.alpha());
@@ -244,30 +249,34 @@ public class StarterTeleop extends LinearOpMode {
 //            telemetry.addData("range2", String.format("%.3f cm",Distance2.getAverage() + cal2));
 //            telemetry.addData("laserboi", String.format("%.3f cm", robot.laserboi.getDistance(DistanceUnit.CM)));
 //            telemetry.addData("pewpewboi", String.format("%.3f m", robot.pewpewboi.getDistance(DistanceUnit.CM)));
+              telemetry.addData("indexSensor", String.format("%.3f cm", robot.indexSensor.getDistance(DistanceUnit.CM)));
+              telemetry.addData("rings: ", mainIntake.rings);
+              telemetry.addData("Ring Flag: ", mainIntake.ringCountFlag);
+              telemetry.addData("intake: ", intake);
 //            telemetry.addData("skewAngle", String.format("%.3f °",180*(Math.atan((Distance2.getAverage()-Distance1.getAverage())/0.15))/Math.PI));
-            telemetry.addData("left front encoder", robot.leftFrontMotor.getCurrentPosition());
-            telemetry.addData("left back encoder", robot.leftBackMotor.getCurrentPosition());
-            telemetry.addData("right front encoder", robot.rightFrontMotor.getCurrentPosition());
-            telemetry.addData("right back encoder", robot.rightBackMotor.getCurrentPosition());
+//            telemetry.addData("left front encoder", robot.leftFrontMotor.getCurrentPosition());
+//            telemetry.addData("left back encoder", robot.leftBackMotor.getCurrentPosition());
+//            telemetry.addData("right front encoder", robot.rightFrontMotor.getCurrentPosition());
+//            telemetry.addData("right back encoder", robot.rightBackMotor.getCurrentPosition());
             telemetry.addLine();
 
 //            telemetry.addData("Pow", pow);
 //            telemetry.addData("Pow1", pow1);
 //            telemetry.addData("Pow2", pow2);
 
-            telemetry.addData("left front power", robot.leftFrontMotor.getPower());
-            telemetry.addData("left back power", robot.leftBackMotor.getPower());
-            telemetry.addData("right front power", robot.rightFrontMotor.getPower());
-            telemetry.addData("right back power", robot.rightBackMotor.getPower());
-            telemetry.addData("leftstick y value: ", gamepad1.left_stick_y);
-            telemetry.addData("leftstick x value: ", gamepad1.left_stick_x);
+//            telemetry.addData("left front power", robot.leftFrontMotor.getPower());
+//            telemetry.addData("left back power", robot.leftBackMotor.getPower());
+//            telemetry.addData("right front power", robot.rightFrontMotor.getPower());
+//            telemetry.addData("right back power", robot.rightBackMotor.getPower());
+//            telemetry.addData("leftstick y value: ", gamepad1.left_stick_y);
+//            telemetry.addData("leftstick x value: ", gamepad1.left_stick_x);
             telemetry.addData("current angle: ", angles.firstAngle);
             telemetry.addData("command heading: ", command);
             telemetry.addLine();
 
-            telemetry.addData("Vibrator:", robot.vibrator.getPosition());
+//            telemetry.addData("Vibrator:", robot.vibrator.getPosition());
             //telemetry.addData("Inake Array Size:", mainIntake.rings.lastIndexOf(true)) ;
-            telemetry.addData("grapfroot encoder", robot.grapfroot.getCurrentPosition());
+            //telemetry.addData("grapfroot encoder", robot.grapfroot.getCurrentPosition());
             telemetry.addData("Runtime", "%.03f", getRuntime());
             telemetry.addData("P,I,D (orig)", "%.04f, %.04f, %.0f",
                     pidOrig.p, pidOrig.i, pidOrig.d);
