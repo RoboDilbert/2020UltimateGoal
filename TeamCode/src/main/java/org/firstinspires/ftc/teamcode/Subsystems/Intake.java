@@ -100,10 +100,10 @@ public class Intake extends StarterTeleop {
                 ringCountFlag = true;
                 robot.frontIntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robot.rearIntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                robot.frontIntakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.rearIntakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//                robot.frontIntakeMotor.setTargetPosition(10000);
-//                robot.rearIntakeMotor.setTargetPosition(10000);
+                robot.frontIntakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.rearIntakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.frontIntakeMotor.setTargetPosition(10000);
+                robot.rearIntakeMotor.setTargetPosition(10000);
                 robot.frontIntakeMotor.setPower(0.3);
                 robot.rearIntakeMotor.setPower(0.3);
                 robot.frontIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

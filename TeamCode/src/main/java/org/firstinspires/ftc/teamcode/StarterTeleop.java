@@ -85,7 +85,6 @@ public class StarterTeleop extends HardwarePresets {
         robot.frontIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rearIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-
         robot.leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -96,22 +95,22 @@ public class StarterTeleop extends HardwarePresets {
         robot.rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        robot.grapfroot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.grapfroot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.grapfroot.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.shooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.shooter.setDirection(DcMotorSimple.Direction.REVERSE);
         waitForStart();
 
         while(opModeIsActive()){
 
             // get the PID coefficients for the RUN_USING_ENCODER  modes.
-            PIDFCoefficients pidOrig = robot.grapfroot.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+            PIDFCoefficients pidOrig = robot.shooter.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
 
             // change coefficients using methods included with DcMotorEx class.
             PIDFCoefficients pidNew = new PIDFCoefficients(NEW_P, NEW_I, NEW_D, NEW_F);
-            robot.grapfroot.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidNew);
+            robot.shooter.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidNew);
 
             // re-read coefficients and verify change.
-            PIDFCoefficients pidModified = robot.grapfroot.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+            PIDFCoefficients pidModified = robot.shooter.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
 
             // 2m Distance sensor stuff
             Distance1.add(robot.laserboi.getDistance(DistanceUnit.CM));
@@ -119,13 +118,12 @@ public class StarterTeleop extends HardwarePresets {
 
             //colorsensor stuff
             NormalizedColorSensor colorSensor;
-            colorSensor = hardwareMap.get(NormalizedColorSensor.class, "cranberi");
-            robot.cranberi.enableLed(true);
+            colorSensor = hardwareMap.get(NormalizedColorSensor.class, "autoColorSensor");
+            robot.autoColorSensor.enableLed(true);
 
 //            NormalizedColorSensor colorSensor2;
-//            colorSensor2 = hardwareMap.get(NormalizedColorSensor.class, "orngi");
-//            robot.orngi.enableLed(true);
-
+//            colorSensor2 = hardwareMap.get(NormalizedColorSensor.class, "indexColorSensor");
+//            robot.indexColorSensor.enableLed(true);
 
             //Mecanum Drive
 //            double x = gamepad1.left_stick_x;
@@ -185,6 +183,7 @@ public class StarterTeleop extends HardwarePresets {
 //            robot.leftBackMotor.setPower(gamepad1.left_stick_y);
 //            robot.rightFrontMotor.setPower(gamepad1.left_stick_y);
 //            robot.rightBackMotor.setPower(gamepad1.left_stick_y);
+
 //            if(gamepad1.x){
 //                gyroVariation = angles.firstAngle;
 //            }
@@ -192,10 +191,6 @@ public class StarterTeleop extends HardwarePresets {
             if (gamepad1.x){
                intake = !intake;
             }
-//            if(gamepadA){
-//                mainIntake.intake();
-//            }
-
 
             if(intake){
                 mainIntake.intake();
@@ -212,11 +207,19 @@ public class StarterTeleop extends HardwarePresets {
             }
 
             if(gamepad1.a) {
-                robot.grapfroot.setPower(0.55);
+                robot.shooter.setPower(0.55);
+            }
+
+            if(gamepad2.a){
+                robot.grabber.setPosition(.5);
+            }
+
+            if(gamepad2.b) {
+                robot.grabber.setPosition(.25);
             }
 
             if(gamepad1.y)
-                robot.grapfroot.setPower(0);
+                robot.shooter.setPower(0);
 
             if(gamepad1.dpad_down){
                 robot.frontIntakeMotor.setPower(0);
@@ -234,16 +237,15 @@ public class StarterTeleop extends HardwarePresets {
             else
                 robot.vibrator.setPosition(.60);
 
+//            telemetry.addLine()
+//                    .addData("Red", "%.3f", (double) robot.autoColorSensor.red())
+//                    .addData("Blue", "%.3f", (double) robot.autoColorSensor.blue())
+//                    .addData("Alpha", "%.3f", (double) robot.autoColorSensor.alpha());
 
 //            telemetry.addLine()
-//                    .addData("Red", "%.3f", (double) robot.cranberi.red())
-//                    .addData("Blue", "%.3f", (double) robot.cranberi.blue())
-//                    .addData("Alpha", "%.3f", (double) robot.cranberi.alpha());
-
-//            telemetry.addLine()
-//                    .addData("Red", "%.3f", (double) robot.orngi.red())
-//                    .addData("Blue", "%.3f", (double) robot.orngi.blue())
-//                    .addData("Alpha", "%.3f", (double) robot.orngi.alpha());
+//                    .addData("Red", "%.3f", (double) robot.indexColorSensor.red())
+//                    .addData("Blue", "%.3f", (double) robot.indexColorSensor.blue())
+//                    .addData("Alpha", "%.3f", (double) robot.indexColorSensor.alpha());
 
 //            telemetry.addData("range1", String.format("%.3f cm",Distance1.getAverage() + cal1));
 //            telemetry.addData("range2", String.format("%.3f cm",Distance2.getAverage() + cal2));

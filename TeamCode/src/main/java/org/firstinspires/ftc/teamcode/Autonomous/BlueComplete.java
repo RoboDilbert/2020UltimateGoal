@@ -87,7 +87,7 @@ public class BlueComplete extends LinearOpMode {
         Thread.sleep(50);
         NormalizedColorSensor colorSensor;
         colorSensor = robot.HwMap.get(NormalizedColorSensor.class, "cranberi");
-        robot.cranberi.enableLed(true);
+        robot.autoColorSensor.enableLed(true);
 
         webcam.closeCameraDevice();
 
@@ -97,7 +97,7 @@ public class BlueComplete extends LinearOpMode {
 
         telemetry.addData("Position", pipeline.position);
         telemetry.addData("laserboi", String.format("%.3f cm", robot.laserboi.getDistance(DistanceUnit.CM)));
-        telemetry.addData("Red", "%.3f", (double) robot.cranberi.red());
+        telemetry.addData("Red", "%.3f", (double) robot.autoColorSensor.red());
         telemetry.addData("Average of ouh", pipeline.avg1);
         telemetry.update();
 
@@ -144,6 +144,8 @@ public class BlueComplete extends LinearOpMode {
             telemetry.update();
             drive.Drive("STRAFE_LEFT", 1200, 0.4);
             sleep(100);
+            robot.grabber.setPosition(.5);
+            sleep(100);
         }
         else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
             telemetry.addData("Status", "blocko is 1'0");
@@ -152,6 +154,8 @@ public class BlueComplete extends LinearOpMode {
             color.DriveToLine("WHITE");
             color.DriveToLine("RED");
             Thread.sleep(100);
+            robot.grabber.setPosition(.5);
+            sleep(100);
         }
         else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.FOUR){
             telemetry.addData("Status", "blocko is 4'0");
@@ -161,6 +165,8 @@ public class BlueComplete extends LinearOpMode {
             sleep(100);
             drive.setRunMode("RUN_USING_ENCODER");
             color.DriveToLine("RED");
+            sleep(100);
+            robot.grabber.setPosition(.5);
             sleep(100);
         }
 
@@ -179,7 +185,6 @@ public class BlueComplete extends LinearOpMode {
         drive.Drive("REVERSE", 2500, 0.4);
 
         //left off with it indexing wrong
-
 
         drive.Drive("STRAFE_RIGHT" , 500, .3);
 
