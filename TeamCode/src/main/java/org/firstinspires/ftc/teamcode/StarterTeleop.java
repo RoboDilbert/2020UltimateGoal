@@ -48,7 +48,7 @@ public class StarterTeleop extends HardwarePresets {
     public Orientation angles;
     public Acceleration gravity;
 
-    public static double NEW_P = 30.0;//18.6
+    public static double NEW_P = 50.0;//18.6
     public static double NEW_I = 2.0;
     public static double NEW_D = 0.4;
     public static double NEW_F = 0;
@@ -82,6 +82,7 @@ public class StarterTeleop extends HardwarePresets {
         mainShooter = new Shooter(NEW_P, NEW_I, NEW_D, NEW_F);
 
         robot.vibrator.setPosition(0.53);
+        robot.angleAdjust.setPosition(0.5);
 
         boolean intake = false;
 
@@ -200,9 +201,25 @@ public class StarterTeleop extends HardwarePresets {
             }
 
             if(gamepad1.a) {
-                mainShooter.shoot(0.55);
+                robot.angleAdjust.setPosition(0.43);
+                mainShooter.shoot(0.58);
+            }
+            if(robot.shooter.getPower() == 0) {
+                robot.angleAdjust.setPosition(0.7);
             }
 
+            //White Line
+            if(gamepad2.dpad_up){
+                robot.angleAdjust.setPosition(0.51);
+            }
+            //Back Wall
+            if(gamepad2.dpad_down){
+                robot.angleAdjust.setPosition(0.58);
+            }
+            //In front of rings
+            if (gamepad2.dpad_left) {
+                robot.angleAdjust.setPosition(.5);
+            }
 //            if(gamepad2.a){
 ////                robot.grabber.setPosition(.5);
 //            }
@@ -211,6 +228,18 @@ public class StarterTeleop extends HardwarePresets {
 ////                robot.grabber.setPosition(.25);
 //            }
 
+            if(gamepad2.a){
+                robot.wobble1.setPosition(.5);
+            }
+            if(gamepad2.y){
+                robot.wobble1.setPosition(.1);
+            }
+            if(gamepad2.x){
+                robot.wobble2.setPosition(.5);
+            }
+            if(gamepad2.b){
+                robot.wobble2.setPosition(.1);
+            }
             if(gamepad1.y)
                 robot.shooter.setPower(0);
 
@@ -225,7 +254,16 @@ public class StarterTeleop extends HardwarePresets {
 //                robot.rightBackMotor.setPower(.5);
 //            }
             if (gamepad1.dpad_right) {
-                mainIntake.releaseOne();
+                mainIntake.releaseAll();
+            }
+            else
+                robot.vibrator.setPosition(.60);
+
+            if(gamepad1.dpad_left){
+                robot.vibrator.setPosition(0.65);
+                sleep(150);
+                robot.vibrator.setPosition(0.45);
+                sleep(75);
             }
             else
                 robot.vibrator.setPosition(.60);

@@ -15,6 +15,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Util.HardwarePresets;
 import org.firstinspires.ftc.teamcode.Util.Rolling;
 import org.firstinspires.ftc.teamcode.Util.SensorColor;
@@ -46,6 +48,13 @@ public class BlueComplete extends LinearOpMode {
     public Orientation angles;
     public Acceleration gravity;
 
+    public static double NEW_P = 50.0;//18.6
+    public static double NEW_I = 2.0;
+    public static double NEW_D = 0.4;
+    public static double NEW_F = 0;
+
+    public Shooter autoShooter;
+    public Intake autoIntake;
     public Rolling Distance1 = new Rolling(20);
 
     OpenCvCamera webcam;
@@ -70,6 +79,11 @@ public class BlueComplete extends LinearOpMode {
         pipeline = new SkystoneDeterminationPipeline();
         webcam.setPipeline(pipeline);
 
+        autoShooter = new Shooter(NEW_P, NEW_I, NEW_D, NEW_F);
+        autoIntake = new Intake();
+
+        robot.angleAdjust.setPosition(0.5);
+
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
@@ -80,6 +94,10 @@ public class BlueComplete extends LinearOpMode {
         });
 
         waitForStart();
+
+
+
+        autoShooter.shoot(0.58);
 
         drive.setRunMode("STOP_AND_RESET_ENCODER");
         drive.setRunMode("RUN_USING_ENCODER");
@@ -144,29 +162,47 @@ public class BlueComplete extends LinearOpMode {
             telemetry.update();
             drive.Drive("STRAFE_LEFT", 1200, 0.4);
             sleep(100);
-//            robot.grabber.setPosition(.5);
+            robot.grabber.setPosition(.5);
             sleep(100);
         }
         else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
             telemetry.addData("Status", "blocko is 1'0");
             telemetry.update();
+            drive.driveToRing(0.3);
+            robot.angleAdjust.setPosition(0.5);
+            autoIntake.shootAllNoClear();
+            sleep(100);
+            autoIntake.intake();
             drive.setRunMode("RUN_USING_ENCODER");
             color.DriveToLine("WHITE");
+            robot.angleAdjust.setPosition(0.51);
+            autoIntake.releaseAll();
+            sleep(100);
+            drive.setRunMode("RUN_USING_ENCODER");
             color.DriveToLine("RED");
             Thread.sleep(100);
-//            robot.grabber.setPosition(.5);
+            robot.grabber.setPosition(.5);
             sleep(100);
         }
         else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.FOUR){
             telemetry.addData("Status", "blocko is 4'0");
             telemetry.update();
+            drive.driveToRing(0.3);
+            robot.angleAdjust.setPosition(0.5);
+            autoIntake.shootAllNoClear();
             sleep(100);
-            drive.Drive("FORWARD_LEFT", 350, .2);
+            autoIntake.intake();
+            drive.setRunMode("RUN_USING_ENCODER");
+            color.DriveToLine("WHITE");
+            robot.angleAdjust.setPosition(0.51);
+            autoIntake.releaseAll();
+            sleep(100);
+            drive.Drive("FORWARD_LEFT", 250, .2);
             sleep(100);
             drive.setRunMode("RUN_USING_ENCODER");
             color.DriveToLine("RED");
             sleep(100);
-//            robot.grabber.setPosition(.5);
+            robot.grabber.setPosition(.5);
             sleep(100);
         }
 

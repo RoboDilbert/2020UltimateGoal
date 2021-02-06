@@ -32,31 +32,70 @@ public class Intake extends StarterTeleop {
     //Release All
     public void releaseAll(){
         robot.vibrator.setPosition(0.65);
-        sleep(150);
+        sleep(100);
         robot.vibrator.setPosition(0.45);
-        sleep(75);
+        sleep(100);
         robot.vibrator.setPosition(0.65);
-        sleep(150);
+        sleep(100);
         robot.vibrator.setPosition(0.45);
-        sleep(75);
+        sleep(100);
         robot.vibrator.setPosition(0.65);
-        sleep(150);
+        sleep(100);
         robot.vibrator.setPosition(0.45);
-        sleep(75);
+        sleep(100);
         robot.vibrator.setPosition(0.65);
-        sleep(150);
+        sleep(100);
         robot.vibrator.setPosition(0.45);
-        sleep(75);
+        sleep(100);
         robot.vibrator.setPosition(0.65);
-        sleep(150);
+        sleep(100);
         robot.vibrator.setPosition(0.45);
-        sleep(75);
+        sleep(100);
         robot.vibrator.setPosition(0.65);
-        sleep(150);
+        sleep(100);
         robot.vibrator.setPosition(0.45);
-        sleep(75);
+        sleep(100);
+        robot.vibrator.setPosition(0.65);
+        sleep(100);
+        robot.vibrator.setPosition(0.45);
+        sleep(100);
+        robot.vibrator.setPosition(0.65);
+        sleep(100);
+        robot.vibrator.setPosition(0.45);
+        sleep(100);
+        robot.vibrator.setPosition(0.65);
+        sleep(100);
+        robot.vibrator.setPosition(0.45);
+        sleep(100);
         rings.clear();
     }
+    public void shootAllNoClear(){
+        robot.vibrator.setPosition(0.65);
+        sleep(100);
+        robot.vibrator.setPosition(0.45);
+        sleep(100);
+        robot.vibrator.setPosition(0.65);
+        sleep(100);
+        robot.vibrator.setPosition(0.45);
+        sleep(100);
+        robot.vibrator.setPosition(0.65);
+        sleep(100);
+        robot.vibrator.setPosition(0.45);
+        sleep(100);
+        robot.vibrator.setPosition(0.65);
+        sleep(100);
+        robot.vibrator.setPosition(0.45);
+        sleep(100);
+        robot.vibrator.setPosition(0.65);
+        sleep(100);
+        robot.vibrator.setPosition(0.45);
+        sleep(100);
+        robot.vibrator.setPosition(0.65);
+        sleep(100);
+        robot.vibrator.setPosition(0.45);
+        sleep(100);
+    }
+
 
     //Spin backward (button hold)
     public void backwards(){
@@ -84,17 +123,16 @@ public class Intake extends StarterTeleop {
     }
 
     //Check to see if there are 3 rings
-    public boolean isFull(){
-        if(rings.lastIndexOf(true) == 2){
+    public boolean isFull() {
+        if (rings.lastIndexOf(true) == 2) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
 
-    //Index
-    public void index(){
+        //Index
+        public void index () {
             if (rings.lastIndexOf(true) < 2) {
                 ringCountFlag = true;
 //                robot.frontIntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -107,8 +145,7 @@ public class Intake extends StarterTeleop {
 //                robot.rearIntakeMotor.setPower(0.3);
 //                robot.frontIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //                robot.rearIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            }
-            else {
+            } else {
                 ringCountFlag = true;
                 spit();
 //                robot.frontIntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -124,7 +161,7 @@ public class Intake extends StarterTeleop {
 
             }
 
-    }
+        }
     public void intake(){
         if (robot.indexSensor.getDistance(DistanceUnit.CM) < ringDistance) {
             index();
