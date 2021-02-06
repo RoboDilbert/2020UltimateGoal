@@ -227,26 +227,28 @@ public class StarterTeleop extends HardwarePresets {
 //            if(gamepad2.b) {
 ////                robot.grabber.setPosition(.25);
 //            }
-
+            //robot.wobbleMotor.setPower(gamepad2.left_stick_y)
+            ;
             if(gamepad2.a){
-                robot.wobble1.setPosition(.5);
+                robot.wobble1.setPosition(.12);
+                //wobble bottom position
             }
             if(gamepad2.y){
-                robot.wobble1.setPosition(.1);
+                robot.wobble1.setPosition(.08);
+                //wobble top position
             }
             if(gamepad2.x){
                 robot.wobble2.setPosition(.5);
+                //wobble grabber close position
             }
             if(gamepad2.b){
                 robot.wobble2.setPosition(.1);
+                //wobble grabber open position
             }
             if(gamepad1.y)
                 robot.shooter.setPower(0);
+               // turn shooter off
 
-            if(gamepad1.dpad_down){
-                robot.frontIntakeMotor.setPower(0);
-                robot.rearIntakeMotor.setPower(0);
-            }
 //            if(gamepad1.dpad_up){
 //                robot.leftFrontMotor.setPower(.5);
 //                robot.leftBackMotor.setPower(.5);
@@ -292,6 +294,8 @@ public class StarterTeleop extends HardwarePresets {
             telemetry.addData("right front encoder", robot.rightFrontMotor.getCurrentPosition());
             telemetry.addData("right back encoder", robot.rightBackMotor.getCurrentPosition());
             telemetry.addLine();
+            telemetry.addData("wobble1:", robot.wobble1.getPosition());
+            telemetry.addData("wobble2:", robot.wobble2.getPosition());
 
 //            telemetry.addData("Pow", pow);
 //            telemetry.addData("Pow1", pow1);

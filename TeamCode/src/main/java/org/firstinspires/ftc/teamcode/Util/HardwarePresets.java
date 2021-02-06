@@ -44,6 +44,8 @@ public class HardwarePresets extends LinearOpMode {
 
     public DcMotorEx shooter; //Control hub, port 0
 
+    //public DcMotor wobbleMotor;
+
     //Servo
     public Servo vibrator; //Control hub, port  0
     public Servo grabber; //Control hub, port 1
@@ -74,6 +76,8 @@ public class HardwarePresets extends LinearOpMode {
         rightBackMotor = HwMap.dcMotor.get("rightBackMotor");
 
         shooter = (DcMotorEx)HwMap.get(DcMotor.class, "shooter");
+        //wobbleMotor = HwMap.dcMotor.get("wobbleMotor");
+
         vibrator = HwMap.servo.get("vibrator");
         angleAdjust = HwMap.servo.get("angleAdjust");
         grabber = HwMap.servo.get("grabber");
