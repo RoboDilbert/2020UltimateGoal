@@ -46,7 +46,7 @@ public class HardwarePresets extends LinearOpMode {
 
     //Servo
     public Servo vibrator; //Control hub, port  0
-    public Servo grabber; //Control hub, port 1
+//    public Servo grabber; //Control hub, port 1
 
     //Other
     public BNO055IMU imu; //Control hub, I2C Bus 0
@@ -70,7 +70,7 @@ public class HardwarePresets extends LinearOpMode {
 
         shooter = (DcMotorEx)HwMap.get(DcMotor.class, "shooter");
         vibrator = HwMap.servo.get("vibrator");
-        grabber = HwMap.servo.get("grabber");
+//        grabber = HwMap.servo.get("grabber");
 
         laserboi = HwMap.get(DistanceSensor.class, "laserboi");
         pewpewboi = HwMap.get(DistanceSensor.class, "pewpewboi");

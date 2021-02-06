@@ -23,6 +23,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Util.*;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -40,7 +41,7 @@ public class StarterTeleop extends HardwarePresets {
     public double drive = 0;
     public double strafe = 0;
     public double twist = 0;
-    public final double TELEOP_LIMITER = 0.5;
+    public final double TELEOP_LIMITER = 0.8;
     public float gyroVariation = 0;
 
     public BNO055IMU imu;
@@ -58,6 +59,7 @@ public class StarterTeleop extends HardwarePresets {
     public double cal2 = 0;
 
     public Intake mainIntake;
+    public static Shooter mainShooter;
     public boolean gamepadA = false;
 
     @Override
@@ -77,6 +79,7 @@ public class StarterTeleop extends HardwarePresets {
         imu.initialize(parameters1);
 
         mainIntake = new Intake();
+        mainShooter = new Shooter(NEW_P, NEW_I, NEW_D, NEW_F);
 
         robot.vibrator.setPosition(0.53);
 
@@ -101,16 +104,6 @@ public class StarterTeleop extends HardwarePresets {
         waitForStart();
 
         while(opModeIsActive()){
-
-            // get the PID coefficients for the RUN_USING_ENCODER  modes.
-            PIDFCoefficients pidOrig = robot.shooter.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            // change coefficients using methods included with DcMotorEx class.
-            PIDFCoefficients pidNew = new PIDFCoefficients(NEW_P, NEW_I, NEW_D, NEW_F);
-            robot.shooter.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidNew);
-
-            // re-read coefficients and verify change.
-            PIDFCoefficients pidModified = robot.shooter.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
 
             // 2m Distance sensor stuff
             Distance1.add(robot.laserboi.getDistance(DistanceUnit.CM));
@@ -153,7 +146,7 @@ public class StarterTeleop extends HardwarePresets {
             //Drive
             double speed = Math.sqrt(2) * Math.hypot(-gamepad1.left_stick_x, gamepad1.left_stick_y);
             double command = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) + Math.PI/2;
-            double rotation = -gamepad1.right_stick_x;
+            double rotation = gamepad1.right_stick_x;
 
             Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
             double adjustedXHeading = Math.cos(command + angles.firstAngle + Math.PI/4);
@@ -207,16 +200,16 @@ public class StarterTeleop extends HardwarePresets {
             }
 
             if(gamepad1.a) {
-                robot.shooter.setPower(0.55);
+                mainShooter.shoot(0.55);
             }
 
-            if(gamepad2.a){
-                robot.grabber.setPosition(.5);
-            }
-
-            if(gamepad2.b) {
-                robot.grabber.setPosition(.25);
-            }
+//            if(gamepad2.a){
+////                robot.grabber.setPosition(.5);
+//            }
+//
+//            if(gamepad2.b) {
+////                robot.grabber.setPosition(.25);
+//            }
 
             if(gamepad1.y)
                 robot.shooter.setPower(0);
@@ -256,10 +249,10 @@ public class StarterTeleop extends HardwarePresets {
               telemetry.addData("Ring Flag: ", mainIntake.ringCountFlag);
               telemetry.addData("intake: ", intake);
 //            telemetry.addData("skewAngle", String.format("%.3f °",180*(Math.atan((Distance2.getAverage()-Distance1.getAverage())/0.15))/Math.PI));
-//            telemetry.addData("left front encoder", robot.leftFrontMotor.getCurrentPosition());
-//            telemetry.addData("left back encoder", robot.leftBackMotor.getCurrentPosition());
-//            telemetry.addData("right front encoder", robot.rightFrontMotor.getCurrentPosition());
-//            telemetry.addData("right back encoder", robot.rightBackMotor.getCurrentPosition());
+            telemetry.addData("left front encoder", robot.leftFrontMotor.getCurrentPosition());
+            telemetry.addData("left back encoder", robot.leftBackMotor.getCurrentPosition());
+            telemetry.addData("right front encoder", robot.rightFrontMotor.getCurrentPosition());
+            telemetry.addData("right back encoder", robot.rightBackMotor.getCurrentPosition());
             telemetry.addLine();
 
 //            telemetry.addData("Pow", pow);
@@ -279,11 +272,11 @@ public class StarterTeleop extends HardwarePresets {
 //            telemetry.addData("Vibrator:", robot.vibrator.getPosition());
             //telemetry.addData("Inake Array Size:", mainIntake.rings.lastIndexOf(true)) ;
             //telemetry.addData("grapfroot encoder", robot.grapfroot.getCurrentPosition());
-            telemetry.addData("Runtime", "%.03f", getRuntime());
-            telemetry.addData("P,I,D (orig)", "%.04f, %.04f, %.0f",
-                    pidOrig.p, pidOrig.i, pidOrig.d);
-            telemetry.addData("P,I,D (modified)", "%.04f, %.04f, %.04f",
-                    pidModified.p, pidModified.i, pidModified.d);
+//            telemetry.addData("Runtime", "%.03f", getRuntime());
+//            telemetry.addData("P,I,D (orig)", "%.04f, %.04f, %.0f",
+//                    mainShooter.getOldP(), mainShooter.getOldI(), mainShooter.getOldD());
+//            telemetry.addData("P,I,D (modified)", "%.04f, %.04f, %.04f",
+//                    mainShooter.getNewP(), mainShooter.getNewI(), mainShooter.getNewD());
             telemetry.update();
         }
     }

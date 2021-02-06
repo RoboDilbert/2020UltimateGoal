@@ -144,7 +144,7 @@ public class BlueComplete extends LinearOpMode {
             telemetry.update();
             drive.Drive("STRAFE_LEFT", 1200, 0.4);
             sleep(100);
-            robot.grabber.setPosition(.5);
+//            robot.grabber.setPosition(.5);
             sleep(100);
         }
         else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
@@ -154,7 +154,7 @@ public class BlueComplete extends LinearOpMode {
             color.DriveToLine("WHITE");
             color.DriveToLine("RED");
             Thread.sleep(100);
-            robot.grabber.setPosition(.5);
+//            robot.grabber.setPosition(.5);
             sleep(100);
         }
         else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.FOUR){
@@ -166,7 +166,7 @@ public class BlueComplete extends LinearOpMode {
             drive.setRunMode("RUN_USING_ENCODER");
             color.DriveToLine("RED");
             sleep(100);
-            robot.grabber.setPosition(.5);
+//            robot.grabber.setPosition(.5);
             sleep(100);
         }
 
