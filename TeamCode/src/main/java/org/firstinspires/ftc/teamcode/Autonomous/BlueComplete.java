@@ -160,6 +160,13 @@ public class BlueComplete extends LinearOpMode {
         if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.NONE){
             telemetry.addData("Status", "no blocko");
             telemetry.update();
+            drive.setRunMode("RUN_USING_ENCODER");
+            color.DriveToLine("WHITE");
+            robot.angleAdjust.setPosition(0.51);
+            autoIntake.shootAllNoClear();
+            sleep(100);
+            drive.Drive("REVERSE", 200, 0.3);
+            sleep(100);
             drive.Drive("STRAFE_LEFT", 1200, 0.4);
             sleep(100);
             robot.grabber.setPosition(.5);

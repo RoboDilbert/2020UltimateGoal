@@ -122,7 +122,7 @@ public class DriveTrain extends HardwarePresets{
         rightBackMotor.setPower(0);
     }
     public void driveToRing(double power){
-        while(pewpewboi.getDistance(DistanceUnit.CM) > 10) {
+        while(laserboi.getDistance(DistanceUnit.CM) > 10) {
                 leftFrontMotor.setPower(power);
                 leftBackMotor.setPower(power);
                 rightFrontMotor.setPower(power);
@@ -191,7 +191,7 @@ public class DriveTrain extends HardwarePresets{
             rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
     }
-    //sam loves taylor
+
 
     //Returns TRUE if any drive motors are busy and FALSE if not.
     public boolean anyDriveMotorsBusy() {
@@ -208,5 +208,3 @@ public class DriveTrain extends HardwarePresets{
     }
 }
 
-
-// grant likes big old men

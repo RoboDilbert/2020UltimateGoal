@@ -44,7 +44,7 @@ public class HardwarePresets extends LinearOpMode {
 
     public DcMotorEx shooter; //Control hub, port 0
 
-    //public DcMotor wobbleMotor;
+    public DcMotor wobbleMotor;
 
     //Servo
     public Servo vibrator; //Control hub, port  0
@@ -76,7 +76,7 @@ public class HardwarePresets extends LinearOpMode {
         rightBackMotor = HwMap.dcMotor.get("rightBackMotor");
 
         shooter = (DcMotorEx)HwMap.get(DcMotor.class, "shooter");
-        //wobbleMotor = HwMap.dcMotor.get("wobbleMotor");
+        wobbleMotor = HwMap.dcMotor.get("wobbleMotor");
 
         vibrator = HwMap.servo.get("vibrator");
         angleAdjust = HwMap.servo.get("angleAdjust");
@@ -94,11 +94,13 @@ public class HardwarePresets extends LinearOpMode {
         leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         rightBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        wobbleMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        wobbleMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void composeTelemetry () {
