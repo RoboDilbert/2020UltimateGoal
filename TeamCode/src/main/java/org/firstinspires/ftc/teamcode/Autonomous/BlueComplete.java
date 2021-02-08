@@ -15,6 +15,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Util.HardwarePresets;
 import org.firstinspires.ftc.teamcode.Util.Rolling;
 import org.firstinspires.ftc.teamcode.Util.SensorColor;
@@ -46,6 +48,13 @@ public class BlueComplete extends LinearOpMode {
     public Orientation angles;
     public Acceleration gravity;
 
+    public static double NEW_P = 50.0;//18.6
+    public static double NEW_I = 2.0;
+    public static double NEW_D = 0.4;
+    public static double NEW_F = 0;
+
+    public Shooter autoShooter;
+    public Intake autoIntake;
     public Rolling Distance1 = new Rolling(20);
 
     OpenCvCamera webcam;
@@ -70,6 +79,11 @@ public class BlueComplete extends LinearOpMode {
         pipeline = new SkystoneDeterminationPipeline();
         webcam.setPipeline(pipeline);
 
+        autoShooter = new Shooter(NEW_P, NEW_I, NEW_D, NEW_F);
+        autoIntake = new Intake();
+
+        robot.angleAdjust.setPosition(0.5);
+
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
@@ -81,13 +95,17 @@ public class BlueComplete extends LinearOpMode {
 
         waitForStart();
 
+
+
+        autoShooter.shoot(0.58);
+
         drive.setRunMode("STOP_AND_RESET_ENCODER");
         drive.setRunMode("RUN_USING_ENCODER");
 
         Thread.sleep(50);
         NormalizedColorSensor colorSensor;
         colorSensor = robot.HwMap.get(NormalizedColorSensor.class, "cranberi");
-        robot.cranberi.enableLed(true);
+        robot.autoColorSensor.enableLed(true);
 
         webcam.closeCameraDevice();
 
@@ -97,7 +115,7 @@ public class BlueComplete extends LinearOpMode {
 
         telemetry.addData("Position", pipeline.position);
         telemetry.addData("laserboi", String.format("%.3f cm", robot.laserboi.getDistance(DistanceUnit.CM)));
-        telemetry.addData("Red", "%.3f", (double) robot.cranberi.red());
+        telemetry.addData("Red", "%.3f", (double) robot.autoColorSensor.red());
         telemetry.addData("Average of ouh", pipeline.avg1);
         telemetry.update();
 
@@ -142,25 +160,56 @@ public class BlueComplete extends LinearOpMode {
         if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.NONE){
             telemetry.addData("Status", "no blocko");
             telemetry.update();
+            drive.setRunMode("RUN_USING_ENCODER");
+            color.DriveToLine("WHITE");
+            robot.angleAdjust.setPosition(0.51);
+            autoIntake.shootAllNoClear();
+            sleep(100);
+            drive.Drive("REVERSE", 200, 0.3);
+            sleep(100);
             drive.Drive("STRAFE_LEFT", 1200, 0.4);
+            sleep(100);
+            robot.grabber.setPosition(.5);
             sleep(100);
         }
         else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
             telemetry.addData("Status", "blocko is 1'0");
             telemetry.update();
+            drive.driveToRing(0.3);
+            robot.angleAdjust.setPosition(0.5);
+            autoIntake.shootAllNoClear();
+            sleep(100);
+            autoIntake.intake();
             drive.setRunMode("RUN_USING_ENCODER");
             color.DriveToLine("WHITE");
+            robot.angleAdjust.setPosition(0.51);
+            autoIntake.releaseAll();
+            sleep(100);
+            drive.setRunMode("RUN_USING_ENCODER");
             color.DriveToLine("RED");
             Thread.sleep(100);
+            robot.grabber.setPosition(.5);
+            sleep(100);
         }
         else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.FOUR){
             telemetry.addData("Status", "blocko is 4'0");
             telemetry.update();
+            drive.driveToRing(0.3);
+            robot.angleAdjust.setPosition(0.5);
+            autoIntake.shootAllNoClear();
             sleep(100);
-            drive.Drive("FORWARD_LEFT", 350, .2);
+            autoIntake.intake();
+            drive.setRunMode("RUN_USING_ENCODER");
+            color.DriveToLine("WHITE");
+            robot.angleAdjust.setPosition(0.51);
+            autoIntake.releaseAll();
+            sleep(100);
+            drive.Drive("FORWARD_LEFT", 250, .2);
             sleep(100);
             drive.setRunMode("RUN_USING_ENCODER");
             color.DriveToLine("RED");
+            sleep(100);
+            robot.grabber.setPosition(.5);
             sleep(100);
         }
 
@@ -179,7 +228,6 @@ public class BlueComplete extends LinearOpMode {
         drive.Drive("REVERSE", 2500, 0.4);
 
         //left off with it indexing wrong
-
 
         drive.Drive("STRAFE_RIGHT" , 500, .3);
 

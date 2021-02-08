@@ -1,17 +1,13 @@
 package org.firstinspires.ftc.teamcode.Util;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Func;
@@ -23,9 +19,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.Locale;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
 public class HardwarePresets extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {}
@@ -34,11 +27,11 @@ public class HardwarePresets extends LinearOpMode {
     //2m distance sensors
     public DistanceSensor laserboi; //Control hub, I2C Bus 2
     public DistanceSensor pewpewboi; //Control hub, I2C Bus 3
+    public DistanceSensor indexSensor;
 
     //Color Sensors
-    public ColorSensor cranberi; //Control hub, I2C Bus 1
-    public ColorSensor orngi; //Expansion hub, I2C Bus 1
-    //public ColorSensor tanjereen;
+    public ColorSensor autoColorSensor; //Control hub, I2C Bus 1
+    public ColorSensor indexColorSensor; //Expansion hub, I2C Bus 1
 
     //Motors
     public DcMotor leftFrontMotor; //Expansion hub, port 0
@@ -49,17 +42,25 @@ public class HardwarePresets extends LinearOpMode {
     public DcMotor frontIntakeMotor; //Control hub, port 1
     public DcMotor rearIntakeMotor; //Control hub, port 2
 
-    public DcMotorEx grapfroot; //Control hub, port 0
+    public DcMotorEx shooter; //Control hub, port 0
+
+    public DcMotor wobbleMotor;
 
     //Servo
     public Servo vibrator; //Control hub, port  0
+    public Servo grabber; //Control hub, port 1
+    public Servo angleAdjust; //Control hub, port
+
+    //Wobble
+    public Servo wobble1;
+    public Servo wobble2;
 
     //Other
     public BNO055IMU imu; //Control hub, I2C Bus 0
     public Orientation angles;
     public Acceleration gravity;
 
-    //Contructor
+    //Contsructor
     public HardwarePresets(){}
 
     public void init(HardwareMap hwm){
@@ -74,24 +75,32 @@ public class HardwarePresets extends LinearOpMode {
         rightFrontMotor = HwMap.dcMotor.get("rightFrontMotor");
         rightBackMotor = HwMap.dcMotor.get("rightBackMotor");
 
-        grapfroot = (DcMotorEx)HwMap.get(DcMotor.class, "grapfroot");
+        shooter = (DcMotorEx)HwMap.get(DcMotor.class, "shooter");
+        wobbleMotor = HwMap.dcMotor.get("wobbleMotor");
+
         vibrator = HwMap.servo.get("vibrator");
+        angleAdjust = HwMap.servo.get("angleAdjust");
+        grabber = HwMap.servo.get("grabber");
+        wobble1 = HwMap.servo.get("wobble1");
+        wobble2 = HwMap.servo.get("wobble2");
 
         laserboi = HwMap.get(DistanceSensor.class, "laserboi");
         pewpewboi = HwMap.get(DistanceSensor.class, "pewpewboi");
-        cranberi = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "cranberi");
-//        orngi = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "orngi");
-//        tanjereen = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "tanjereen");
+        indexSensor = HwMap.get(DistanceSensor.class, "indexSensor");
+        autoColorSensor = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "autoColorSensor");
+        //indexColorSensor = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "indexColorSensor");
 
-        leftFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        wobbleMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        wobbleMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void composeTelemetry () {

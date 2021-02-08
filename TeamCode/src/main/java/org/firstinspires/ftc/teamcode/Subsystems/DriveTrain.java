@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Util.HardwarePresets;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -114,10 +115,25 @@ public class DriveTrain extends HardwarePresets{
                 rightBackMotor.setPower(power * -.5);
             }
         }
+
         leftFrontMotor.setPower(0);
         leftBackMotor.setPower(0);
         rightFrontMotor.setPower(0);
         rightBackMotor.setPower(0);
+    }
+    public void driveToRing(double power){
+        while(laserboi.getDistance(DistanceUnit.CM) > 10) {
+                leftFrontMotor.setPower(power);
+                leftBackMotor.setPower(power);
+                rightFrontMotor.setPower(power);
+                rightBackMotor.setPower(power);
+        }
+
+        leftFrontMotor.setPower(0);
+        leftBackMotor.setPower(0);
+        rightFrontMotor.setPower(0);
+        rightBackMotor.setPower(0);
+
     }
 
     public void Turn(String input, double power, float degrees){
@@ -146,6 +162,7 @@ public class DriveTrain extends HardwarePresets{
                 rightBackMotor.setPower(-power);
             }
         }
+
     }
     public void setRunMode(String input) {
         super.init(HwMap);
@@ -175,6 +192,7 @@ public class DriveTrain extends HardwarePresets{
         }
     }
 
+
     //Returns TRUE if any drive motors are busy and FALSE if not.
     public boolean anyDriveMotorsBusy() {
         super.init(HwMap);
@@ -189,3 +207,4 @@ public class DriveTrain extends HardwarePresets{
 
     }
 }
+
