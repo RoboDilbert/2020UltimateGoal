@@ -6,13 +6,13 @@ import java.util.ArrayList;
 
 public class Intake extends HardwarePresets {
     //Instance Fields
-    public ArrayList rings = new ArrayList(4);
+    public ArrayList rings;
     public boolean ringCountFlag = false;
     public final double orangeValue = 43;
 
     //Constructor
     public Intake() {
-
+        rings = new ArrayList(4);
     }
     //Methods
 
@@ -103,23 +103,23 @@ public class Intake extends HardwarePresets {
             }
 
     }
-//    public void intake(){
-//        if (orngi.red() > orangeValue) {
-//            index();
-//        }
-//        else if (ringCountFlag) {
-//            rings.add(true);
-//            ringCountFlag = false;
-//        }
-//        if(isFull()) {
-//            backwards();
-//        }
-//        else{
-//            frontIntakeMotor.setPower(0.85);
-//            rearIntakeMotor.setPower(0.85);
-//        }
-//
-//    }
+    public void intake(){
+        if (orngi.red() > orangeValue) {
+            index();
+        }
+        else if (ringCountFlag) {
+            rings.add(true);
+            ringCountFlag = false;
+        }
+        if(isFull()) {
+            backwards();
+        }
+        else{
+            frontIntakeMotor.setPower(0.85);
+            rearIntakeMotor.setPower(0.85);
+        }
+
+    }
     public void intakeTwo(){
         frontIntakeMotor.setPower(.85);
         rearIntakeMotor.setPower(.85);
