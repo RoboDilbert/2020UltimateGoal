@@ -10,36 +10,4 @@ public class SensorColor extends HardwarePresets {
 
     //Constructor
     public SensorColor() {}
-
-    //Methods
-    public void DriveToLine(String color){
-        super.init(HwMap);
-
-        if(color.equals("RED")){
-            while(autoColorSensor.red() < 175){//240, 82
-                leftFrontMotor.setPower(0.3);
-                rightFrontMotor.setPower(0.3);
-                leftBackMotor.setPower(0.3);
-                rightBackMotor.setPower(0.3);
-                telemetry.update();
-            }
-            leftFrontMotor.setPower(0);
-            rightFrontMotor.setPower(0);
-            leftBackMotor.setPower(0);
-            rightBackMotor.setPower(0);
-        }
-        else if(color.equals("WHITE")) {
-            while(autoColorSensor.red() < 190){//480, 680
-                telemetry.update();
-                leftFrontMotor.setPower(0.4);
-                rightFrontMotor.setPower(0.4);
-                leftBackMotor.setPower(0.4);
-                rightBackMotor.setPower(0.4);
-            }
-            leftFrontMotor.setPower(0);
-            rightFrontMotor.setPower(0);
-            leftBackMotor.setPower(0);
-            rightBackMotor.setPower(0);
-        }
-    }
 }

@@ -37,7 +37,7 @@ import java.util.Locale;
 
 @Autonomous(name= "BlueComplete", group= "Autonomous")
 
-public class BlueComplete extends LinearOpMode {
+public class BlueComplete extends Intake {
 
     HardwarePresets robot = new HardwarePresets();
     SensorColor color = new SensorColor();
@@ -79,7 +79,6 @@ public class BlueComplete extends LinearOpMode {
         pipeline = new SkystoneDeterminationPipeline();
         webcam.setPipeline(pipeline);
 
-        autoShooter = new Shooter(NEW_P, NEW_I, NEW_D, NEW_F);
         autoIntake = new Intake();
 
         robot.angleAdjust.setPosition(0.5);
@@ -97,14 +96,14 @@ public class BlueComplete extends LinearOpMode {
 
 
 
-        autoShooter.shoot(0.58);
+        robot.mainShooter.shoot(0.58);
 
         drive.setRunMode("STOP_AND_RESET_ENCODER");
         drive.setRunMode("RUN_USING_ENCODER");
 
         Thread.sleep(50);
         NormalizedColorSensor colorSensor;
-        colorSensor = robot.HwMap.get(NormalizedColorSensor.class, "cranberi");
+        colorSensor = robot.HwMap.get(NormalizedColorSensor.class, "autoColorSensor");
         robot.autoColorSensor.enableLed(true);
 
         webcam.closeCameraDevice();
@@ -169,7 +168,7 @@ public class BlueComplete extends LinearOpMode {
             sleep(100);
             drive.Drive("STRAFE_LEFT", 1200, 0.4);
             sleep(100);
-            robot.grabber.setPosition(.5);
+//            robot.grabber.setPosition(.5);
             sleep(100);
         }
         else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
@@ -188,7 +187,7 @@ public class BlueComplete extends LinearOpMode {
             drive.setRunMode("RUN_USING_ENCODER");
             color.DriveToLine("RED");
             Thread.sleep(100);
-            robot.grabber.setPosition(.5);
+//            robot.grabber.setPosition(.5);
             sleep(100);
         }
         else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.FOUR){
@@ -209,7 +208,7 @@ public class BlueComplete extends LinearOpMode {
             drive.setRunMode("RUN_USING_ENCODER");
             color.DriveToLine("RED");
             sleep(100);
-            robot.grabber.setPosition(.5);
+//            robot.grabber.setPosition(.5);
             sleep(100);
         }
 

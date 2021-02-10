@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 
 import java.util.Locale;
 
@@ -24,25 +25,12 @@ public class HardwarePresets extends LinearOpMode {
     public void runOpMode() throws InterruptedException {}
     public static HardwareMap HwMap;
 
-    //2m distance sensors
-    public DistanceSensor laserboi; //Control hub, I2C Bus 2
-    public DistanceSensor pewpewboi; //Control hub, I2C Bus 3
-    public DistanceSensor indexSensor;
-
-    //Color Sensors
-    public ColorSensor autoColorSensor; //Control hub, I2C Bus 1
-    public ColorSensor indexColorSensor; //Expansion hub, I2C Bus 1
-
-    //Motors
-    public DcMotor leftFrontMotor; //Expansion hub, port 0
-    public DcMotor leftBackMotor; //Expansion hub, port 1
-    public DcMotor rightFrontMotor; //Expansion hub, port 3
-    public DcMotor rightBackMotor; //Expansion hub, port 2
-
-    public DcMotor frontIntakeMotor; //Control hub, port 1
-    public DcMotor rearIntakeMotor; //Control hub, port 2
-
     public DcMotorEx shooter; //Control hub, port 0
+    public Shooter mainShooter;
+    public static double NEW_P = 50.0;//18.6
+    public static double NEW_I = 2.0;
+    public static double NEW_D = 0.4;
+    public static double NEW_F = 0;
 
     public DcMotor wobbleMotor;
 
@@ -70,12 +58,8 @@ public class HardwarePresets extends LinearOpMode {
         frontIntakeMotor = HwMap.dcMotor.get("frontIntakeMotor");
         rearIntakeMotor = HwMap.dcMotor.get("rearIntakeMotor");
 
-        leftFrontMotor = HwMap.dcMotor.get("leftFrontMotor");
-        leftBackMotor = HwMap.dcMotor.get("leftBackMotor");
-        rightFrontMotor = HwMap.dcMotor.get("rightFrontMotor");
-        rightBackMotor = HwMap.dcMotor.get("rightBackMotor");
-
-        shooter = (DcMotorEx)HwMap.get(DcMotor.class, "shooter");
+        shooter = HwMap.get(DcMotorEx.class, "shooter");
+        mainShooter = new Shooter(NEW_P, NEW_I, NEW_D, NEW_F);
         wobbleMotor = HwMap.dcMotor.get("wobbleMotor");
 
         vibrator = HwMap.servo.get("vibrator");
@@ -84,22 +68,14 @@ public class HardwarePresets extends LinearOpMode {
         wobble1 = HwMap.servo.get("wobble1");
         wobble2 = HwMap.servo.get("wobble2");
 
-        laserboi = HwMap.get(DistanceSensor.class, "laserboi");
-        pewpewboi = HwMap.get(DistanceSensor.class, "pewpewboi");
+
         indexSensor = HwMap.get(DistanceSensor.class, "indexSensor");
-        autoColorSensor = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "autoColorSensor");
         //indexColorSensor = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "indexColorSensor");
 
-        leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
         wobbleMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         wobbleMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
