@@ -286,10 +286,7 @@ public class StarterTeleop extends HardwarePresets {
               telemetry.addData("Ring Flag: ", mainIntake.ringCountFlag);
               telemetry.addData("intake: ", intake);
 //              telemetry.addData("skewAngle", String.format("%.3f °",180*(Math.atan((Distance2.getAverage()-Distance1.getAverage())/0.15))/Math.PI));
-//            telemetry.addData("left front encoder", robot.leftFrontMotor.getCurrentPosition());
-//            telemetry.addData("left back encoder", robot.leftBackMotor.getCurrentPosition());
-//            telemetry.addData("right front encoder", robot.rightFrontMotor.getCurrentPosition());
-//            telemetry.addData("right back encoder", robot.rightBackMotor.getCurrentPosition());
+
 //            telemetry.addLine();
 //            telemetry.addData("wobble1:", robot.wobble1.getPosition());
 //            telemetry.addData("wobble2:", robot.wobble2.getPosition());
@@ -298,10 +295,7 @@ public class StarterTeleop extends HardwarePresets {
 //            telemetry.addData("Pow1", pow1);
 //            telemetry.addData("Pow2", pow2);
 
-//            telemetry.addData("left front power", robot.leftFrontMotor.getPower());
-//            telemetry.addData("left back power", robot.leftBackMotor.getPower());
-//            telemetry.addData("right front power", robot.rightFrontMotor.getPower());
-//            telemetry.addData("right back power", robot.rightBackMotor.getPower());
+
 //            telemetry.addData("leftstick y value: ", gamepad1.left_stick_y);
 //            telemetry.addData("leftstick x value: ", gamepad1.left_stick_x);
 //            telemetry.addData("current angle: ", angles.firstAngle);

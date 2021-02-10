@@ -1,22 +1,57 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Util.HardwarePresets;
+
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class DriveTrain extends HardwarePresets{
+public class DriveTrain{
 
-    @Override
-    public void init(HardwareMap hwm) {
-        super.init(hwm);
+    //Motors
+    public DcMotor leftFrontMotor; //Expansion hub, port 0
+    public DcMotor leftBackMotor; //Expansion hub, port 1
+    public DcMotor rightFrontMotor; //Expansion hub, port 3
+    public DcMotor rightBackMotor; //Expansion hub, port 2
+
+    public ColorSensor floorColorSensor; //Control hub, I2C Bus 1
+
+    //2m distance sensors
+    public DistanceSensor laserboi; //Control hub, I2C Bus 2
+    //public DistanceSensor pewpewboi; //Control hub, I2C Bus 3
+
+    public void initDriveTrain(HardwareMap HwMap) {
+        //super.init(hwm);
+        leftFrontMotor = HwMap.dcMotor.get("leftFrontMotor");
+        leftBackMotor = HwMap.dcMotor.get("leftBackMotor");
+        rightFrontMotor = HwMap.dcMotor.get("rightFrontMotor");
+        rightBackMotor = HwMap.dcMotor.get("rightBackMotor");
+
+        floorColorSensor = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "floorColorSensor");
+
+        laserboi = HwMap.get(DistanceSensor.class, "laserboi");
+        //pewpewboi = HwMap.get(DistanceSensor.class, "pewpewboi");
+
+
+        leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     //Constructor
     public DriveTrain(){}
 
     public void Drive(String input, int encoderTicks, double power){
-        super.init(HwMap);
         if(input.equals("STRAFE_RIGHT")){
             leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + encoderTicks);
             leftBackMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() - encoderTicks);
@@ -137,7 +172,6 @@ public class DriveTrain extends HardwarePresets{
     }
 
     public void Turn(String input, double power, float degrees){
-        super.init(HwMap);
         if(input.equals("TURN_LEFT")){
             float targetLocation = angles.firstAngle - degrees;
             if(targetLocation < -180){
@@ -165,7 +199,6 @@ public class DriveTrain extends HardwarePresets{
 
     }
     public void setRunMode(String input) {
-        super.init(HwMap);
         if (input.equals("STOP_AND_RESET_ENCODER")) {
             leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -195,7 +228,6 @@ public class DriveTrain extends HardwarePresets{
 
     //Returns TRUE if any drive motors are busy and FALSE if not.
     public boolean anyDriveMotorsBusy() {
-        super.init(HwMap);
         if (leftFrontMotor.isBusy() /*|| leftBackMotor.isBusy() || rightFrontMotor.isBusy() || rightBackMotor.isBusy()*/) {
             return (true);
         } else {
@@ -203,19 +235,25 @@ public class DriveTrain extends HardwarePresets{
         }
     }
 
-    public void DriveTelemetry(){
+    public void DriveTelemetry(Telemetry telemetry){
+            telemetry.addData("left front encoder", leftFrontMotor.getCurrentPosition());
+            telemetry.addData("left back encoder", leftBackMotor.getCurrentPosition());
+            telemetry.addData("right front encoder", rightFrontMotor.getCurrentPosition());
+            telemetry.addData("right back encoder", rightBackMotor.getCurrentPosition());
+            telemetry.addLine();
+            telemetry.addData("left front power", leftFrontMotor.getPower());
+            telemetry.addData("left back power", leftBackMotor.getPower());
+            telemetry.addData("right front power", rightFrontMotor.getPower());
+            telemetry.addData("right back power", rightBackMotor.getPower());
     }
 
     public void DriveToLine(String color){
-        super.init(HwMap);
-
         if(color.equals("RED")){
-            while(autoColorSensor.red() < 175){//240, 82
+            while(floorColorSensor.red() < 175){//240, 82
                 leftFrontMotor.setPower(0.3);
                 rightFrontMotor.setPower(0.3);
                 leftBackMotor.setPower(0.3);
                 rightBackMotor.setPower(0.3);
-                telemetry.update();
             }
             leftFrontMotor.setPower(0);
             rightFrontMotor.setPower(0);
@@ -223,8 +261,7 @@ public class DriveTrain extends HardwarePresets{
             rightBackMotor.setPower(0);
         }
         else if(color.equals("WHITE")) {
-            while(autoColorSensor.red() < 190){//480, 680
-                telemetry.update();
+            while(floorColorSensor.red() < 190){//480, 680
                 leftFrontMotor.setPower(0.4);
                 rightFrontMotor.setPower(0.4);
                 leftBackMotor.setPower(0.4);

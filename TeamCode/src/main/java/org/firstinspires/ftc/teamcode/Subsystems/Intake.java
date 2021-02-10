@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.StarterTeleop;
@@ -12,6 +13,11 @@ public class Intake extends Shooter {
     public ArrayList rings = new ArrayList(4);
     public boolean ringCountFlag = false;
     public final double ringDistance = 13;
+
+    public DistanceSensor indexSensor;
+
+    public DcMotor frontIntakeMotor; //Control hub, port 1
+    public DcMotor rearIntakeMotor; //Control hub, port 2
 
     //Constructor
     public Intake() {
