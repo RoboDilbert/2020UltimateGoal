@@ -37,7 +37,7 @@ public class HardwarePresets extends LinearOpMode {
     //Servo
     public Servo vibrator; //Control hub, port  0
     public Servo grabber; //Control hub, port 1
-    public Servo angleAdjust; //Control hub, port
+
 
     //Wobble
     public Servo wobble1;
@@ -55,15 +55,8 @@ public class HardwarePresets extends LinearOpMode {
         //Set up Drive Train Motors
         HwMap = hwm;
 
-        frontIntakeMotor = HwMap.dcMotor.get("frontIntakeMotor");
-        rearIntakeMotor = HwMap.dcMotor.get("rearIntakeMotor");
-
-        shooter = HwMap.get(DcMotorEx.class, "shooter");
-        mainShooter = new Shooter(NEW_P, NEW_I, NEW_D, NEW_F);
         wobbleMotor = HwMap.dcMotor.get("wobbleMotor");
 
-        vibrator = HwMap.servo.get("vibrator");
-        angleAdjust = HwMap.servo.get("angleAdjust");
         grabber = HwMap.servo.get("grabber");
         wobble1 = HwMap.servo.get("wobble1");
         wobble2 = HwMap.servo.get("wobble2");

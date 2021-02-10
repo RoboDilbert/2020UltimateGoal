@@ -49,7 +49,9 @@ public class DriveTrain{
     }
 
     //Constructor
-    public DriveTrain(){}
+    public DriveTrain(){
+
+    }
 
     public void Drive(String input, int encoderTicks, double power){
         if(input.equals("STRAFE_RIGHT")){

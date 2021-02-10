@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.StarterTeleop;
@@ -16,6 +18,7 @@ public class Intake extends Shooter {
 
     public DistanceSensor indexSensor;
 
+    public Servo vibrator;
     public DcMotor frontIntakeMotor; //Control hub, port 1
     public DcMotor rearIntakeMotor; //Control hub, port 2
 
@@ -25,94 +28,114 @@ public class Intake extends Shooter {
     }
     //Methods
 
+    public void initIntake(HardwareMap HwMap){
+        frontIntakeMotor = HwMap.dcMotor.get("frontIntakeMotor");
+        rearIntakeMotor = HwMap.dcMotor.get("rearIntakeMotor");
+        indexSensor = HwMap.get(DistanceSensor.class, "indexSensor");
+        vibrator = HwMap.servo.get("vibrator");
+
+    }
+
     //Release 1
     public void releaseOne(){
         if(rings.lastIndexOf(true) >= 0) {
-            robot.vibrator.setPosition(0.65);
+            vibrator.setPosition(0.65);
             sleep(150);
-            robot.vibrator.setPosition(0.45);
+            vibrator.setPosition(0.45);
             sleep(75);
             rings.remove(rings.lastIndexOf(true));
         }
     }
     //Release All
     public void releaseAll(){
-        robot.vibrator.setPosition(0.65);
+        vibrator.setPosition(0.65);
         sleep(100);
-        robot.vibrator.setPosition(0.45);
+        vibrator.setPosition(0.45);
         sleep(100);
-        robot.vibrator.setPosition(0.65);
+        vibrator.setPosition(0.65);
         sleep(100);
-        robot.vibrator.setPosition(0.45);
+        vibrator.setPosition(0.45);
         sleep(100);
-        robot.vibrator.setPosition(0.65);
+        vibrator.setPosition(0.65);
         sleep(100);
-        robot.vibrator.setPosition(0.45);
+        vibrator.setPosition(0.45);
         sleep(100);
-        robot.vibrator.setPosition(0.65);
+        vibrator.setPosition(0.65);
         sleep(100);
-        robot.vibrator.setPosition(0.45);
+        vibrator.setPosition(0.45);
         sleep(100);
-        robot.vibrator.setPosition(0.65);
+        vibrator.setPosition(0.65);
         sleep(100);
-        robot.vibrator.setPosition(0.45);
+        vibrator.setPosition(0.45);
         sleep(100);
-        robot.vibrator.setPosition(0.65);
+        vibrator.setPosition(0.65);
         sleep(100);
-        robot.vibrator.setPosition(0.45);
+        vibrator.setPosition(0.45);
         sleep(100);
-        robot.vibrator.setPosition(0.65);
+        vibrator.setPosition(0.65);
         sleep(100);
-        robot.vibrator.setPosition(0.45);
+        vibrator.setPosition(0.45);
         sleep(100);
-        robot.vibrator.setPosition(0.65);
+        vibrator.setPosition(0.65);
         sleep(100);
-        robot.vibrator.setPosition(0.45);
+        vibrator.setPosition(0.45);
         sleep(100);
-        robot.vibrator.setPosition(0.65);
+        vibrator.setPosition(0.65);
         sleep(100);
-        robot.vibrator.setPosition(0.45);
+        vibrator.setPosition(0.45);
         sleep(100);
         rings.clear();
     }
     public void shootAllNoClear(){
-        robot.vibrator.setPosition(0.65);
+        vibrator.setPosition(0.65);
         sleep(100);
-        robot.vibrator.setPosition(0.45);
+        vibrator.setPosition(0.45);
         sleep(100);
-        robot.vibrator.setPosition(0.65);
+        vibrator.setPosition(0.65);
         sleep(100);
-        robot.vibrator.setPosition(0.45);
+        vibrator.setPosition(0.45);
         sleep(100);
-        robot.vibrator.setPosition(0.65);
+        vibrator.setPosition(0.65);
         sleep(100);
-        robot.vibrator.setPosition(0.45);
+        vibrator.setPosition(0.45);
         sleep(100);
-        robot.vibrator.setPosition(0.65);
+        vibrator.setPosition(0.65);
         sleep(100);
-        robot.vibrator.setPosition(0.45);
+        vibrator.setPosition(0.45);
         sleep(100);
-        robot.vibrator.setPosition(0.65);
+        vibrator.setPosition(0.65);
         sleep(100);
-        robot.vibrator.setPosition(0.45);
+        vibrator.setPosition(0.45);
         sleep(100);
-        robot.vibrator.setPosition(0.65);
+        vibrator.setPosition(0.65);
         sleep(100);
-        robot.vibrator.setPosition(0.45);
+        vibrator.setPosition(0.45);
+        sleep(100);
+        vibrator.setPosition(0.65);
+        sleep(100);
+        vibrator.setPosition(0.45);
+        sleep(100);
+        vibrator.setPosition(0.65);
+        sleep(100);
+        vibrator.setPosition(0.45);
+        sleep(100);
+        vibrator.setPosition(0.65);
+        sleep(100);
+        vibrator.setPosition(0.45);
         sleep(100);
     }
 
 
     //Spin backward (button hold)
     public void backwards(){
-        robot.frontIntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rearIntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.frontIntakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rearIntakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontIntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rearIntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontIntakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rearIntakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //                robot.frontIntakeMotor.setTargetPosition(10000);
 //                robot.rearIntakeMotor.setTargetPosition(10000);
-        robot.frontIntakeMotor.setPower(0.3);
-        robot.rearIntakeMotor.setPower(0.3);
+        frontIntakeMotor.setPower(0.3);
+        rearIntakeMotor.setPower(0.3);
 //        robot.frontIntakeMotor.setPower(-0.85);
 //        robot.rearIntakeMotor.setPower(-0.85);
     }

@@ -22,6 +22,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Util.*;
@@ -35,7 +36,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 //@Disabled
 public class StarterTeleop extends HardwarePresets {
 
-    public static HardwarePresets robot = new HardwarePresets();
+    public static DriveTrain robot = new DriveTrain();
     //Constants constant = new Constants();
 
     public double drive = 0;
@@ -55,6 +56,7 @@ public class StarterTeleop extends HardwarePresets {
     public double cal2 = 0;
 
     public Intake mainIntake;
+    public Shooter mainShooter;
     public boolean gamepadA = false;
 
     public boolean intake = false;
@@ -63,7 +65,14 @@ public class StarterTeleop extends HardwarePresets {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        robot.init(hardwareMap);
+
+
+        mainIntake = new Intake();
+        mainShooter = new Shooter(NEW_P, NEW_I, NEW_D, NEW_F, hardwareMap);
+
+        mainIntake.initIntake(hardwareMap);
+        mainShooter.initShooter(hardwareMap);
+        robot.initDriveTrain(hardwareMap);
 
         BNO055IMU.Parameters parameters1 = new BNO055IMU.Parameters();
         parameters1.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -76,14 +85,14 @@ public class StarterTeleop extends HardwarePresets {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters1);
 
-        mainIntake = new Intake();
 
 
-        robot.vibrator.setPosition(0.53);
-        robot.angleAdjust.setPosition(0.5);
 
-        robot.frontIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.rearIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        mainIntake.vibrator.setPosition(0.53);
+        angleAdjust.setPosition(0.5);
+
+        frontIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rearIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         robot.leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -179,24 +188,20 @@ public class StarterTeleop extends HardwarePresets {
             }
 
             if(gamepad1.a) {
-                robot.angleAdjust.setPosition(0.43);
+                mainShooter.angleAdjustUp("WHITE_LINE");
                 robot.mainShooter.shoot(0.58);
             }
             if(robot.shooter.getPower() == 0) {
-                robot.angleAdjust.setPosition(0.7);
+                mainShooter.angleAdjustUp("INDEX");
             }
 
             //White Line
             if(gamepad2.dpad_up){
-                robot.angleAdjust.setPosition(0.51);
-            }
-            //Back Wall
-            if(gamepad2.dpad_down){
-                robot.angleAdjust.setPosition(0.58);
+                mainShooter.angleAdjustUp("WHITE_LINE");
             }
             //In front of rings
             if (gamepad2.dpad_left) {
-                robot.angleAdjust.setPosition(.5);
+                mainShooter.angleAdjustUp("RINGS");
             }
 //            if(gamepad2.a){
 ////                robot.grabber.setPosition(.5);

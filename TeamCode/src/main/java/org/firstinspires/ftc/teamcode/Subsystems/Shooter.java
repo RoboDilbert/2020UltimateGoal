@@ -2,14 +2,18 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.StarterTeleop;
 import org.firstinspires.ftc.teamcode.Util.HardwarePresets;
 
-public class Shooter extends StarterTeleop {
+public class Shooter{
 
     private DcMotorEx shooter; //Control hub, port 0
+    public Servo vibrator;
+    public Servo angleAdjust; //Control hub, port
 
     private static double NEW_P;//18.6
     private static double NEW_I;
@@ -19,10 +23,9 @@ public class Shooter extends StarterTeleop {
     private static PIDFCoefficients pidModified;
 
     //Constructor
-    public Shooter(double P, double I, double D, double F){
+    public Shooter(double P, double I, double D, double F, HardwareMap hardwareMap){
 
 //        PIDFCoefficients pidOrig = robot.shooter.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
-        shooter = HwMap.get(DcMotorEx.class, "shooter");
 
         NEW_P = P;
         NEW_I = I;
@@ -41,10 +44,33 @@ public class Shooter extends StarterTeleop {
 
     }
 
-    //Methods
-    public void getShooterSpeed(){
-
+    public void initShooter(HardwareMap hardwareMap){
+        vibrator = hardwareMap.servo.get("vibrator");
+        shooter = hardwareMap.get(DcMotorEx.class, "shooter");
+        angleAdjust = hardwareMap.servo.get("angleAdjust");
     }
+    //Methods
+    public void shoot(double power){
+        shooter.setPower(power);
+    }
+    public double getShooterSpeed(){
+        return shooter.getVelocity();
+    }
+    public void angleAdjustUp(String position){
+        if(position.equals("INDEX")){
+            angleAdjust.setPosition(0.7);
+        }
+        else if(position.equals("WHITE_LINE")){
+            angleAdjust.setPosition(0.43);
+        }
+        else if(position.equals("RINGS")){
+            angleAdjust.setPosition(0.5);
+        }
+    }
+
+
+
+
     public double getNewP(){
         return pidModified.p;
     }
@@ -64,7 +90,5 @@ public class Shooter extends StarterTeleop {
         return pidOrig.d;
     }
 
-    public void shoot(double power){
-        shooter.setPower(power);
-   }
+
 }
