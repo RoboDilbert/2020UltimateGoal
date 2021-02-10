@@ -48,10 +48,6 @@ public class StarterTeleop extends HardwarePresets {
     public Orientation angles;
     public Acceleration gravity;
 
-    public static double NEW_P = 50.0;//18.6
-    public static double NEW_I = 2.0;
-    public static double NEW_D = 0.4;
-    public static double NEW_F = 0;
 
     public Rolling Distance1 = new Rolling(20);
     public Rolling Distance2 = new Rolling (20);
@@ -59,14 +55,13 @@ public class StarterTeleop extends HardwarePresets {
     public double cal2 = 0;
 
     public Intake mainIntake;
-    public static Shooter mainShooter;
     public boolean gamepadA = false;
 
     public boolean intake = false;
 
 
     @Override
-    public void runOpMode(){
+    public void runOpMode() throws InterruptedException {
 
         robot.init(hardwareMap);
 
@@ -82,7 +77,7 @@ public class StarterTeleop extends HardwarePresets {
         imu.initialize(parameters1);
 
         mainIntake = new Intake();
-        mainShooter = new Shooter(NEW_P, NEW_I, NEW_D, NEW_F);
+
 
         robot.vibrator.setPosition(0.53);
         robot.angleAdjust.setPosition(0.5);
@@ -185,7 +180,7 @@ public class StarterTeleop extends HardwarePresets {
 
             if(gamepad1.a) {
                 robot.angleAdjust.setPosition(0.43);
-                mainShooter.shoot(0.58);
+                robot.mainShooter.shoot(0.58);
             }
             if(robot.shooter.getPower() == 0) {
                 robot.angleAdjust.setPosition(0.7);
@@ -243,15 +238,15 @@ public class StarterTeleop extends HardwarePresets {
             if(gamepad2.right_bumper){
                 robot.wobbleMotor.setTargetPosition(lifterTP);
                 robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.wobbleMotor.setPower(-.7);
+                robot.wobbleMotor.setPower(-.3);
                 if(Math.abs(lifterTP - robot.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1)){
                     robot.wobbleMotor.setPower(-0.4);
                 }
             }
             else if(Math.abs(lifterTP - robot.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1) && !gamepad2.right_bumper){
-                robot.wobbleMotor.setTargetPosition(0);
+                robot.wobbleMotor.setTargetPosition(-350);
                 robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.wobbleMotor.setPower(.7);
+                robot.wobbleMotor.setPower(.3);
                 if(Math.abs(robot.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1)){
                     robot.wobbleMotor.setPower(0.4);
                 }
@@ -290,7 +285,7 @@ public class StarterTeleop extends HardwarePresets {
               telemetry.addData("rings: ", mainIntake.rings);
               telemetry.addData("Ring Flag: ", mainIntake.ringCountFlag);
               telemetry.addData("intake: ", intake);
-////            telemetry.addData("skewAngle", String.format("%.3f °",180*(Math.atan((Distance2.getAverage()-Distance1.getAverage())/0.15))/Math.PI));
+//              telemetry.addData("skewAngle", String.format("%.3f °",180*(Math.atan((Distance2.getAverage()-Distance1.getAverage())/0.15))/Math.PI));
 //            telemetry.addData("left front encoder", robot.leftFrontMotor.getCurrentPosition());
 //            telemetry.addData("left back encoder", robot.leftBackMotor.getCurrentPosition());
 //            telemetry.addData("right front encoder", robot.rightFrontMotor.getCurrentPosition());

@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 
 import java.util.Locale;
 
@@ -43,6 +44,11 @@ public class HardwarePresets extends LinearOpMode {
     public DcMotor rearIntakeMotor; //Control hub, port 2
 
     public DcMotorEx shooter; //Control hub, port 0
+    public Shooter mainShooter;
+    public static double NEW_P = 50.0;//18.6
+    public static double NEW_I = 2.0;
+    public static double NEW_D = 0.4;
+    public static double NEW_F = 0;
 
     public DcMotor wobbleMotor;
 
@@ -75,7 +81,8 @@ public class HardwarePresets extends LinearOpMode {
         rightFrontMotor = HwMap.dcMotor.get("rightFrontMotor");
         rightBackMotor = HwMap.dcMotor.get("rightBackMotor");
 
-        shooter = (DcMotorEx)HwMap.get(DcMotor.class, "shooter");
+        shooter = HwMap.get(DcMotorEx.class, "shooter");
+        mainShooter = new Shooter(NEW_P, NEW_I, NEW_D, NEW_F);
         wobbleMotor = HwMap.dcMotor.get("wobbleMotor");
 
         vibrator = HwMap.servo.get("vibrator");

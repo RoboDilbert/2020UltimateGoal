@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Util.HardwarePresets;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-public class Intake extends StarterTeleop {
+public class Intake extends Shooter {
     //Instance Fields
     public ArrayList rings = new ArrayList(4);
     public boolean ringCountFlag = false;
