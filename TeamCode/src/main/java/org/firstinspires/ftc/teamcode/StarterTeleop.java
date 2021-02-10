@@ -290,7 +290,7 @@ public class StarterTeleop extends HardwarePresets {
               telemetry.addData("rings: ", mainIntake.rings);
               telemetry.addData("Ring Flag: ", mainIntake.ringCountFlag);
               telemetry.addData("intake: ", intake);
-////            telemetry.addData("skewAngle", String.format("%.3f °",180*(Math.atan((Distance2.getAverage()-Distance1.getAverage())/0.15))/Math.PI));
+//            telemetry.addData("skewAngle", String.format("%.3f °",180*(Math.atan((Distance2.getAverage()-Distance1.getAverage())/0.15))/Math.PI));
 //            telemetry.addData("left front encoder", robot.leftFrontMotor.getCurrentPosition());
 //            telemetry.addData("left back encoder", robot.leftBackMotor.getCurrentPosition());
 //            telemetry.addData("right front encoder", robot.rightFrontMotor.getCurrentPosition());
@@ -298,6 +298,7 @@ public class StarterTeleop extends HardwarePresets {
 //            telemetry.addLine();
 //            telemetry.addData("wobble1:", robot.wobble1.getPosition());
 //            telemetry.addData("wobble2:", robot.wobble2.getPosition());
+              telemetry.addData("shooter velocity: ", mainShooter.getShooterSpeed());
 
 //            telemetry.addData("Pow", pow);
 //            telemetry.addData("Pow1", pow1);

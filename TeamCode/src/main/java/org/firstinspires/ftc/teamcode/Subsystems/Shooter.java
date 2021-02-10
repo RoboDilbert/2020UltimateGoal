@@ -38,27 +38,17 @@ public class Shooter extends StarterTeleop {
     }
 
     //Methods
-    public void getShooterSpeed(){
+    public double getShooterSpeed(){
+        return robot.shooter.getVelocity();
+    }
 
-    }
-    public double getNewP(){
-        return pidModified.p;
-    }
-    public double getNewI(){
-        return pidModified.i;
-    }
-    public double getNewD(){
-        return pidModified.d;
-    }
-    public double getOldP(){
-        return pidOrig.p;
-    }
-    public double getOldI(){
-        return pidOrig.i;
-    }
-    public double getOldD(){
-        return pidOrig.d;
-    }
+    public double getNewP(){ return pidModified.p; }
+    public double getNewI(){ return pidModified.i; }
+    public double getNewD(){ return pidModified.d; }
+    public double getOldP(){ return pidOrig.p; }
+    public double getOldI(){ return pidOrig.i; }
+    public double getOldD(){ return pidOrig.d; }
+
     public void shoot(double power){
         robot.shooter.setPower(power);
    }
