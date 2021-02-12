@@ -19,4 +19,6 @@ public class Constants {
 
     public static double cal1 = 0;
     public static double cal2 = 0;
+
+    public static final double TELEOP_LIMITER = 0.8;
 }

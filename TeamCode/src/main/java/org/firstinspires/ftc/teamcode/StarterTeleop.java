@@ -15,7 +15,6 @@ import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Wobble;
 import org.firstinspires.ftc.teamcode.Util.*;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.Locale;
 
@@ -25,7 +24,6 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 //@Disabled
 public class StarterTeleop extends LinearOpMode{
 
-    public final double TELEOP_LIMITER = 0.8;
     public float gyroVariation = 0;
 
     public boolean intake = false;
@@ -51,6 +49,8 @@ public class StarterTeleop extends LinearOpMode{
         Shooter.shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         Wobble.wobbleMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        DriveTrain.composeTelemetry(telemetry);
         waitForStart();
 
         while(opModeIsActive()){
@@ -61,18 +61,7 @@ public class StarterTeleop extends LinearOpMode{
             DriveTrain.floorColorSensor.enableLed(true);
 
             //Mecanum Drive
-            double speed = Math.sqrt(2) * Math.hypot(-gamepad1.left_stick_x, gamepad1.left_stick_y);
-            double command = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) + Math.PI/2;
-            double rotation = gamepad1.right_stick_x;
-
-            Orientation angles = DriveTrain.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-            double adjustedXHeading = Math.cos(command + angles.firstAngle + Math.PI/4);
-            double adjustedYHeading = Math.sin(command + angles.firstAngle + Math.PI/4);
-
-            DriveTrain.leftFrontMotor.setPower((speed * adjustedYHeading + rotation) * TELEOP_LIMITER);
-            DriveTrain.rightFrontMotor.setPower((speed * adjustedXHeading - rotation) * TELEOP_LIMITER);
-            DriveTrain.leftBackMotor.setPower((speed * adjustedXHeading + rotation) * TELEOP_LIMITER);
-            DriveTrain.rightBackMotor.setPower((speed * adjustedYHeading - rotation) * TELEOP_LIMITER);
+            DriveTrain.cartesianDrive(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
 //            if(gamepad1.x){
 //                gyroVariation = angles.firstAngle;
@@ -178,11 +167,10 @@ public class StarterTeleop extends LinearOpMode{
             else
                 Intake.vibrator.setPosition(.60);
 
-
-//            DriveTrain.DriveTelemetry(telemetry);
-//            Intake.intakeTelemetry(telemetry);
-//            Shooter.shooterTelemetry(telemetry);
-//            Wobble.wobbleTelemetry(telemetry);
+            DriveTrain.DriveTelemetry(telemetry);
+            Intake.intakeTelemetry(telemetry);
+            Shooter.shooterTelemetry(telemetry);
+            Wobble.wobbleTelemetry(telemetry);
 //            telemetry.addData("leftstick y value: ", gamepad1.left_stick_y);
 //            telemetry.addData("leftstick x value: ", gamepad1.left_stick_x);
 //            telemetry.addLine();

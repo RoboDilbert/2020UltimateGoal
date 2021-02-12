@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import org.firstinspires.ftc.teamcode.Util.Constants;
 
 import java.io.CharArrayWriter;
@@ -20,7 +21,7 @@ public class Wobble {
     public static Servo grabber; //Control hub, port 1
 
     //Constuctor
-    public void Wobble(){}
+    public Wobble(){}
 
     public static void initWobble(HardwareMap hwm){
         Constants.HwMap = hwm;
@@ -43,5 +44,6 @@ public class Wobble {
         telemetry.addData("wobble1:", wobble1.getPosition());
         telemetry.addData("wobble2:", wobble2.getPosition());
         telemetry.addLine();
+        telemetry.update();
     }
 }
