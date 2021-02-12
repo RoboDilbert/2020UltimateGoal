@@ -1,29 +1,19 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
-import org.firstinspires.ftc.robotcontroller.external.samples.SensorREV2mDistance;
-import org.firstinspires.ftc.robotcore.external.Func;
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+
+import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.Subsystems.Wobble;
 import org.firstinspires.ftc.teamcode.Util.*;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -33,128 +23,56 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 
 @TeleOp(name= "TeleOop", group= "TeleOp")
 //@Disabled
-public class StarterTeleop extends HardwarePresets {
+public class StarterTeleop extends LinearOpMode{
 
-    public static HardwarePresets robot = new HardwarePresets();
-    //Constants constant = new Constants();
-
-    public double drive = 0;
-    public double strafe = 0;
-    public double twist = 0;
     public final double TELEOP_LIMITER = 0.8;
     public float gyroVariation = 0;
 
-    public BNO055IMU imu;
-    public Orientation angles;
-    public Acceleration gravity;
-
-
-    public Rolling Distance1 = new Rolling(20);
-    public Rolling Distance2 = new Rolling (20);
-    public double cal1 = 0;
-    public double cal2 = 0;
-
-    public Intake mainIntake;
-    public boolean gamepadA = false;
-
     public boolean intake = false;
-
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        robot.init(hardwareMap);
+        DriveTrain.initDriveTrain(hardwareMap);
+        Wobble.initWobble(hardwareMap);
+        Shooter.initShooter(hardwareMap);
+        Intake.initIntake(hardwareMap);
 
-        BNO055IMU.Parameters parameters1 = new BNO055IMU.Parameters();
-        parameters1.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters1.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters1.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters1.loggingEnabled = true;
-        parameters1.loggingTag = "IMU";
-        parameters1.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        Intake.vibrator.setPosition(0.53);
+        Shooter.angleAdjust.setPosition(0.5);
 
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters1);
+        Intake.frontIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Intake.rearIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        mainIntake = new Intake();
+        Constants.drive.setRunMode("STOP_AND_RESET_ENCODER");
+        Constants.drive.setRunMode("RUN_USING_ENCODER");
 
+        Shooter.shooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Shooter.shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        robot.vibrator.setPosition(0.53);
-        robot.angleAdjust.setPosition(0.5);
-
-        robot.frontIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.rearIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        robot.leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        robot.leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.leftBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        robot.shooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.shooter.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        robot.wobbleMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Wobble.wobbleMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         waitForStart();
 
         while(opModeIsActive()){
 
             // 2m Distance sensor stuff
-            Distance1.add(robot.laserboi.getDistance(DistanceUnit.CM));
-            Distance2.add(robot.pewpewboi.getDistance(DistanceUnit.CM));
+            Constants.Distance1.add(DriveTrain.driveDistanceSensor.getDistance(DistanceUnit.CM));
 
-            //colorsensor stuff
-            NormalizedColorSensor colorSensor;
-            colorSensor = hardwareMap.get(NormalizedColorSensor.class, "autoColorSensor");
-            robot.autoColorSensor.enableLed(true);
-
-//            NormalizedColorSensor colorSensor2;
-//            colorSensor2 = hardwareMap.get(NormalizedColorSensor.class, "indexColorSensor");
-//            robot.indexColorSensor.enableLed(true);
+            DriveTrain.floorColorSensor.enableLed(true);
 
             //Mecanum Drive
-//            double x = gamepad1.left_stick_x;
-//            double y = -gamepad1.left_stick_y;
-//            double turn = gamepad1.right_stick_x;
-//            double heading;
-//
-//            if(x == 0 && y == 0)
-//                heading = 0;
-//            else if(x >= 0)
-//                heading = Math.PI - Math.atan(y / x);
-//            else
-//                heading = -Math.atan(y / x);
-//
-//            double pow = Math.sqrt(Math.pow(x, 6) + Math.pow(y, 6));
-//            Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-//            heading -= (-angles.firstAngle + Math.PI / 4.0);
-//
-//            double pow1 = Math.sqrt(2) * pow * Math.cos(heading + gyroVariation);//negative 1
-//            double pow2 = Math.sqrt(2) * pow * Math.sin(heading + gyroVariation);//positive 1
-//
-//            robot.leftFrontMotor.setPower((turn + pow2) * TELEOP_LIMITER);//n
-//            robot.leftBackMotor.setPower((turn + pow1) * TELEOP_LIMITER);//p
-//            robot.rightFrontMotor.setPower((pow1 - turn) * TELEOP_LIMITER);//n
-//            robot.rightBackMotor.setPower((pow2 - turn) * TELEOP_LIMITER);//p
-//
-            //Drive
             double speed = Math.sqrt(2) * Math.hypot(-gamepad1.left_stick_x, gamepad1.left_stick_y);
             double command = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) + Math.PI/2;
             double rotation = gamepad1.right_stick_x;
 
-            Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+            Orientation angles = DriveTrain.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
             double adjustedXHeading = Math.cos(command + angles.firstAngle + Math.PI/4);
             double adjustedYHeading = Math.sin(command + angles.firstAngle + Math.PI/4);
 
-            robot.leftFrontMotor.setPower((speed * adjustedYHeading + rotation) * TELEOP_LIMITER);
-            robot.rightFrontMotor.setPower((speed * adjustedXHeading - rotation) * TELEOP_LIMITER);
-            robot.leftBackMotor.setPower((speed * adjustedXHeading + rotation) * TELEOP_LIMITER);
-            robot.rightBackMotor.setPower((speed * adjustedYHeading - rotation) * TELEOP_LIMITER);
+            DriveTrain.leftFrontMotor.setPower((speed * adjustedYHeading + rotation) * TELEOP_LIMITER);
+            DriveTrain.rightFrontMotor.setPower((speed * adjustedXHeading - rotation) * TELEOP_LIMITER);
+            DriveTrain.leftBackMotor.setPower((speed * adjustedXHeading + rotation) * TELEOP_LIMITER);
+            DriveTrain.rightBackMotor.setPower((speed * adjustedYHeading - rotation) * TELEOP_LIMITER);
 
 //            if(gamepad1.x){
 //                gyroVariation = angles.firstAngle;
@@ -165,38 +83,38 @@ public class StarterTeleop extends HardwarePresets {
             }
 
             if(intake){
-                mainIntake.intake();
+                Constants.mainIntake.intake();
             }
 
             if(!intake){
-                robot.frontIntakeMotor.setPower(0);
-                robot.rearIntakeMotor.setPower(0);
+                Intake.frontIntakeMotor.setPower(0);
+                Intake.rearIntakeMotor.setPower(0);
             }
-//
+
             if(gamepad1.b){
-                robot.frontIntakeMotor.setPower(-1);
-                robot.rearIntakeMotor.setPower(-1);
+                Intake.frontIntakeMotor.setPower(-1);
+                Intake.rearIntakeMotor.setPower(-1);
             }
 
             if(gamepad1.a) {
-                robot.angleAdjust.setPosition(0.43);
-                robot.mainShooter.shoot(0.58);
+                Shooter.angleAdjust.setPosition(0.43);
+                Shooter.mainShooter.shoot(0.58);
             }
-            if(robot.shooter.getPower() == 0) {
-                robot.angleAdjust.setPosition(0.7);
+            if(Shooter.shooter.getPower() == 0) {
+                Shooter.angleAdjust.setPosition(0.7);
             }
 
             //White Line
             if(gamepad2.dpad_up){
-                robot.angleAdjust.setPosition(0.51);
+                Shooter.angleAdjust.setPosition(0.51);
             }
             //Back Wall
             if(gamepad2.dpad_down){
-                robot.angleAdjust.setPosition(0.58);
+                Shooter.angleAdjust.setPosition(0.58);
             }
             //In front of rings
             if (gamepad2.dpad_left) {
-                robot.angleAdjust.setPosition(.5);
+                Shooter.angleAdjust.setPosition(.5);
             }
 //            if(gamepad2.a){
 ////                robot.grabber.setPosition(.5);
@@ -207,120 +125,74 @@ public class StarterTeleop extends HardwarePresets {
 //            }
 
             if(gamepad2.a){
-                robot.wobble1.setPosition(.12);
+                Wobble.wobble1.setPosition(.12);
                 //wobble bottom position
             }
             if(gamepad2.y){
-                robot.wobble1.setPosition(.08);
+                Wobble.wobble1.setPosition(.08);
                 //wobble top position
             }
             if(gamepad2.x){
-                robot.wobble2.setPosition(.5);
+                Wobble.wobble2.setPosition(.5);
                 //wobble grabber close position
             }
             if(gamepad2.b){
-                robot.wobble2.setPosition(.1);
+                Wobble.wobble2.setPosition(.1);
                 //wobble grabber open position
             }
             if(gamepad1.y)
-                robot.shooter.setPower(0);
+                Shooter.shooter.setPower(0);
                // turn shooter off
-
-//            if(gamepad1.dpad_up){
-//                robot.leftFrontMotor.setPower(.5);
-//                robot.leftBackMotor.setPower(.5);
-//                robot.rightFrontMotor.setPower(.5);
-//                robot.rightBackMotor.setPower(.5);
-//            }
 
             //Lifter
             int lifterTP = -500;
             if(gamepad2.right_bumper){
-                robot.wobbleMotor.setTargetPosition(lifterTP);
-                robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.wobbleMotor.setPower(-.3);
-                if(Math.abs(lifterTP - robot.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1)){
-                    robot.wobbleMotor.setPower(-0.4);
+                Wobble.wobbleMotor.setTargetPosition(lifterTP);
+                Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                Wobble.wobbleMotor.setPower(-.3);
+                if(Math.abs(lifterTP - Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1)){
+                    Wobble.wobbleMotor.setPower(-0.4);
                 }
             }
-            else if(Math.abs(lifterTP - robot.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1) && !gamepad2.right_bumper){
-                robot.wobbleMotor.setTargetPosition(-350);
-                robot.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.wobbleMotor.setPower(.3);
-                if(Math.abs(robot.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1)){
-                    robot.wobbleMotor.setPower(0.4);
+            else if(Math.abs(lifterTP - Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1) && !gamepad2.right_bumper){
+                Wobble.wobbleMotor.setTargetPosition(-350);
+                Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                Wobble.wobbleMotor.setPower(.3);
+                if(Math.abs(Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1)){
+                    Wobble.wobbleMotor.setPower(0.4);
                 }
             }
 
             if (gamepad1.dpad_right) {
-                mainIntake.releaseAll();
+                Constants.mainIntake.releaseAll();
             }
             else
-                robot.vibrator.setPosition(.60);
+                Intake.vibrator.setPosition(.60);
 
             if(gamepad1.dpad_left){
-                robot.vibrator.setPosition(0.65);
+                Intake.vibrator.setPosition(0.65);
                 sleep(150);
-                robot.vibrator.setPosition(0.45);
+                Intake.vibrator.setPosition(0.45);
                 sleep(75);
             }
             else
-                robot.vibrator.setPosition(.60);
-
-//            telemetry.addLine()
-//                    .addData("Red", "%.3f", (double) robot.autoColorSensor.red())
-//                    .addData("Blue", "%.3f", (double) robot.autoColorSensor.blue())
-//                    .addData("Alpha", "%.3f", (double) robot.autoColorSensor.alpha());
-
-//            telemetry.addLine()
-//                    .addData("Red", "%.3f", (double) robot.indexColorSensor.red())
-//                    .addData("Blue", "%.3f", (double) robot.indexColorSensor.blue())
-//                    .addData("Alpha", "%.3f", (double) robot.indexColorSensor.alpha());
-
-//            telemetry.addData("range1", String.format("%.3f cm",Distance1.getAverage() + cal1));
-//            telemetry.addData("range2", String.format("%.3f cm",Distance2.getAverage() + cal2));
-//            telemetry.addData("laserboi", String.format("%.3f cm", robot.laserboi.getDistance(DistanceUnit.CM)));
-//            telemetry.addData("pewpewboi", String.format("%.3f m", robot.pewpewboi.getDistance(DistanceUnit.CM)));
-              telemetry.addData("indexSensor", String.format("%.3f cm", robot.indexSensor.getDistance(DistanceUnit.CM)));
-              telemetry.addData("rings: ", mainIntake.rings);
-              telemetry.addData("Ring Flag: ", mainIntake.ringCountFlag);
-              telemetry.addData("intake: ", intake);
-//              telemetry.addData("skewAngle", String.format("%.3f °",180*(Math.atan((Distance2.getAverage()-Distance1.getAverage())/0.15))/Math.PI));
-
-//            telemetry.addLine();
-//            telemetry.addData("wobble1:", robot.wobble1.getPosition());
-//            telemetry.addData("wobble2:", robot.wobble2.getPosition());
-
-//            telemetry.addData("Pow", pow);
-//            telemetry.addData("Pow1", pow1);
-//            telemetry.addData("Pow2", pow2);
+                Intake.vibrator.setPosition(.60);
 
 
+//            DriveTrain.DriveTelemetry(telemetry);
+//            Intake.intakeTelemetry(telemetry);
+//            Shooter.shooterTelemetry(telemetry);
+//            Wobble.wobbleTelemetry(telemetry);
 //            telemetry.addData("leftstick y value: ", gamepad1.left_stick_y);
 //            telemetry.addData("leftstick x value: ", gamepad1.left_stick_x);
-//            telemetry.addData("current angle: ", angles.firstAngle);
+//            telemetry.addLine();
 //            telemetry.addData("command heading: ", command);
-            telemetry.addLine();
+//            telemetry.addLine();
 
-            telemetry.addData("Lifter Pos: ", robot.wobbleMotor.getCurrentPosition());
-            telemetry.addData("Lifter TP: ", robot.wobbleMotor.getTargetPosition());
-            telemetry.addData("Lifter Pow: ", robot.wobbleMotor.getPower());
-//            telemetry.addData("Vibrator:", robot.vibrator.getPosition());
-            //telemetry.addData("Inake Array Size:", mainIntake.rings.lastIndexOf(true)) ;
+
             //telemetry.addData("grapfroot encoder", robot.grapfroot.getCurrentPosition());
 //            telemetry.addData("Runtime", "%.03f", getRuntime());
-//            telemetry.addData("P,I,D (orig)", "%.04f, %.04f, %.0f",
-//                    mainShooter.getOldP(), mainShooter.getOldI(), mainShooter.getOldD());
-//            telemetry.addData("P,I,D (modified)", "%.04f, %.04f, %.04f",
-//                    mainShooter.getNewP(), mainShooter.getNewI(), mainShooter.getNewD());
             telemetry.update();
         }
-    }
-    static String formatAngle(AngleUnit angleUnit, double angle) {
-        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
-    }
-
-    static String formatDegrees(double degrees) {
-        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 }

@@ -1,41 +1,55 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Util.HardwarePresets;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.Util.Constants;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class DriveTrain{
+import java.util.Locale;
+
+public class DriveTrain {
 
     //Motors
-    public DcMotor leftFrontMotor; //Expansion hub, port 0
-    public DcMotor leftBackMotor; //Expansion hub, port 1
-    public DcMotor rightFrontMotor; //Expansion hub, port 3
-    public DcMotor rightBackMotor; //Expansion hub, port 2
+    public static DcMotor leftFrontMotor; //Expansion hub, port 0
+    public static DcMotor leftBackMotor; //Expansion hub, port 1
+    public static DcMotor rightFrontMotor; //Expansion hub, port 3
+    public static DcMotor rightBackMotor; //Expansion hub, port 2
 
-    public ColorSensor floorColorSensor; //Control hub, I2C Bus 1
+    public static ColorSensor floorColorSensor; //Control hub, I2C Bus 1
+
+    public static BNO055IMU imu; //Control hub, I2C Bus 0
+    public static Orientation angles;
+    public static Acceleration gravity;
 
     //2m distance sensors
-    public DistanceSensor laserboi; //Control hub, I2C Bus 2
-    //public DistanceSensor pewpewboi; //Control hub, I2C Bus 3
+    public static DistanceSensor driveDistanceSensor; //Control hub, I2C Bus 2
 
-    public void initDriveTrain(HardwareMap HwMap) {
-        //super.init(hwm);
-        leftFrontMotor = HwMap.dcMotor.get("leftFrontMotor");
-        leftBackMotor = HwMap.dcMotor.get("leftBackMotor");
-        rightFrontMotor = HwMap.dcMotor.get("rightFrontMotor");
-        rightBackMotor = HwMap.dcMotor.get("rightBackMotor");
+    public static void initDriveTrain(HardwareMap hwm) {
 
-        floorColorSensor = HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "floorColorSensor");
+        Constants.HwMap = hwm;
+        leftFrontMotor = Constants.HwMap.dcMotor.get("leftFrontMotor");
+        leftBackMotor = Constants.HwMap.dcMotor.get("leftBackMotor");
+        rightFrontMotor = Constants.HwMap.dcMotor.get("rightFrontMotor");
+        rightBackMotor = Constants.HwMap.dcMotor.get("rightBackMotor");
 
-        laserboi = HwMap.get(DistanceSensor.class, "laserboi");
-        //pewpewboi = HwMap.get(DistanceSensor.class, "pewpewboi");
+        floorColorSensor = Constants.HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "floorColorSensor");
 
+        driveDistanceSensor = Constants.HwMap.get(DistanceSensor.class, "driveDistanceSensor");
+
+        imu = Constants.HwMap.get(BNO055IMU.class, "imu");
 
         leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -46,6 +60,15 @@ public class DriveTrain{
         leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        BNO055IMU.Parameters parameters1 = new BNO055IMU.Parameters();
+        parameters1.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters1.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters1.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters1.loggingEnabled = true;
+        parameters1.loggingTag = "IMU";
+        parameters1.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        imu.initialize(parameters1);
     }
 
     //Constructor
@@ -157,7 +180,7 @@ public class DriveTrain{
         rightBackMotor.setPower(0);
     }
     public void driveToRing(double power){
-        while(laserboi.getDistance(DistanceUnit.CM) > 10) {
+        while(driveDistanceSensor.getDistance(DistanceUnit.CM) > 10) {
                 leftFrontMotor.setPower(power);
                 leftBackMotor.setPower(power);
                 rightFrontMotor.setPower(power);
@@ -235,16 +258,29 @@ public class DriveTrain{
         }
     }
 
-    public void DriveTelemetry(Telemetry telemetry){
-            telemetry.addData("left front encoder", leftFrontMotor.getCurrentPosition());
-            telemetry.addData("left back encoder", leftBackMotor.getCurrentPosition());
-            telemetry.addData("right front encoder", rightFrontMotor.getCurrentPosition());
-            telemetry.addData("right back encoder", rightBackMotor.getCurrentPosition());
-            telemetry.addLine();
-            telemetry.addData("left front power", leftFrontMotor.getPower());
-            telemetry.addData("left back power", leftBackMotor.getPower());
-            telemetry.addData("right front power", rightFrontMotor.getPower());
-            telemetry.addData("right back power", rightBackMotor.getPower());
+    public static void DriveTelemetry(Telemetry telemetry){
+        telemetry.addData("left front encoder", leftFrontMotor.getCurrentPosition());
+        telemetry.addData("left back encoder", leftBackMotor.getCurrentPosition());
+        telemetry.addData("right front encoder", rightFrontMotor.getCurrentPosition());
+        telemetry.addData("right back encoder", rightBackMotor.getCurrentPosition());
+        telemetry.addLine();
+        telemetry.addData("left front power", leftFrontMotor.getPower());
+        telemetry.addData("left back power", leftBackMotor.getPower());
+        telemetry.addData("right front power", rightFrontMotor.getPower());
+        telemetry.addData("right back power", rightBackMotor.getPower());
+        telemetry.addLine();
+        telemetry.addLine();
+                    telemetry.addLine()
+                    .addData("Red", "%.3f", (double) floorColorSensor.red())
+                    .addData("Blue", "%.3f", (double) floorColorSensor.blue())
+                    .addData("Alpha", "%.3f", (double) floorColorSensor.alpha());
+        telemetry.addLine();
+        telemetry.addData("range1", String.format("%.3f cm", Constants.Distance1.getAverage() + Constants.cal1));
+        telemetry.addData("range2", String.format("%.3f cm",Constants.Distance2.getAverage() + Constants.cal2));
+        telemetry.addData("laserboi", String.format("%.3f cm", driveDistanceSensor.getDistance(DistanceUnit.CM)));
+        telemetry.addLine();
+        telemetry.addData("current angle: ", angles.firstAngle);
+        telemetry.addLine();
     }
 
     public void DriveToLine(String color){
@@ -272,6 +308,74 @@ public class DriveTrain{
             leftBackMotor.setPower(0);
             rightBackMotor.setPower(0);
         }
+    }
+
+    public void composeTelemetry (Telemetry telemetry) {
+
+        telemetry.addAction(new Runnable() {
+            @Override
+            public void run() {
+                angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                gravity = imu.getGravity();
+            }
+        });
+        telemetry.addLine()
+                .addData("status", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return imu.getSystemStatus().toShortString();
+                    }
+                })
+                .addData("calib", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return imu.getCalibrationStatus().toString();
+                    }
+                });
+        telemetry.addLine()
+                .addData("heading", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return formatAngle(angles.angleUnit, angles.firstAngle);
+                    }
+                })
+                .addData("roll", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return formatAngle(angles.angleUnit, angles.secondAngle);
+                    }
+                })
+                .addData("pitch", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return formatAngle(angles.angleUnit, angles.thirdAngle);
+                    }
+                });
+
+        telemetry.addLine()
+                .addData("grvty", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return gravity.toString();
+                    }
+                })
+                .addData("mag", new Func<String>() {
+                    @Override
+                    public String value() {
+                        return String.format(Locale.getDefault(), "%.3f",
+                                Math.sqrt(gravity.xAccel * gravity.xAccel
+                                        + gravity.yAccel * gravity.yAccel
+                                        + gravity.zAccel * gravity.zAccel));
+                    }
+                });
+    }
+
+    static String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    static String formatDegrees(double degrees) {
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 }
 

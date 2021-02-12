@@ -1,25 +1,14 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
-import android.hardware.Sensor;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
-import org.firstinspires.ftc.teamcode.Util.HardwarePresets;
+import org.firstinspires.ftc.teamcode.Util.Constants;
 import org.firstinspires.ftc.teamcode.Util.Rolling;
-import org.firstinspires.ftc.teamcode.Util.SensorColor;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -37,21 +26,7 @@ import java.util.Locale;
 
 @Autonomous(name= "BlueComplete", group= "Autonomous")
 
-public class BlueComplete extends Intake {
-
-    HardwarePresets robot = new HardwarePresets();
-    SensorColor color = new SensorColor();
-    DriveTrain drive = new DriveTrain();
-    //private Telemetry telemetry = new TelemetryImpl(this);
-
-    public BNO055IMU imu;
-    public Orientation angles;
-    public Acceleration gravity;
-
-    public static double NEW_P = 50.0;//18.6
-    public static double NEW_I = 2.0;
-    public static double NEW_D = 0.4;
-    public static double NEW_F = 0;
+public class BlueComplete extends LinearOpMode{
 
     public Shooter autoShooter;
     public Intake autoIntake;
@@ -61,18 +36,6 @@ public class BlueComplete extends Intake {
     SkystoneDeterminationPipeline pipeline;
 
     public void runOpMode() throws InterruptedException {
-        robot.init(hardwareMap);
-
-        BNO055IMU.Parameters parameters1 = new BNO055IMU.Parameters();
-        parameters1.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters1.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters1.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters1.loggingEnabled = true;
-        parameters1.loggingTag = "IMU";
-        parameters1.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters1);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -81,7 +44,7 @@ public class BlueComplete extends Intake {
 
         autoIntake = new Intake();
 
-        robot.angleAdjust.setPosition(0.5);
+        Shooter.angleAdjust.setPosition(0.5);
 
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
@@ -94,17 +57,13 @@ public class BlueComplete extends Intake {
 
         waitForStart();
 
+        Shooter.mainShooter.shoot(0.58);
 
-
-        robot.mainShooter.shoot(0.58);
-
-        drive.setRunMode("STOP_AND_RESET_ENCODER");
-        drive.setRunMode("RUN_USING_ENCODER");
+        Constants.drive.setRunMode("STOP_AND_RESET_ENCODER");
+        Constants.drive.setRunMode("RUN_USING_ENCODER");
 
         Thread.sleep(50);
-        NormalizedColorSensor colorSensor;
-        colorSensor = robot.HwMap.get(NormalizedColorSensor.class, "autoColorSensor");
-        robot.autoColorSensor.enableLed(true);
+        DriveTrain.floorColorSensor.enableLed(true);
 
         webcam.closeCameraDevice();
 
@@ -113,43 +72,43 @@ public class BlueComplete extends Intake {
         pipeline.position = SkystoneDeterminationPipeline.RingPosition.FOUR;
 
         telemetry.addData("Position", pipeline.position);
-        telemetry.addData("laserboi", String.format("%.3f cm", robot.laserboi.getDistance(DistanceUnit.CM)));
-        telemetry.addData("Red", "%.3f", (double) robot.autoColorSensor.red());
+        telemetry.addData("driveDistanecSensor", String.format("%.3f cm", DriveTrain.driveDistanceSensor.getDistance(DistanceUnit.CM)));
+        telemetry.addData("Red", "%.3f", (double) DriveTrain.floorColorSensor.red());
         telemetry.addData("Average of ouh", pipeline.avg1);
         telemetry.update();
 
         //Drive forward and pick up ringos
         if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.NONE || pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
             //TODO Spin intake motor
-            color.DriveToLine("WHITE");
+            Constants.drive.DriveToLine("WHITE");
             sleep(50);
-            drive.Drive("REVERSE", 400, 0.3);
+            Constants.drive.Drive("REVERSE", 400, 0.3);
             sleep(50);
         }
         else{
-            drive.Drive("FORWARD", 1000, 0.3);
+            Constants.drive.Drive("FORWARD", 1000, 0.3);
             sleep(100);
             //TODO Spin Intake
-            drive.Drive("FORWARD", 300, 0.15);
+            Constants.drive.Drive("FORWARD", 300, 0.15);
             telemetry.addData("Status", "Lineyo");
             telemetry.update();
             //TODO add color sensor for rings
-            drive.Drive("FORWARD", 1000, 0.3);
+            Constants.drive.Drive("FORWARD", 1000, 0.3);
             sleep(100);
-            drive.setRunMode("RUN_USING_ENCODER");
+            Constants.drive.setRunMode("RUN_USING_ENCODER");
             sleep(50);
-            color.DriveToLine("WHITE");
+            Constants.drive.DriveToLine("WHITE");
             //TODO Spin Intake
-            drive.Drive("FORWARD", 300, 0.15);
+            Constants.drive.Drive("FORWARD", 300, 0.15);
             telemetry.addData("Status", "Lineyo");
             telemetry.update();
             //TODO add color sensor for rings
             sleep(100);
-            drive.setRunMode("RUN_USING_ENCODER");
+            Constants.drive.setRunMode("RUN_USING_ENCODER");
             sleep(50);
-            color.DriveToLine("WHITE");
+            Constants.drive.DriveToLine("WHITE");
             sleep(100);
-            drive.Drive("REVERSE", 400, 0.3);
+            Constants.drive.Drive("REVERSE", 400, 0.3);
             sleep(50);
         }
 
@@ -159,14 +118,14 @@ public class BlueComplete extends Intake {
         if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.NONE){
             telemetry.addData("Status", "no blocko");
             telemetry.update();
-            drive.setRunMode("RUN_USING_ENCODER");
-            color.DriveToLine("WHITE");
-            robot.angleAdjust.setPosition(0.51);
+            Constants.drive.setRunMode("RUN_USING_ENCODER");
+            Constants.drive.DriveToLine("WHITE");
+            Shooter.angleAdjust.setPosition(0.51);
             autoIntake.shootAllNoClear();
             sleep(100);
-            drive.Drive("REVERSE", 200, 0.3);
+            Constants.drive.Drive("REVERSE", 200, 0.3);
             sleep(100);
-            drive.Drive("STRAFE_LEFT", 1200, 0.4);
+            Constants.drive.Drive("STRAFE_LEFT", 1200, 0.4);
             sleep(100);
 //            robot.grabber.setPosition(.5);
             sleep(100);
@@ -174,18 +133,18 @@ public class BlueComplete extends Intake {
         else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
             telemetry.addData("Status", "blocko is 1'0");
             telemetry.update();
-            drive.driveToRing(0.3);
-            robot.angleAdjust.setPosition(0.5);
+            Constants.drive.driveToRing(0.3);
+            Shooter.angleAdjust.setPosition(0.5);
             autoIntake.shootAllNoClear();
             sleep(100);
             autoIntake.intake();
-            drive.setRunMode("RUN_USING_ENCODER");
-            color.DriveToLine("WHITE");
-            robot.angleAdjust.setPosition(0.51);
+            Constants.drive.setRunMode("RUN_USING_ENCODER");
+            Constants.drive.DriveToLine("WHITE");
+            Shooter.angleAdjust.setPosition(0.51);
             autoIntake.releaseAll();
             sleep(100);
-            drive.setRunMode("RUN_USING_ENCODER");
-            color.DriveToLine("RED");
+            Constants.drive.setRunMode("RUN_USING_ENCODER");
+            Constants.drive.DriveToLine("RED");
             Thread.sleep(100);
 //            robot.grabber.setPosition(.5);
             sleep(100);
@@ -193,20 +152,20 @@ public class BlueComplete extends Intake {
         else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.FOUR){
             telemetry.addData("Status", "blocko is 4'0");
             telemetry.update();
-            drive.driveToRing(0.3);
-            robot.angleAdjust.setPosition(0.5);
+            Constants.drive.driveToRing(0.3);
+            Shooter.angleAdjust.setPosition(0.5);
             autoIntake.shootAllNoClear();
             sleep(100);
             autoIntake.intake();
-            drive.setRunMode("RUN_USING_ENCODER");
-            color.DriveToLine("WHITE");
-            robot.angleAdjust.setPosition(0.51);
+            Constants.drive.setRunMode("RUN_USING_ENCODER");
+            Constants.drive.DriveToLine("WHITE");
+            Shooter.angleAdjust.setPosition(0.51);
             autoIntake.releaseAll();
             sleep(100);
-            drive.Drive("FORWARD_LEFT", 250, .2);
+            Constants.drive.Drive("FORWARD_LEFT", 250, .2);
             sleep(100);
-            drive.setRunMode("RUN_USING_ENCODER");
-            color.DriveToLine("RED");
+            Constants.drive.setRunMode("RUN_USING_ENCODER");
+            Constants.drive.DriveToLine("RED");
             sleep(100);
 //            robot.grabber.setPosition(.5);
             sleep(100);
@@ -219,40 +178,40 @@ public class BlueComplete extends Intake {
 
 
         if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
-            drive.Drive("STRAFE_LEFT", 1200, 0.4);
+            Constants.drive.Drive("STRAFE_LEFT", 1200, 0.4);
             Thread.sleep(100);
         }
 
 
-        drive.Drive("REVERSE", 2500, 0.4);
+        Constants.drive.Drive("REVERSE", 2500, 0.4);
 
         //left off with it indexing wrong
 
-        drive.Drive("STRAFE_RIGHT" , 500, .3);
+        Constants.drive.Drive("STRAFE_RIGHT" , 500, .3);
 
         //takes too long to index
-        while(Distance1.index < 10){
-            Distance1.add(robot.pewpewboi.getDistance(DistanceUnit.CM));
-            telemetry.addData("Average Distance indexing", Distance1.getAverage());
-            telemetry.update();
-        }
-        //doesnt read distance up close
-        while(Distance1.getAverage() > 15){
-            Distance1.add(robot.pewpewboi.getDistance(DistanceUnit.CM));
-            telemetry.addData("Average Distance driving", Distance1.getAverage());
-            telemetry.update();
-            drive.setRunMode("RUN_USING_ENCODER");
-            drive.leftFrontMotor.setPower(-0.4);
-            drive.leftBackMotor.setPower(-0.4);
-            drive.rightFrontMotor.setPower(-0.4);
-            drive.rightBackMotor.setPower(-0.4);
-        }
+//        while(Distance1.index < 10){
+//            Distance1.add(DriveTrain.pewpewboi.getDistance(DistanceUnit.CM));
+//            telemetry.addData("Average Distance indexing", Distance1.getAverage());
+//            telemetry.update();
+//        }
+//        //doesnt read distance up close
+//        while(Distance1.getAverage() > 15){
+//            Distance1.add(DriveTrain.pewpewboi.getDistance(DistanceUnit.CM));
+//            telemetry.addData("Average Distance driving", Distance1.getAverage());
+//            telemetry.update();
+//            Constants.drive.setRunMode("RUN_USING_ENCODER");
+//            Constants.drive.leftFrontMotor.setPower(-0.4);
+//            Constants.drive.leftBackMotor.setPower(-0.4);
+//            Constants.drive.rightFrontMotor.setPower(-0.4);
+//            Constants.drive.rightBackMotor.setPower(-0.4);
+//        }
 
 
 
 
         if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
-            drive.Drive("STRAFE_LEFT", 1200, 0.4);
+            Constants.drive.Drive("STRAFE_LEFT", 1200, 0.4);
             Thread.sleep(100);
         }
 
@@ -263,34 +222,34 @@ public class BlueComplete extends Intake {
 
 
         if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.NONE){
-            drive.Drive("REVERSE", 1000, 0.4);
+            Constants.drive.Drive("REVERSE", 1000, 0.4);
         }
         else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
-            drive.Drive("REVERSE", 1750, 0.4);
+            Constants.drive.Drive("REVERSE", 1750, 0.4);
         }
         else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.FOUR){
-            drive.Drive("REVERSE", 2500, 0.4);
+            Constants.drive.Drive("REVERSE", 2500, 0.4);
         }
 
 
-        drive.Drive("STRAFE_RIGHT" , 500, .3);
+        Constants.drive.Drive("STRAFE_RIGHT" , 500, .3);
 
-        while(Distance1.index < 5){
-            Distance1.add(robot.pewpewboi.getDistance(DistanceUnit.CM));
-            telemetry.addData("Average Distance indexing", Distance1.getAverage());
-            telemetry.update();
-        }
+//        while(Distance1.index < 5){
+//            Distance1.add(DriveTrain.pewpewboi.getDistance(DistanceUnit.CM));
+//            telemetry.addData("Average Distance indexing", Distance1.getAverage());
+//            telemetry.update();
+//        }
 
-        while(Distance1.getAverage() > 10){
-            Distance1.add(robot.pewpewboi.getDistance(DistanceUnit.CM));
-            telemetry.addData("Average Distance driving", Distance1.getAverage());
-            telemetry.update();
-            drive.setRunMode("RUN_USING_ENCODER");
-            drive.leftFrontMotor.setPower(-0.4);
-            drive.leftBackMotor.setPower(-0.4);
-            drive.rightFrontMotor.setPower(-0.4);
-            drive.rightBackMotor.setPower(-0.4);
-        }
+//        while(Distance1.getAverage() > 10){
+//            Distance1.add(DriveTrain.pewpewboi.getDistance(DistanceUnit.CM));
+//            telemetry.addData("Average Distance driving", Distance1.getAverage());
+//            telemetry.update();
+//            Constants.drive.setRunMode("RUN_USING_ENCODER");
+//            Constants.drive.leftFrontMotor.setPower(-0.4);
+//            Constants.drive.leftBackMotor.setPower(-0.4);
+//            Constants.drive.rightFrontMotor.setPower(-0.4);
+//            Constants.drive.rightBackMotor.setPower(-0.4);
+//        }
     }
 
     public static class SkystoneDeterminationPipeline extends OpenCvPipeline {

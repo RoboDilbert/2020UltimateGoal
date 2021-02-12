@@ -2,14 +2,19 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.StarterTeleop;
-import org.firstinspires.ftc.teamcode.Util.HardwarePresets;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Util.Constants;
 
-public class Shooter extends StarterTeleop {
+public class Shooter {
 
-    private DcMotorEx shooter; //Control hub, port 0
+    public static DcMotorEx shooter; //Control hub, port 0
+    public static Shooter mainShooter;
+    public static Servo angleAdjust; //Control hub, port
 
     private static double NEW_P;//18.6
     private static double NEW_I;
@@ -22,7 +27,6 @@ public class Shooter extends StarterTeleop {
     public Shooter(double P, double I, double D, double F){
 
 //        PIDFCoefficients pidOrig = robot.shooter.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
-        shooter = HwMap.get(DcMotorEx.class, "shooter");
 
         NEW_P = P;
         NEW_I = I;
@@ -37,8 +41,23 @@ public class Shooter extends StarterTeleop {
         PIDFCoefficients pidModified = shooter.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public Shooter(){
+    public static void initShooter(HardwareMap hwm){
+        Constants.HwMap = hwm;
+        shooter = Constants.HwMap.get(DcMotorEx.class, "shooter");
+        angleAdjust = Constants.HwMap.servo.get("angleAdjust");
 
+        shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        shooter.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        mainShooter = new Shooter(NEW_P, NEW_I, NEW_D, NEW_F);
+    }
+
+    public static void shooterTelemetry(Telemetry telemetry){
+        telemetry.addData("P,I,D (orig)", "%.04f, %.04f, %.0f",
+                mainShooter.getOldP(), mainShooter.getOldI(), mainShooter.getOldD());
+        telemetry.addData("P,I,D (modified)", "%.04f, %.04f, %.04f",
+                mainShooter.getNewP(), mainShooter.getNewI(), mainShooter.getNewD());
+        telemetry.addLine();
     }
 
     //Methods
