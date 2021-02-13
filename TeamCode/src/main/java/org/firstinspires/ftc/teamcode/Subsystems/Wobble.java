@@ -13,12 +13,12 @@ import java.io.CharArrayWriter;
 
 public class Wobble {
 
-    public static DcMotor wobbleMotor;
+    private static DcMotor wobbleMotor;
 
-    public static Servo wobble1;
-    public static Servo wobble2;
+    private static Servo wobble1;
+    private static Servo wobble2;
 
-    public static Servo grabber; //Control hub, port 1
+    private static Servo grabber; //Control hub, port 1
 
     //Constuctor
     public Wobble(){}
@@ -34,7 +34,34 @@ public class Wobble {
 
         wobbleMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         wobbleMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        wobbleMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
+
+    public static void open(){
+        wobble2.setPosition(.1);
+    }
+
+    public static void close(){
+        wobble2.setPosition(.5);
+    }
+
+    public static void lift(int lifterTP, boolean right_bumper){
+        Wobble.wobbleMotor.setTargetPosition(lifterTP);
+        Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Wobble.wobbleMotor.setPower(-.3);
+        if (Math.abs(lifterTP - Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1)) {
+            Wobble.wobbleMotor.setPower(-0.4);
+        }
+        else if(Math.abs(lifterTP - Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1) && !right_bumper) {
+            Wobble.wobbleMotor.setTargetPosition(-350);
+            Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            Wobble.wobbleMotor.setPower(.3);
+        }
+        if (Math.abs(Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1)) {
+            Wobble.wobbleMotor.setPower(0.4);
+        }
+    }
+
 
     public static void wobbleTelemetry(Telemetry telemetry){
         telemetry.addData("Lifter Pos: ", Wobble.wobbleMotor.getCurrentPosition());

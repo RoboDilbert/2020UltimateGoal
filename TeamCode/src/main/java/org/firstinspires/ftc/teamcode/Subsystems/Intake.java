@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -12,16 +13,16 @@ import java.util.ArrayList;
 
 public class Intake {
     //Instance Fields
-    public static ArrayList rings = new ArrayList(4);
-    public static boolean ringCountFlag = false;
-    public static final double ringDistance = 13;
+    private static ArrayList rings = new ArrayList(4);
+    private static boolean ringCountFlag = false;
+    private static final double ringDistance = 13;
 
-    public static DistanceSensor indexSensor;
+    private static DistanceSensor indexSensor;
 
-    public static DcMotor frontIntakeMotor; //Control hub, port 1
-    public static DcMotor rearIntakeMotor; //Control hub, port 2
+    private static DcMotor frontIntakeMotor; //Control hub, port 1
+    private static DcMotor rearIntakeMotor; //Control hub, port 2
 
-    public static Servo vibrator; //Control hub, port  0
+    private static Servo vibrator; //Control hub, port  0
 
     //Constructor
     public Intake() {}
@@ -36,6 +37,9 @@ public class Intake {
 
         vibrator = Constants.HwMap.servo.get("vibrator");
         vibrator.setPosition(0.53);
+
+        frontIntakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearIntakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     //Release 1
@@ -167,5 +171,24 @@ public class Intake {
     public static void stop(){
         frontIntakeMotor.setPower(0);
         rearIntakeMotor.setPower(0);
+    }
+    public static void intakeRunMode(String mode){
+        if(mode.equals("RUN_USING_ENCODER")){
+            rearIntakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            frontIntakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+        else if(mode.equals("RUN_WITHOUT_ENCODER")){
+            rearIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            frontIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+    }
+    public static void shootOneNoClear() throws InterruptedException{
+        vibrator.setPosition(0.65);
+        Thread.sleep(100);
+        vibrator.setPosition(0.45);
+        Thread.sleep(100);
+    }
+    public static void defaultPos(){
+        vibrator.setPosition(0.6);
     }
 }

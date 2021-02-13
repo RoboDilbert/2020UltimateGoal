@@ -36,16 +36,13 @@ public class StarterTeleop extends LinearOpMode {
         Shooter.initShooter(hardwareMap);
         Intake.initIntake(hardwareMap);
 
-        Intake.frontIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        Intake.rearIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Intake.intakeRunMode("RUN_WITHOUT_ENCODER");
 
-        Constants.drive.setRunMode("STOP_AND_RESET_ENCODER");
-        Constants.drive.setRunMode("RUN_USING_ENCODER");
+        DriveTrain.setRunMode("STOP_AND_RESET_ENCODER");
+        DriveTrain.setRunMode("RUN_USING_ENCODER");
 
-        Shooter.shooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Shooter.shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        Wobble.wobbleMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Shooter.shooterRunMode("STOP_AND_RESET_ENCODER");
+        Shooter.shooterRunMode("RUN_USING_ENCODER");
 
         DriveTrain.composeTelemetry(telemetry);
         waitForStart();
@@ -102,62 +99,47 @@ public class StarterTeleop extends LinearOpMode {
 ////                robot.grabber.setPosition(.25);
 //            }
 
-            if (gamepad2.a) {
-                Wobble.wobble1.setPosition(.12);
-                //wobble bottom position
+//            if (gamepad2.a) {
+//                Wobble.wobble1.setPosition(.12);
+//                //wobble bottom position
+//            }
+//            if (gamepad2.y) {
+//                Wobble.wobble1.setPosition(.08);
+//                //wobble top position
+
+            if (gamepad2.x) {
+                Wobble.close();
+                //wobble grabber close position
             }
-            if (gamepad2.y) {
-                Wobble.wobble1.setPosition(.08);
-                //wobble top position
+            if (gamepad2.b) {
+                Wobble.open();
+                //wobble grabber open position
+            }
+            if (gamepad1.y) {
+                Shooter.shoot(0);
+            }
 
-                if (gamepad2.x) {
-                    Wobble.wobble2.setPosition(.5);
-                    //wobble grabber close position
-                }
-                if (gamepad2.b) {
-                    Wobble.wobble2.setPosition(.1);
-                    //wobble grabber open position
-                }
-                if (gamepad1.y) {
-                    Shooter.shooter.setPower(0);
-                    // turn shooter off
-                }
+            //Lifter
+            if (gamepad2.right_bumper) {
+                Wobble.lift(-500, gamepad1.right_bumper);
+            }
 
-                //Lifter
-                int lifterTP = -500;
-                if (gamepad2.right_bumper) {
-                    Wobble.wobbleMotor.setTargetPosition(lifterTP);
-                    Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    Wobble.wobbleMotor.setPower(-.3);
-                    if (Math.abs(lifterTP - Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1)) {
-                        Wobble.wobbleMotor.setPower(-0.4);
-                    }
-                } else if (Math.abs(lifterTP - Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1) && !gamepad2.right_bumper) {
-                    Wobble.wobbleMotor.setTargetPosition(-350);
-                    Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    Wobble.wobbleMotor.setPower(.3);
-                    if (Math.abs(Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1)) {
-                        Wobble.wobbleMotor.setPower(0.4);
-                    }
-                }
+            if (gamepad1.dpad_right) {
+                Intake.releaseAll();
+            } else {
+                Intake.defaultPos();
+            }
 
-                if (gamepad1.dpad_right) {
-                    Constants.mainIntake.releaseAll();
-                } else
-                    Intake.vibrator.setPosition(.60);
+            if (gamepad1.dpad_left) {
+                Intake.shootOneNoClear();
+            } else {
+                Intake.defaultPos();
+            }
 
-                if (gamepad1.dpad_left) {
-                    Intake.vibrator.setPosition(0.65);
-                    sleep(150);
-                    Intake.vibrator.setPosition(0.45);
-                    sleep(75);
-                } else
-                    Intake.vibrator.setPosition(.60);
-
-                DriveTrain.DriveTelemetry(telemetry);
-                Intake.intakeTelemetry(telemetry);
-                Shooter.shooterTelemetry(telemetry);
-                Wobble.wobbleTelemetry(telemetry);
+            DriveTrain.DriveTelemetry(telemetry);
+            Intake.intakeTelemetry(telemetry);
+            Shooter.shooterTelemetry(telemetry);
+            Wobble.wobbleTelemetry(telemetry);
 //            telemetry.addData("leftstick y value: ", gamepad1.left_stick_y);
 //            telemetry.addData("leftstick x value: ", gamepad1.left_stick_x);
 //            telemetry.addLine();
@@ -165,10 +147,9 @@ public class StarterTeleop extends LinearOpMode {
 //            telemetry.addLine();
 
 
-                //telemetry.addData("grapfroot encoder", robot.grapfroot.getCurrentPosition());
+            //telemetry.addData("grapfroot encoder", robot.grapfroot.getCurrentPosition());
 //            telemetry.addData("Runtime", "%.03f", getRuntime());
-                telemetry.update();
-            }
+            telemetry.update();
         }
     }
 }

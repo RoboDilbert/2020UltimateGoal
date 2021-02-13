@@ -270,7 +270,7 @@ public class DriveTrain {
         }
 
     }
-    public void setRunMode(String input) {
+    public static void setRunMode(String input) {
         if (input.equals("STOP_AND_RESET_ENCODER")) {
             leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

@@ -15,7 +15,7 @@ public class Shooter {
 
     public static DcMotorEx shooter; //Control hub, port 0
     public static Shooter mainShooter;
-    private static Servo angleAdjust; //Control hub, port
+    private static Servo angleAdjust; //Control hub, port 2
 
     private static double NEW_P;//18.6
     private static double NEW_I;
@@ -73,10 +73,10 @@ public class Shooter {
     }
 
     //Methods
-    public double  getShooterSpeed(){
+    public static double  getShooterSpeed(){
         return shooter.getVelocity();
     }
-    public void setPosition(String position){
+    public static void setPosition(String position){
         if(position.equals("INDEX")){
             angleAdjust.setPosition(0.7);
         }
@@ -105,7 +105,20 @@ public class Shooter {
 //        return pidOrig.d;
 //    }
 
-    public void shoot(double power){
+    public static void shoot(double power){
         shooter.setPower(power);
    }
+
+    public static void shooterRunMode(String mode){
+        if(mode.equals("RUN_USING_ENCODER")){
+            shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+        else if(mode.equals("RUN_WITHOUT_ENCODER")){
+            shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+        else if(mode.equals("STOP_AND_RESET_ENCODER")){
+            shooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        }
+    }
 }
