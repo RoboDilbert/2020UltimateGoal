@@ -22,7 +22,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 
 @TeleOp(name= "TeleOop", group= "TeleOp")
 //@Disabled
-public class StarterTeleop extends LinearOpMode{
+public class StarterTeleop extends LinearOpMode {
 
     public float gyroVariation = 0;
 
@@ -35,9 +35,6 @@ public class StarterTeleop extends LinearOpMode{
         Wobble.initWobble(hardwareMap);
         Shooter.initShooter(hardwareMap);
         Intake.initIntake(hardwareMap);
-
-        Intake.vibrator.setPosition(0.53);
-        Shooter.angleAdjust.setPosition(0.5);
 
         Intake.frontIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         Intake.rearIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -53,7 +50,7 @@ public class StarterTeleop extends LinearOpMode{
         DriveTrain.composeTelemetry(telemetry);
         waitForStart();
 
-        while(opModeIsActive()){
+        while (opModeIsActive()) {
 
             // 2m Distance sensor stuff
             Constants.Distance1.add(DriveTrain.driveDistanceSensor.getDistance(DistanceUnit.CM));
@@ -67,43 +64,35 @@ public class StarterTeleop extends LinearOpMode{
 //                gyroVariation = angles.firstAngle;
 //            }
 
-            if (gamepad1.x){
-               intake = !intake;
+            if (gamepad1.x) {
+                intake = !intake;
             }
 
-            if(intake){
-                Constants.mainIntake.intake();
+            if (intake) {
+                Intake.intake();
+            } else {
+                Intake.stop();
             }
 
-            if(!intake){
-                Intake.frontIntakeMotor.setPower(0);
-                Intake.rearIntakeMotor.setPower(0);
+            if (gamepad1.b) {
+                Intake.setBackwards();
             }
 
-            if(gamepad1.b){
-                Intake.frontIntakeMotor.setPower(-1);
-                Intake.rearIntakeMotor.setPower(-1);
-            }
-
-            if(gamepad1.a) {
-                Shooter.angleAdjust.setPosition(0.43);
+            if (gamepad1.a) {
+                Shooter.mainShooter.setPosition("WHITE_LINE");
                 Shooter.mainShooter.shoot(0.58);
             }
-            if(Shooter.shooter.getPower() == 0) {
-                Shooter.angleAdjust.setPosition(0.7);
+            if (Shooter.shooter.getPower() == 0) {
+                Shooter.mainShooter.setPosition("INDEX");
             }
 
             //White Line
-            if(gamepad2.dpad_up){
-                Shooter.angleAdjust.setPosition(0.51);
-            }
-            //Back Wall
-            if(gamepad2.dpad_down){
-                Shooter.angleAdjust.setPosition(0.58);
+            if (gamepad2.dpad_up) {
+                Shooter.mainShooter.setPosition("WHITE_LINE");
             }
             //In front of rings
             if (gamepad2.dpad_left) {
-                Shooter.angleAdjust.setPosition(.5);
+                Shooter.mainShooter.setPosition("RINGS");
             }
 //            if(gamepad2.a){
 ////                robot.grabber.setPosition(.5);
@@ -113,64 +102,62 @@ public class StarterTeleop extends LinearOpMode{
 ////                robot.grabber.setPosition(.25);
 //            }
 
-            if(gamepad2.a){
+            if (gamepad2.a) {
                 Wobble.wobble1.setPosition(.12);
                 //wobble bottom position
             }
-            if(gamepad2.y){
+            if (gamepad2.y) {
                 Wobble.wobble1.setPosition(.08);
                 //wobble top position
-            }
-            if(gamepad2.x){
-                Wobble.wobble2.setPosition(.5);
-                //wobble grabber close position
-            }
-            if(gamepad2.b){
-                Wobble.wobble2.setPosition(.1);
-                //wobble grabber open position
-            }
-            if(gamepad1.y)
-                Shooter.shooter.setPower(0);
-               // turn shooter off
 
-            //Lifter
-            int lifterTP = -500;
-            if(gamepad2.right_bumper){
-                Wobble.wobbleMotor.setTargetPosition(lifterTP);
-                Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                Wobble.wobbleMotor.setPower(-.3);
-                if(Math.abs(lifterTP - Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1)){
-                    Wobble.wobbleMotor.setPower(-0.4);
+                if (gamepad2.x) {
+                    Wobble.wobble2.setPosition(.5);
+                    //wobble grabber close position
                 }
-            }
-            else if(Math.abs(lifterTP - Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1) && !gamepad2.right_bumper){
-                Wobble.wobbleMotor.setTargetPosition(-350);
-                Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                Wobble.wobbleMotor.setPower(.3);
-                if(Math.abs(Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1)){
-                    Wobble.wobbleMotor.setPower(0.4);
+                if (gamepad2.b) {
+                    Wobble.wobble2.setPosition(.1);
+                    //wobble grabber open position
                 }
-            }
+                if (gamepad1.y) {
+                    Shooter.shooter.setPower(0);
+                    // turn shooter off
+                }
 
-            if (gamepad1.dpad_right) {
-                Constants.mainIntake.releaseAll();
-            }
-            else
-                Intake.vibrator.setPosition(.60);
+                //Lifter
+                int lifterTP = -500;
+                if (gamepad2.right_bumper) {
+                    Wobble.wobbleMotor.setTargetPosition(lifterTP);
+                    Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    Wobble.wobbleMotor.setPower(-.3);
+                    if (Math.abs(lifterTP - Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1)) {
+                        Wobble.wobbleMotor.setPower(-0.4);
+                    }
+                } else if (Math.abs(lifterTP - Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1) && !gamepad2.right_bumper) {
+                    Wobble.wobbleMotor.setTargetPosition(-350);
+                    Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    Wobble.wobbleMotor.setPower(.3);
+                    if (Math.abs(Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1)) {
+                        Wobble.wobbleMotor.setPower(0.4);
+                    }
+                }
 
-            if(gamepad1.dpad_left){
-                Intake.vibrator.setPosition(0.65);
-                sleep(150);
-                Intake.vibrator.setPosition(0.45);
-                sleep(75);
-            }
-            else
-                Intake.vibrator.setPosition(.60);
+                if (gamepad1.dpad_right) {
+                    Constants.mainIntake.releaseAll();
+                } else
+                    Intake.vibrator.setPosition(.60);
 
-            DriveTrain.DriveTelemetry(telemetry);
-            Intake.intakeTelemetry(telemetry);
-            Shooter.shooterTelemetry(telemetry);
-            Wobble.wobbleTelemetry(telemetry);
+                if (gamepad1.dpad_left) {
+                    Intake.vibrator.setPosition(0.65);
+                    sleep(150);
+                    Intake.vibrator.setPosition(0.45);
+                    sleep(75);
+                } else
+                    Intake.vibrator.setPosition(.60);
+
+                DriveTrain.DriveTelemetry(telemetry);
+                Intake.intakeTelemetry(telemetry);
+                Shooter.shooterTelemetry(telemetry);
+                Wobble.wobbleTelemetry(telemetry);
 //            telemetry.addData("leftstick y value: ", gamepad1.left_stick_y);
 //            telemetry.addData("leftstick x value: ", gamepad1.left_stick_x);
 //            telemetry.addLine();
@@ -178,9 +165,10 @@ public class StarterTeleop extends LinearOpMode{
 //            telemetry.addLine();
 
 
-            //telemetry.addData("grapfroot encoder", robot.grapfroot.getCurrentPosition());
+                //telemetry.addData("grapfroot encoder", robot.grapfroot.getCurrentPosition());
 //            telemetry.addData("Runtime", "%.03f", getRuntime());
-            telemetry.update();
+                telemetry.update();
+            }
         }
     }
 }

@@ -12,9 +12,9 @@ import java.util.ArrayList;
 
 public class Intake {
     //Instance Fields
-    public ArrayList rings = new ArrayList(4);
-    public boolean ringCountFlag = false;
-    public final double ringDistance = 13;
+    public static ArrayList rings = new ArrayList(4);
+    public static boolean ringCountFlag = false;
+    public static final double ringDistance = 13;
 
     public static DistanceSensor indexSensor;
 
@@ -35,10 +35,11 @@ public class Intake {
         indexSensor = Constants.HwMap.get(DistanceSensor.class, "indexSensor");
 
         vibrator = Constants.HwMap.servo.get("vibrator");
+        vibrator.setPosition(0.53);
     }
 
     //Release 1
-    public void releaseOne() throws InterruptedException {
+    public static void releaseOne() throws InterruptedException {
         if(rings.lastIndexOf(true) >= 0) {
             vibrator.setPosition(0.65);
             Thread.sleep(150);
@@ -48,7 +49,7 @@ public class Intake {
         }
     }
     //Release All
-    public void releaseAll() throws InterruptedException {
+    public static void releaseAll() throws InterruptedException {
         for(int i = 0; i < 9; i++) {
             vibrator.setPosition(0.65);
             Thread.sleep(100);
@@ -57,7 +58,7 @@ public class Intake {
         }
         rings.clear();
     }
-    public void shootAllNoClear()  throws InterruptedException {
+    public static void shootAllNoClear()  throws InterruptedException {
         for(int i = 0; i < 6; i++) {
             vibrator.setPosition(0.65);
             Thread.sleep(100);
@@ -67,22 +68,8 @@ public class Intake {
     }
 
 
-    //Spin backward (button hold)
-    public void backwards(){
-        frontIntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rearIntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontIntakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rearIntakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//                robot.frontIntakeMotor.setTargetPosition(10000);
-//                robot.rearIntakeMotor.setTargetPosition(10000);
-        frontIntakeMotor.setPower(0.3);
-        rearIntakeMotor.setPower(0.3);
-//        robot.frontIntakeMotor.setPower(-0.85);
-//        robot.rearIntakeMotor.setPower(-0.85);
-    }
-
     //Spit one ring
-    public void spit() throws InterruptedException {
+    public static void spit() throws InterruptedException {
         Shooter.mainShooter.shoot(.3);
         Thread.sleep(200);
         vibrator.setPosition(0.65);
@@ -93,7 +80,7 @@ public class Intake {
     }
 
     //Check to see if there are 3 rings
-    public boolean isFull() {
+    public static boolean isFull() {
         if (rings.lastIndexOf(true) == 2) {
             return true;
         } else {
@@ -102,7 +89,7 @@ public class Intake {
     }
 
         //Index
-        public void index ()  throws InterruptedException {
+        public static void index ()  throws InterruptedException {
             if (rings.lastIndexOf(true) < 2) {
                 ringCountFlag = true;
 //                robot.frontIntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -132,7 +119,7 @@ public class Intake {
             }
 
         }
-    public void intake() throws InterruptedException {
+    public static void intake() throws InterruptedException {
         if (indexSensor.getDistance(DistanceUnit.CM) < ringDistance) {
             index();
         }
@@ -148,7 +135,7 @@ public class Intake {
             }
     }
 
-    public void intakeTwo(){
+    public static void intakeTwo(){
         frontIntakeMotor.setPower(.85);
         rearIntakeMotor.setPower(.85);
     }
@@ -166,5 +153,19 @@ public class Intake {
         telemetry.addData("Intake Array Size:", Constants.mainIntake.rings.lastIndexOf(true));
         telemetry.addLine();
         telemetry.update();
+    }
+
+    public static void setForward(){
+        frontIntakeMotor.setPower(.85);
+        rearIntakeMotor.setPower(.85);
+    }
+
+    public static void setBackwards(){
+        frontIntakeMotor.setPower(-.85);
+        rearIntakeMotor.setPower(-.85);
+    }
+    public static void stop(){
+        frontIntakeMotor.setPower(0);
+        rearIntakeMotor.setPower(0);
     }
 }

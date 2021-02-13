@@ -15,7 +15,7 @@ public class Shooter {
 
     public static DcMotorEx shooter; //Control hub, port 0
     public static Shooter mainShooter;
-    public static Servo angleAdjust; //Control hub, port
+    private static Servo angleAdjust; //Control hub, port
 
     private static double NEW_P;//18.6
     private static double NEW_I;
@@ -46,6 +46,8 @@ public class Shooter {
         shooter.setDirection(DcMotorSimple.Direction.REVERSE);
 
         mainShooter = new Shooter();
+
+        mainShooter.setPosition("RINGS");
     }
     public static void updateShooterConstants(double p, double i, double d, double f){
         NEW_P = p;
@@ -71,9 +73,21 @@ public class Shooter {
     }
 
     //Methods
-    public void getShooterSpeed(){
-
+    public double  getShooterSpeed(){
+        return shooter.getVelocity();
     }
+    public void setPosition(String position){
+        if(position.equals("INDEX")){
+            angleAdjust.setPosition(0.7);
+        }
+        else if(position.equals("WHITE_LINE")){
+            angleAdjust.setPosition(0.43);
+        }
+        else if(position.equals("RINGS")){
+            angleAdjust.setPosition(0.5);
+        }
+    }
+
 //    public double getNewP(){
 //        return pidModified.p;
 //    }
