@@ -36,6 +36,9 @@ public class DriveTrain {
     public static Orientation angles;
     public static Acceleration gravity;
 
+    public static double driveTrainError = 0;
+    public static double driveTrainPower = 0;
+
     //2m distance sensors
     public static DistanceSensor driveDistanceSensor; //Control hub, I2C Bus 2;
 
@@ -64,7 +67,7 @@ public class DriveTrain {
         rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         BNO055IMU.Parameters parameters1 = new BNO055IMU.Parameters();
-        parameters1.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters1.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         parameters1.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters1.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
         parameters1.loggingEnabled = true;
@@ -243,33 +246,57 @@ public class DriveTrain {
 
     }
 
-    public void Turn(String input, double power, float degrees){
-        if(input.equals("TURN_LEFT")){
-            float targetLocation = angles.firstAngle - degrees;
-            if(targetLocation < -180){
-                targetLocation = Math.abs(targetLocation + 180);
-            }
-            while (angles.firstAngle < targetLocation - 2 && angles.firstAngle > targetLocation + 2) {
-                leftFrontMotor.setPower(-power);
-                leftBackMotor.setPower(-power);
-                rightFrontMotor.setPower(power);
-                rightBackMotor.setPower(power);
-            }
+    public static void autoAlign(){
+
+        driveTrainError = angles.firstAngle - 0;
+
+        if(Math.abs(driveTrainError) > (Math.PI / 6) /* || driveTrainError < -(Math.PI / 6)*/){
+            driveTrainPower = 1;
         }
-        if(input.equals("TURN_RIGHT")){
-            float targetLocation = angles.firstAngle + degrees;
-            if(targetLocation > 180){
-                targetLocation = -(targetLocation - 180);
+        else{
+            if(Math.abs(driveTrainError) < (Math.PI / 60) /*|| angles.firstAngle > -(Math.PI / 60)*/){
+                driveTrainPower = 0;
+
             }
-            while (angles.firstAngle < targetLocation - 2 && angles.firstAngle > targetLocation + 2) {
-                leftFrontMotor.setPower(power);
-                leftBackMotor.setPower(power);
-                rightFrontMotor.setPower(-power);
-                rightBackMotor.setPower(-power);
+            else if(Math.abs(driveTrainError) > (Math.PI / 60) /*|| angles.firstAngle < -(Math.PI / 60)*/) {
+                driveTrainPower = Math.abs(driveTrainError / (Math.PI / 5.2)) + 0.1;
             }
         }
 
+        if(driveTrainError > 0){
+            cartesianDrive(0, 0, driveTrainPower);
+        }
+        else if(driveTrainError < 0){
+            cartesianDrive(0, 0, -driveTrainPower);
+        }
     }
+//    public void Turn(String input, double power, double degrees){
+//        if(input.equals("TURN_LEFT")){
+//            double targetLocation = angles.firstAngle - degrees;
+//            if(targetLocation < -180){
+//                targetLocation = Math.abs(targetLocation + 180);
+//            }
+//            while (angles.firstAngle < targetLocation - 2 && angles.firstAngle > targetLocation + 2) {
+//                leftFrontMotor.setPower(-power);
+//                leftBackMotor.setPower(-power);
+//                rightFrontMotor.setPower(power);
+//                rightBackMotor.setPower(power);
+//            }
+//        }
+//        if(input.equals("TURN_RIGHT")){
+//            double targetLocation = angles.firstAngle + degrees;
+//            if(targetLocation > 180){
+//                targetLocation = -(targetLocation - 180);
+//            }
+//            while (angles.firstAngle < targetLocation - 2 && angles.firstAngle > targetLocation + 2) {
+//                leftFrontMotor.setPower(power);
+//                leftBackMotor.setPower(power);
+//                rightFrontMotor.setPower(-power);
+//                rightBackMotor.setPower(-power);
+//            }
+//        }
+//
+//    }
     public static void setRunMode(String input) {
         if (input.equals("STOP_AND_RESET_ENCODER")) {
             leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -313,10 +340,12 @@ public class DriveTrain {
 //        telemetry.addData("right front encoder", rightFrontMotor.getCurrentPosition());
 //        telemetry.addData("right back encoder", rightBackMotor.getCurrentPosition());
 //        telemetry.addLine();
-        telemetry.addData("left front power", leftFrontMotor.getPower());
-        telemetry.addData("left back power", leftBackMotor.getPower());
-        telemetry.addData("right front power", rightFrontMotor.getPower());
-        telemetry.addData("right back power", rightBackMotor.getPower());
+//        telemetry.addData("left front power", leftFrontMotor.getPower());
+//        telemetry.addData("left back power", leftBackMotor.getPower());
+//        telemetry.addData("right front power", rightFrontMotor.getPower());
+//        telemetry.addData("right back power", rightBackMotor.getPower());
+        telemetry.addData("DriveTrainError", driveTrainError);
+        telemetry.addData("DriveTrainPower", driveTrainPower);
 //        telemetry.addLine();
 //        telemetry.addLine();
 //                    telemetry.addLine()
@@ -328,7 +357,6 @@ public class DriveTrain {
 //        telemetry.addData("range2", String.format("%.3f cm",Constants.Distance2.getAverage() + Constants.cal2));
 //        telemetry.addData("laserboi", String.format("%.3f cm", driveDistanceSensor.getDistance(DistanceUnit.CM)));
 //        telemetry.addLine();
-        telemetry.addData("current angle: ", angles.firstAngle);
         telemetry.addLine();
     }
 
@@ -364,7 +392,7 @@ public class DriveTrain {
         telemetry.addAction(new Runnable() {
             @Override
             public void run() {
-                angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
                 gravity = imu.getGravity();
             }
         });
@@ -420,11 +448,11 @@ public class DriveTrain {
     }
 
     static String formatAngle(AngleUnit angleUnit, double angle) {
-        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+        return formatDegrees(AngleUnit.RADIANS.fromUnit(angleUnit, angle));
     }
 
     static String formatDegrees(double degrees) {
-        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.RADIANS.normalize(degrees));
     }
 }
 

@@ -61,7 +61,14 @@ public class StarterTeleop extends LinearOpMode {
             DriveTrain.floorColorSensor.enableLed(true);
 
             //Mecanum Drive
-            DriveTrain.cartesianDrive(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+            if(gamepad1.right_trigger > 0.4){
+                DriveTrain.setRunMode("RUN_WITHOUT_ENCODER");
+                DriveTrain.autoAlign();
+            }
+            else {
+                DriveTrain.setRunMode("RUN_USING_ENCODER");
+                DriveTrain.cartesianDrive(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+            }
 
 //            if(gamepad1.x){
 //                gyroVariation = angles.firstAngle;
@@ -156,20 +163,20 @@ public class StarterTeleop extends LinearOpMode {
                 Intake.defaultPos();
             }
 
-//            DriveTrain.DriveTelemetry(telemetry);
+            DriveTrain.DriveTelemetry(telemetry);
 //            Intake.intakeTelemetry(telemetry);
 //            Shooter.shooterTelemetry(telemetry);
 //            Wobble.wobbleTelemetry(telemetry);
-            Intake.intakeTelemetry(telemetry);
-            telemetry.addData("wobble:", Wobble.wobbleMotor.getCurrentPosition());
-            telemetry.addData("wobble mode:", Wobble.wobbleMotor.getMode());
+//            Intake.intakeTelemetry(telemetry);
+//            telemetry.addData("wobble:", Wobble.wobbleMotor.getCurrentPosition());
+//            telemetry.addData("wobble mode:", Wobble.wobbleMotor.getMode());
 //            telemetry.addData("leftstick y value: ", gamepad1.left_stick_y);
 //            telemetry.addData("leftstick x value: ", gamepad1.left_stick_x);
 //            telemetry.addLine();
 //            telemetry.addData("command heading: ", command);
 //            telemetry.addLine();
 
-
+            telemetry.addData("Trigger Position", gamepad1.right_trigger);
             //telemetry.addData("grapfroot encoder", robot.grapfroot.getCurrentPosition());
 //            telemetry.addData("Runtime", "%.03f", getRuntime());
             telemetry.update();
