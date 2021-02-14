@@ -29,9 +29,9 @@ public class Shooter {
 
         //PIDFCoefficients pidOrig = shooter.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        NEW_P = 30;
-        NEW_I = 2.0;
-        NEW_D = 0.4;
+        NEW_P = 200;
+        NEW_I = 0.001;
+        NEW_D = 0.001;
         NEW_F = 0;
 
         updateShooterConstants(NEW_P, NEW_I, NEW_D, NEW_F);
@@ -84,6 +84,9 @@ public class Shooter {
             angleAdjust.setPosition(0.43);
         }
         else if(position.equals("RINGS")){
+            angleAdjust.setPosition(0.5);
+        }
+        else if (position.equals("SHOOTING")){
             angleAdjust.setPosition(0.5);
         }
     }

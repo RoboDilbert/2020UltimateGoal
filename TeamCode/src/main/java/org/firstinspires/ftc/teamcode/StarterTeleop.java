@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.view.View;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -27,6 +29,10 @@ public class StarterTeleop extends LinearOpMode {
     public float gyroVariation = 0;
 
     public boolean intake = false;
+
+    private static final long MIN_DELAY_MS = 500;
+
+    private long mLastClickTime;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -60,9 +66,9 @@ public class StarterTeleop extends LinearOpMode {
 //            if(gamepad1.x){
 //                gyroVariation = angles.firstAngle;
 //            }
-
             if (gamepad1.x) {
                 intake = !intake;
+//                onClick(intake);
             }
 
             if (intake) {
@@ -76,20 +82,26 @@ public class StarterTeleop extends LinearOpMode {
             }
 
             if (gamepad1.a) {
-                Shooter.mainShooter.setPosition("WHITE_LINE");
-                Shooter.mainShooter.shoot(0.58);
+                Shooter.setPosition("WHITE_LINE");
+                Shooter.shoot(0.58);
             }
             if (Shooter.shooter.getPower() == 0) {
-                Shooter.mainShooter.setPosition("INDEX");
+                Shooter.setPosition("INDEX");
             }
 
             //White Line
             if (gamepad2.dpad_up) {
-                Shooter.mainShooter.setPosition("WHITE_LINE");
+                Shooter.setPosition("WHITE_LINE");
             }
             //In front of rings
-            if (gamepad2.dpad_left) {
-                Shooter.mainShooter.setPosition("RINGS");
+//            if (gamepad2.dpad_left) {
+//                Shooter.mainShooter.setPosition("RINGS");
+//            }
+            if(gamepad2.dpad_left){
+                Wobble.grab();
+            }
+            if(gamepad2.dpad_right){
+                Wobble.drop();
             }
 //            if(gamepad2.a){
 ////                robot.grabber.setPosition(.5);
@@ -120,8 +132,16 @@ public class StarterTeleop extends LinearOpMode {
             }
 
             //Lifter
-            if (gamepad2.right_bumper) {
-                Wobble.lift(-500, gamepad1.right_bumper);
+            if (gamepad1.right_bumper) {
+                Wobble.lift(420, gamepad1.right_bumper);
+            }
+//            else if(!gamepad1.right_bumper){
+//                Wobble.unlift(-100, gamepad1.right_bumper);
+//            }
+
+            if(gamepad2.right_bumper){
+                Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                Wobble.wobbleMotor.setPower(0);
             }
 
             if (gamepad1.dpad_right) {
@@ -136,10 +156,13 @@ public class StarterTeleop extends LinearOpMode {
                 Intake.defaultPos();
             }
 
-            DriveTrain.DriveTelemetry(telemetry);
+//            DriveTrain.DriveTelemetry(telemetry);
+//            Intake.intakeTelemetry(telemetry);
+//            Shooter.shooterTelemetry(telemetry);
+//            Wobble.wobbleTelemetry(telemetry);
             Intake.intakeTelemetry(telemetry);
-            Shooter.shooterTelemetry(telemetry);
-            Wobble.wobbleTelemetry(telemetry);
+            telemetry.addData("wobble:", Wobble.wobbleMotor.getCurrentPosition());
+            telemetry.addData("wobble mode:", Wobble.wobbleMotor.getMode());
 //            telemetry.addData("leftstick y value: ", gamepad1.left_stick_y);
 //            telemetry.addData("leftstick x value: ", gamepad1.left_stick_x);
 //            telemetry.addLine();
@@ -150,6 +173,17 @@ public class StarterTeleop extends LinearOpMode {
             //telemetry.addData("grapfroot encoder", robot.grapfroot.getCurrentPosition());
 //            telemetry.addData("Runtime", "%.03f", getRuntime());
             telemetry.update();
+        }
+    }
+    public final void onClick(boolean v) {
+        long lastClickTime = mLastClickTime;
+        long now = System.currentTimeMillis();
+        mLastClickTime = now;
+        if (now - lastClickTime < MIN_DELAY_MS) {
+
+        }
+        else{
+            v = !v;
         }
     }
 }

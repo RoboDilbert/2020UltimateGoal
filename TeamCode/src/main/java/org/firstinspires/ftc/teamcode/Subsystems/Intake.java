@@ -45,41 +45,53 @@ public class Intake {
     //Release 1
     public static void releaseOne() throws InterruptedException {
         if(rings.lastIndexOf(true) >= 0) {
-            vibrator.setPosition(0.65);
-            Thread.sleep(150);
+            vibrator.setPosition(0.70);
+            Thread.sleep(125);
             vibrator.setPosition(0.45);
-            Thread.sleep(75);
+            Thread.sleep(100);
             rings.remove(rings.lastIndexOf(true));
         }
     }
     //Release All
     public static void releaseAll() throws InterruptedException {
-        for(int i = 0; i < 9; i++) {
-            vibrator.setPosition(0.65);
-            Thread.sleep(100);
+        vibrator.setPosition(0.70);
+        Thread.sleep(125);
+        vibrator.setPosition(0.45);
+        Thread.sleep(200);
+        Shooter.setPosition("SHOOTING");
+        for(int i = 0; i < 6; i++) {
+            vibrator.setPosition(0.70);
+            Thread.sleep(125);
             vibrator.setPosition(0.45);
             Thread.sleep(100);
         }
+        Shooter.setPosition("WHITE_LINE");
         rings.clear();
     }
     public static void shootAllNoClear()  throws InterruptedException {
+        vibrator.setPosition(0.70);
+        Thread.sleep(125);
+        vibrator.setPosition(0.45);
+        Thread.sleep(200);
+        Shooter.setPosition("SHOOTING");
         for(int i = 0; i < 6; i++) {
-            vibrator.setPosition(0.65);
-            Thread.sleep(100);
+            vibrator.setPosition(0.70);
+            Thread.sleep(125);
             vibrator.setPosition(0.45);
             Thread.sleep(100);
         }
+        Shooter.setPosition("WHITE_LINE");
     }
 
 
     //Spit one ring
     public static void spit() throws InterruptedException {
-        Shooter.mainShooter.shoot(.3);
-        Thread.sleep(200);
-        vibrator.setPosition(0.65);
-        Thread.sleep(75);
+        Shooter.mainShooter.shoot(.4);
+        Thread.sleep(250);
+        vibrator.setPosition(0.70);
+        Thread.sleep(100);
         vibrator.setPosition(0.45);
-        Thread.sleep(150);
+        Thread.sleep(200);
         rings.remove(rings.lastIndexOf(true));
     }
 
@@ -87,7 +99,8 @@ public class Intake {
     public static boolean isFull() {
         if (rings.lastIndexOf(true) == 2) {
             return true;
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -96,30 +109,10 @@ public class Intake {
         public static void index ()  throws InterruptedException {
             if (rings.lastIndexOf(true) < 2) {
                 ringCountFlag = true;
-//                robot.frontIntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//                robot.rearIntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//                robot.frontIntakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                robot.rearIntakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                robot.frontIntakeMotor.setTargetPosition(10000);
-//                robot.rearIntakeMotor.setTargetPosition(10000);
-//                robot.frontIntakeMotor.setPower(0.3);
-//                robot.rearIntakeMotor.setPower(0.3);
-//                robot.frontIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//                robot.rearIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            } else {
+            }
+            else {
                 ringCountFlag = true;
                 spit();
-//                robot.frontIntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//                robot.rearIntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//                robot.frontIntakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                robot.rearIntakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                robot.frontIntakeMotor.setTargetPosition(10000);
-//                robot.rearIntakeMotor.setTargetPosition(10000);
-//                robot.frontIntakeMotor.setPower(0.3);
-//                robot.rearIntakeMotor.setPower(0.3);
-//                robot.frontIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//                robot.rearIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
             }
 
         }
@@ -131,11 +124,11 @@ public class Intake {
             rings.add(true);
             ringCountFlag = false;
         }
-            frontIntakeMotor.setPower(0.85);
-            rearIntakeMotor.setPower(0.85);
+            frontIntakeMotor.setPower(0.95);
+            rearIntakeMotor.setPower(0.95);
 
             if(isFull()){
-                Shooter.mainShooter.shoot(0);
+                Shooter.shoot(0);
             }
     }
 
@@ -145,10 +138,6 @@ public class Intake {
     }
 
     public static void intakeTelemetry(Telemetry telemetry){
-//        telemetry.addLine()
-//                .addData("Red", "%.3f", (double) indexColorSensor.red())
-//                .addData("Blue", "%.3f", (double) indexColorSensor.blue())
-//                .addData("Alpha", "%.3f", (double) indexColorSensor.alpha());
         telemetry.addData("Vibrator:", vibrator.getPosition());
         telemetry.addLine();
         telemetry.addData("indexSensor", String.format("%.3f cm", Intake.indexSensor.getDistance(DistanceUnit.CM)));
@@ -160,8 +149,8 @@ public class Intake {
     }
 
     public static void setForward(){
-        frontIntakeMotor.setPower(.85);
-        rearIntakeMotor.setPower(.85);
+        frontIntakeMotor.setPower(.95);
+        rearIntakeMotor.setPower(.95);
     }
 
     public static void setBackwards(){

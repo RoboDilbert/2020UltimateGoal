@@ -13,7 +13,7 @@ import java.io.CharArrayWriter;
 
 public class Wobble {
 
-    private static DcMotor wobbleMotor;
+    public static DcMotor wobbleMotor;
 
     private static Servo wobble1;
     private static Servo wobble2;
@@ -45,15 +45,27 @@ public class Wobble {
         wobble2.setPosition(.5);
     }
 
+    public static void grab(){
+        grabber.setPosition(0.7);
+    }
+    public static void drop(){
+        grabber.setPosition(1);
+    }
+
     public static void lift(int lifterTP, boolean right_bumper){
         Wobble.wobbleMotor.setTargetPosition(lifterTP);
         Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        Wobble.wobbleMotor.setPower(-.3);
+        Wobble.wobbleMotor.setPower(.3);
         if (Math.abs(lifterTP - Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1)) {
-            Wobble.wobbleMotor.setPower(-0.4);
+            Wobble.wobbleMotor.setPower(0);
         }
-        else if(Math.abs(lifterTP - Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1) && !right_bumper) {
-            Wobble.wobbleMotor.setTargetPosition(-350);
+//        if (Math.abs(Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1)) {
+//            Wobble.wobbleMotor.setPower(0.4);
+//        }
+    }
+    public static void unlift(int lifterTP, boolean right_bumper){
+        if(Math.abs(lifterTP - Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1) && !right_bumper) {
+            Wobble.wobbleMotor.setTargetPosition(-lifterTP);
             Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             Wobble.wobbleMotor.setPower(.3);
         }
