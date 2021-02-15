@@ -45,6 +45,9 @@ public class Shooter {
         shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         shooter.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        Shooter.shooterRunMode("STOP_AND_RESET_ENCODER");
+        Shooter.shooterRunMode("RUN_USING_ENCODER");
+
         mainShooter = new Shooter();
 
         mainShooter.setPosition("RINGS");
@@ -69,11 +72,10 @@ public class Shooter {
 //        telemetry.addData("P,I,D (modified)", "%.04f, %.04f, %.04f",
 //                mainShooter.getNewP(), mainShooter.getNewI(), mainShooter.getNewD());
         telemetry.addLine();
-        telemetry.update();
     }
 
     //Methods
-    public static double  getShooterSpeed(){
+    public static double getShooterSpeed(){
         return shooter.getVelocity();
     }
     public static void setPosition(String position){

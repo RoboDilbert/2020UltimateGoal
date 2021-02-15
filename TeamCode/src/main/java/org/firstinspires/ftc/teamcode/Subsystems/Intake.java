@@ -24,6 +24,9 @@ public class Intake {
 
     private static Servo vibrator; //Control hub, port  0
 
+    private static final double VIBRATOR_CLOSED = 0.7;
+    private static final double VIBRATOR_OPEN = 0.45;
+
     //Constructor
     public Intake() {}
 
@@ -36,7 +39,7 @@ public class Intake {
         indexSensor = Constants.HwMap.get(DistanceSensor.class, "indexSensor");
 
         vibrator = Constants.HwMap.servo.get("vibrator");
-        vibrator.setPosition(0.53);
+        vibrator.setPosition(VIBRATOR_CLOSED);
 
         frontIntakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rearIntakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -45,39 +48,39 @@ public class Intake {
     //Release 1
     public static void releaseOne() throws InterruptedException {
         if(rings.lastIndexOf(true) >= 0) {
-            vibrator.setPosition(0.70);
+            vibrator.setPosition(VIBRATOR_OPEN);
             Thread.sleep(125);
-            vibrator.setPosition(0.45);
+            vibrator.setPosition(VIBRATOR_CLOSED);
             Thread.sleep(100);
             rings.remove(rings.lastIndexOf(true));
         }
     }
     //Release All
     public static void releaseAll() throws InterruptedException {
-        vibrator.setPosition(0.70);
-        Thread.sleep(125);
-        vibrator.setPosition(0.45);
+        vibrator.setPosition(VIBRATOR_OPEN);
+        Thread.sleep(150);
+        vibrator.setPosition(VIBRATOR_CLOSED);
         Thread.sleep(200);
         Shooter.setPosition("SHOOTING");
-        for(int i = 0; i < 6; i++) {
-            vibrator.setPosition(0.70);
-            Thread.sleep(125);
-            vibrator.setPosition(0.45);
+        for(int i = 0; i < 8; i++) {
+            vibrator.setPosition(VIBRATOR_OPEN);
+            Thread.sleep(150);
+            vibrator.setPosition(VIBRATOR_CLOSED);
             Thread.sleep(100);
         }
         Shooter.setPosition("WHITE_LINE");
         rings.clear();
     }
     public static void shootAllNoClear()  throws InterruptedException {
-        vibrator.setPosition(0.70);
+        vibrator.setPosition(VIBRATOR_OPEN);
         Thread.sleep(125);
-        vibrator.setPosition(0.45);
+        vibrator.setPosition(VIBRATOR_CLOSED);
         Thread.sleep(200);
         Shooter.setPosition("SHOOTING");
         for(int i = 0; i < 6; i++) {
-            vibrator.setPosition(0.70);
+            vibrator.setPosition(VIBRATOR_OPEN);
             Thread.sleep(125);
-            vibrator.setPosition(0.45);
+            vibrator.setPosition(VIBRATOR_CLOSED);
             Thread.sleep(100);
         }
         Shooter.setPosition("WHITE_LINE");
@@ -88,9 +91,9 @@ public class Intake {
     public static void spit() throws InterruptedException {
         Shooter.mainShooter.shoot(.4);
         Thread.sleep(250);
-        vibrator.setPosition(0.70);
+        vibrator.setPosition(VIBRATOR_OPEN);
         Thread.sleep(100);
-        vibrator.setPosition(0.45);
+        vibrator.setPosition(VIBRATOR_CLOSED);
         Thread.sleep(200);
         rings.remove(rings.lastIndexOf(true));
     }
@@ -106,16 +109,15 @@ public class Intake {
     }
 
         //Index
-        public static void index ()  throws InterruptedException {
-            if (rings.lastIndexOf(true) < 2) {
-                ringCountFlag = true;
-            }
-            else {
-                ringCountFlag = true;
-                spit();
-            }
-
+     public static void index ()  throws InterruptedException {
+        if (rings.lastIndexOf(true) < 2) {
+            ringCountFlag = true;
         }
+        else {
+            ringCountFlag = true;
+            spit();
+        }
+    }
     public static void intake() throws InterruptedException {
         if (indexSensor.getDistance(DistanceUnit.CM) < ringDistance) {
             index();
@@ -124,12 +126,12 @@ public class Intake {
             rings.add(true);
             ringCountFlag = false;
         }
-            frontIntakeMotor.setPower(0.95);
-            rearIntakeMotor.setPower(0.95);
+        frontIntakeMotor.setPower(0.95);
+        rearIntakeMotor.setPower(0.95);
 
-            if(isFull()){
-                Shooter.shoot(0);
-            }
+        if(isFull()){
+            Shooter.shoot(0);
+        }
     }
 
     public static void intakeTwo(){
@@ -141,18 +143,16 @@ public class Intake {
         telemetry.addData("Vibrator:", vibrator.getPosition());
         telemetry.addLine();
         telemetry.addData("indexSensor", String.format("%.3f cm", Intake.indexSensor.getDistance(DistanceUnit.CM)));
-        telemetry.addData("rings: ", Constants.mainIntake.rings);
-        telemetry.addData("Ring Flag: ", Constants.mainIntake.ringCountFlag);
-        telemetry.addData("Intake Array Size:", Constants.mainIntake.rings.lastIndexOf(true));
+        telemetry.addData("rings: ", rings);
+        telemetry.addData("Ring Flag: ", ringCountFlag);
+        telemetry.addData("Intake Array Size:", rings.lastIndexOf(true));
         telemetry.addLine();
-        telemetry.update();
     }
 
     public static void setForward(){
         frontIntakeMotor.setPower(.95);
         rearIntakeMotor.setPower(.95);
     }
-
     public static void setBackwards(){
         frontIntakeMotor.setPower(-.85);
         rearIntakeMotor.setPower(-.85);
@@ -174,7 +174,7 @@ public class Intake {
     public static void shootOneNoClear() throws InterruptedException{
         vibrator.setPosition(0.65);
         Thread.sleep(100);
-        vibrator.setPosition(0.45);
+        vibrator.setPosition(VIBRATOR_CLOSED);
         Thread.sleep(100);
     }
     public static void defaultPos(){

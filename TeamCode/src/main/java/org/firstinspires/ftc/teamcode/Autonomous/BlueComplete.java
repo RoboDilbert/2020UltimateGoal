@@ -7,6 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.Subsystems.Wobble;
 import org.firstinspires.ftc.teamcode.Util.Constants;
 import org.firstinspires.ftc.teamcode.Util.Rolling;
 import org.opencv.core.Core;
@@ -24,7 +25,6 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.Locale;
 
 @Autonomous(name= "BlueComplete", group= "Autonomous")
-
 public class BlueComplete extends LinearOpMode{
 
     public Shooter autoShooter;
@@ -37,226 +37,190 @@ public class BlueComplete extends LinearOpMode{
     public void runOpMode() throws InterruptedException {
 
         DriveTrain.initDriveTrain(hardwareMap);
+        Shooter.initShooter(hardwareMap);
+        Intake.initIntake(hardwareMap);
+        Wobble.initWobble(hardwareMap);
 
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        pipeline = new SkystoneDeterminationPipeline();
-        webcam.setPipeline(pipeline);
-
-        autoIntake = new Intake();
+//        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+//        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+//        pipeline = new SkystoneDeterminationPipeline();
+//        webcam.setPipeline(pipeline);
 
         //Shooter.angleAdjust.setPosition(0.5);
 
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
-                webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
-            }
-        });
+//        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+//        {
+//            @Override
+//            public void onOpened()
+//            {
+//                webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
+//            }
+//        });
 
         waitForStart();
 
-        DriveTrain.cartesianDriveAuto(0, -0.6, 0, 4000, telemetry);
-        //telemetry.addData("heading", DriveTrain.angles.firstAngle);
-        //Shoot the first three shots
-//        Shooter.mainShooter.shoot(0.58);
-//
-//        Constants.drive.setRunMode("STOP_AND_RESET_ENCODER");
-//        Constants.drive.setRunMode("RUN_USING_ENCODER");
-//
-//        Thread.sleep(50);
-//        DriveTrain.floorColorSensor.enableLed(true);
-//
-//        webcam.closeCameraDevice();
-//
-//        //TODO Shoot the preloaded rings
-//
-//        pipeline.position = SkystoneDeterminationPipeline.RingPosition.FOUR;
-//
-//        telemetry.addData("Position", pipeline.position);
-//        telemetry.addData("driveDistanecSensor", String.format("%.3f cm", DriveTrain.driveDistanceSensor.getDistance(DistanceUnit.CM)));
-//        telemetry.addData("Red", "%.3f", (double) DriveTrain.floorColorSensor.red());
-//        telemetry.addData("Average of ouh", pipeline.avg1);
-//        telemetry.update();
-//
-//        //Drive forward and pick up ringos
-//        if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.NONE || pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
-//            //TODO Spin intake motor
-//            Constants.drive.DriveToLine("WHITE");
-//            sleep(50);
-//            while(/* */){
-//                DriveTrain.cartesianDrive(0,-1,0);
-//            }
-////            Constants.drive.Drive("REVERSE", 400, 0.3);
-////            sleep(50);
-//        }
-//        else{
-//            Constants.drive.Drive("FORWARD", 1000, 0.3);
-//            sleep(100);
-//            //TODO Spin Intake
-//            Constants.drive.Drive("FORWARD", 300, 0.15);
-//            telemetry.addData("Status", "Lineyo");
-//            telemetry.update();
-//            //TODO add color sensor for rings
-//            Constants.drive.Drive("FORWARD", 1000, 0.3);
-//            sleep(100);
-//            Constants.drive.setRunMode("RUN_USING_ENCODER");
-//            sleep(50);
-//            Constants.drive.DriveToLine("WHITE");
-//            //TODO Spin Intake
-//            Constants.drive.Drive("FORWARD", 300, 0.15);
-//            telemetry.addData("Status", "Lineyo");
-//            telemetry.update();
-//            //TODO add color sensor for rings
-//            sleep(100);
-//            Constants.drive.setRunMode("RUN_USING_ENCODER");
-//            sleep(50);
-//            Constants.drive.DriveToLine("WHITE");
-//            sleep(100);
-//            Constants.drive.Drive("REVERSE", 400, 0.3);
-//            sleep(50);
-//        }
-//
-//        //Shoot extra picked up rings
-//
-//        //Drive to designated location
-//        if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.NONE){
-//            telemetry.addData("Status", "no blocko");
-//            telemetry.update();
-//            Constants.drive.setRunMode("RUN_USING_ENCODER");
-//            Constants.drive.DriveToLine("WHITE");
-//            Shooter.angleAdjust.setPosition(0.51);
-//            autoIntake.shootAllNoClear();
-//            sleep(100);
-//            Constants.drive.Drive("REVERSE", 200, 0.3);
-//            sleep(100);
-//            Constants.drive.Drive("STRAFE_LEFT", 1200, 0.4);
-//            sleep(100);
-////            robot.grabber.setPosition(.5);
-//            sleep(100);
-//        }
-//        else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
-//            telemetry.addData("Status", "blocko is 1'0");
-//            telemetry.update();
-//            Constants.drive.driveToRing(0.3);
-//            Shooter.angleAdjust.setPosition(0.5);
-//            autoIntake.shootAllNoClear();
-//            sleep(100);
-//            autoIntake.intake();
-//            Constants.drive.setRunMode("RUN_USING_ENCODER");
-//            Constants.drive.DriveToLine("WHITE");
-//            Shooter.angleAdjust.setPosition(0.51);
-//            autoIntake.releaseAll();
-//            sleep(100);
-//            Constants.drive.setRunMode("RUN_USING_ENCODER");
-//            Constants.drive.DriveToLine("RED");
-//            Thread.sleep(100);
-////            robot.grabber.setPosition(.5);
-//            sleep(100);
-//        }
-//        else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.FOUR){
-//            telemetry.addData("Status", "blocko is 4'0");
-//            telemetry.update();
-//            Constants.drive.driveToRing(0.3);
-//            Shooter.angleAdjust.setPosition(0.5);
-//            autoIntake.shootAllNoClear();
-//            sleep(100);
-//            autoIntake.intake();
-//            Constants.drive.setRunMode("RUN_USING_ENCODER");
-//            Constants.drive.DriveToLine("WHITE");
-//            Shooter.angleAdjust.setPosition(0.51);
-//            autoIntake.releaseAll();
-//            sleep(100);
-//            Constants.drive.Drive("FORWARD_LEFT", 250, .2);
-//            sleep(100);
-//            Constants.drive.setRunMode("RUN_USING_ENCODER");
-//            Constants.drive.DriveToLine("RED");
-//            sleep(100);
-////            robot.grabber.setPosition(.5);
-//            sleep(100);
-//        }
-//
-//        //Drop boyo
-//
-//
-//        //Backup to white line
-//
-//
-//        if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
-//            Constants.drive.Drive("STRAFE_LEFT", 1200, 0.4);
-//            Thread.sleep(100);
-//        }
-//
-//
-//        Constants.drive.Drive("REVERSE", 2500, 0.4);
-//
-//        //left off with it indexing wrong
-//
-//        Constants.drive.Drive("STRAFE_RIGHT" , 500, .3);
-//
-//        //takes too long to index
-////        while(Distance1.index < 10){
-////            Distance1.add(DriveTrain.pewpewboi.getDistance(DistanceUnit.CM));
-////            telemetry.addData("Average Distance indexing", Distance1.getAverage());
-////            telemetry.update();
-////        }
-////        //doesnt read distance up close
-////        while(Distance1.getAverage() > 15){
-////            Distance1.add(DriveTrain.pewpewboi.getDistance(DistanceUnit.CM));
-////            telemetry.addData("Average Distance driving", Distance1.getAverage());
-////            telemetry.update();
-////            Constants.drive.setRunMode("RUN_USING_ENCODER");
-////            Constants.drive.leftFrontMotor.setPower(-0.4);
-////            Constants.drive.leftBackMotor.setPower(-0.4);
-////            Constants.drive.rightFrontMotor.setPower(-0.4);
-////            Constants.drive.rightBackMotor.setPower(-0.4);
-////        }
-//
-//
-//
-//
-//        if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
-//            Constants.drive.Drive("STRAFE_LEFT", 1200, 0.4);
-//            Thread.sleep(100);
-//        }
-//
-//
-//        //left off with it indexing wrong
-//
-//
-//
-//
-//        if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.NONE){
-//            Constants.drive.Drive("REVERSE", 1000, 0.4);
-//        }
-//        else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.ONE){
-//            Constants.drive.Drive("REVERSE", 1750, 0.4);
-//        }
-//        else if(pipeline.position == SkystoneDeterminationPipeline.RingPosition.FOUR){
-//            Constants.drive.Drive("REVERSE", 2500, 0.4);
-//        }
-//
-//
-//        Constants.drive.Drive("STRAFE_RIGHT" , 500, .3);
-//
-////        while(Distance1.index < 5){
-////            Distance1.add(DriveTrain.pewpewboi.getDistance(DistanceUnit.CM));
-////            telemetry.addData("Average Distance indexing", Distance1.getAverage());
-////            telemetry.update();
-////        }
-//
-////        while(Distance1.getAverage() > 10){
-////            Distance1.add(DriveTrain.pewpewboi.getDistance(DistanceUnit.CM));
-////            telemetry.addData("Average Distance driving", Distance1.getAverage());
-////            telemetry.update();
-////            Constants.drive.setRunMode("RUN_USING_ENCODER");
-////            Constants.drive.leftFrontMotor.setPower(-0.4);
-////            Constants.drive.leftBackMotor.setPower(-0.4);
-////            Constants.drive.rightFrontMotor.setPower(-0.4);
-////            Constants.drive.rightBackMotor.setPower(-0.4);
-////        }
+        //Read the stack
+
+        //--------0----------
+
+        //Drive forward to white line
+        Shooter.shoot(Constants.SHOOTER_POWER);
+        sleep(100);
+        DriveTrain.cartesianDriveTimer(0, -0.6 , 42);
+        sleep(1000);
+        DriveTrain.driveToLine("WHITE");
+        sleep(100);
+
+        //Shoot
+        Shooter.setPosition("WHITE_LINE");
+        sleep(100);
+        DriveTrain.cartesianDriveTimer(0, 0.3, 40);
+        sleep(100);
+        Intake.releaseAll();
+        Shooter.shoot(0);
+        sleep(100);
+        Shooter.setPosition("INDEX");
+        sleep(100);
+
+        //Strafe over to wall
+        DriveTrain.cartesianDriveTimer(0.8, 0,70);
+
+        //Drop wobb
+        Wobble.drop();
+
+        //backup along wall with timer
+        DriveTrain.cartesianDriveTimer(0, 0.6, 21);
+        sleep(1000);
+
+        //strafe over until change
+        DriveTrain.cartesianDriveDistance(-0.45, 0, "RED");
+
+        //Use distance sensor to measure distance to wobble
+
+        //Pick it up
+
+        //Strafe and turn at the same time
+        //Drop off wobble
+        //Get to line
+
+
+        //--------1-----------
+        //Strafe Left
+        DriveTrain.cartesianDriveTimer(-0.6, 0 , 10);
+
+        //Drive Forward to ring
+        Shooter.shoot(Constants.SHOOTER_POWER);
+        Shooter.setPosition("RINGS");
+        DriveTrain.cartesianDriveRing(0, -0.4);
+
+        //Shoot our shot
+        Intake.releaseAll();
+
+        //Turn on intake
+        Intake.intake();
+
+        //Drive forward to white line
+//        DriveTrain.cartesianDriveTimer(0, -0.6 , 42);
+//        sleep(1000);
+        DriveTrain.driveToLine("WHITE");
+        sleep(100);
+
+        //Shoot
+        Shooter.setPosition("WHITE_LINE");
+        sleep(100);
+        DriveTrain.cartesianDriveTimer(0, 0.3, 40);
+        sleep(100);
+        Intake.releaseAll();
+        Shooter.shoot(0);
+        Shooter.setPosition("INDEX");
+        sleep(100);
+
+        //Drive Forward to red Line
+        DriveTrain.driveToLine("RED");
+
+        //Drop wobb
+        Wobble.drop();
+
+        //Strafe to wall
+        DriveTrain.cartesianDriveTimer(-0.6, 0 , 40);
+
+        //backup along wall with timer
+        DriveTrain.cartesianDriveTimer(0, 0.6, 25);
+        sleep(100);
+
+        //strafe over until change
+        DriveTrain.cartesianDriveDistance(-0.45, 0, "RED");
+
+        //Use distance sensor to measure distance to wobble
+
+        //Pick it up
+
+        //Strafe and turn at the same time
+        //Drop off wobble
+        //Rotate
+        //Get to line
+
+        //------------4------------
+        //Strafe Left
+        DriveTrain.cartesianDriveTimer(-0.6, 0 , 10);
+
+        //Drive Forward to ring
+        Shooter.shoot(Constants.SHOOTER_POWER);
+        Shooter.setPosition("RINGS");
+        DriveTrain.cartesianDriveRing(0, -0.4);
+
+        //Shoot our shot
+        Intake.releaseAll();
+
+        //Turn on intake
+        Intake.intake();
+
+        //Drive forward to white line
+//        DriveTrain.cartesianDriveTimer(0, -0.6 , 42);
+//        sleep(1000);
+        //TODO MAKE SURE WE DON"T GET FOUR (Splay out rings, pick up 3, stop intake with sensor, then shoot and pick up the last one hopefully)
+        DriveTrain.driveToLine("WHITE");
+        sleep(100);
+
+        //Shoot
+        Shooter.setPosition("WHITE_LINE");
+        sleep(100);
+        DriveTrain.cartesianDriveTimer(0, 0.3, 40);
+        sleep(100);
+        Intake.releaseAll();
+        Shooter.shoot(0);
+        Shooter.setPosition("INDEX");
+        sleep(100);
+
+        //Drive to white line again
+        DriveTrain.driveToLine("WHITE");
+
+        //Strafe over to wall
+        DriveTrain.cartesianDriveTimer(0.8, 0,70);
+
+        //Drive Forward to 2 red Lines
+        DriveTrain.driveToLine("RED");
+        sleep(100);
+        DriveTrain.driveToLine("RED");
+
+        //Drop wobb
+        Wobble.drop();
+
+        //backup along wall with timer
+        DriveTrain.cartesianDriveTimer(0, 0.6, 35);
+        sleep(100);
+
+        //strafe over until change
+        DriveTrain.cartesianDriveDistance(-0.45, 0, "RED");
+
+        //Use distance sensor to measure distance to wobble
+
+        //Pick it up
+
+        //Strafe and turn at the same time
+        //Drop off wobble
+        //Rotate
+        //Get to line
     }
 
     public static class SkystoneDeterminationPipeline extends OpenCvPipeline {

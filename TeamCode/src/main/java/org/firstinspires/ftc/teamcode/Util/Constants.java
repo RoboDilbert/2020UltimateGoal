@@ -12,10 +12,14 @@ public class Constants {
     public static HardwareMap HwMap;
 
     public static Rolling Distance1 = new Rolling(20);
-    public static Rolling Distance2 = new Rolling (20);
-    public static Intake mainIntake = new Intake();
-    public static DriveTrain drive = new DriveTrain();
-    public static Wobble wobb = new Wobble();
+
+    //Shooter Constants
+    public static final double SHOOTER_POWER = 0.58;
+
+    //Intake Constants
+
+    //DriveTrain Constants
+
 
     public static double cal1 = 0;
     public static double cal2 = 0;

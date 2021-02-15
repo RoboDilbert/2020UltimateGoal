@@ -41,6 +41,12 @@ public class DriveTrain {
 
     //2m distance sensors
     public static DistanceSensor driveDistanceSensor; //Control hub, I2C Bus 2;
+    public static DistanceSensor backDistanceSensor; //Expansion hub, I2C Bus 0
+    public static DistanceSensor leftDistanceSensor; //Control hub, I2C Bus 0;
+//    public static DistanceSensor rightDistanceSensor;
+
+    //Constructor
+    public DriveTrain(){}
 
     public static void initDriveTrain(HardwareMap hwm) {
 
@@ -53,6 +59,9 @@ public class DriveTrain {
         floorColorSensor = Constants.HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "floorColorSensor");
 
         driveDistanceSensor = Constants.HwMap.get(DistanceSensor.class, "driveDistanceSensor");
+        backDistanceSensor = Constants.HwMap.get(DistanceSensor.class, "backDistanceSensor");
+        leftDistanceSensor = Constants.HwMap.get(DistanceSensor.class, "leftDistanceSensor");
+//        rightDistanceSensor = Constants.HwMap.get(DistanceSensor.class, "rightDistanceSensor");
 
         imu = Constants.HwMap.get(BNO055IMU.class, "imu");
 
@@ -76,9 +85,6 @@ public class DriveTrain {
         imu.initialize(parameters1);
     }
 
-    //Constructor
-    public DriveTrain(){}
-
     public static void cartesianDrive(double x, double y, double z){
         double speed = Math.sqrt(2) * Math.hypot(x, y);
         double command = Math.atan2(y, -x) + Math.PI/2;
@@ -94,10 +100,12 @@ public class DriveTrain {
         DriveTrain.rightBackMotor.setPower((speed * adjustedYHeading - rotation) * Constants.TELEOP_LIMITER);
     }
 
-    public static void cartesianDriveAuto(double x, double y, double z, int timerLength, Telemetry telemetry) throws InterruptedException {
+    public static void cartesianDriveTimer(double x, double y, int timerLength) throws InterruptedException {
         double speed = Math.sqrt(2) * Math.hypot(x, y);
         double command = Math.atan2(y, -x) + Math.PI/2;
-        double rotation = z;
+        double rotation = 0;
+        double startingHeading = 0;
+        double currentError = 0;
         double adjustedXHeading = 0;
         double adjustedYHeading = 0;
 
@@ -108,14 +116,29 @@ public class DriveTrain {
             adjustedXHeading = Math.cos(command + angles.firstAngle + Math.PI / 4);
             adjustedYHeading = Math.sin(command + angles.firstAngle + Math.PI / 4);
 
+            currentError = angles.firstAngle - startingHeading;
+
+            if(Math.abs(currentError) > (Math.PI / 12)){
+                rotation = 0.40;
+            }
+            else{
+                if(Math.abs(currentError) > (Math.PI / 60)){
+                    rotation = Math.abs(currentError / 0.6);
+                }
+                else{
+                    rotation = 0;
+                }
+            }
+
+            if(currentError < 0){
+                rotation = rotation * -1;
+            }
+
             leftFrontMotor.setPower((speed * adjustedYHeading + rotation) * Constants.TELEOP_LIMITER);
             rightFrontMotor.setPower((speed * adjustedXHeading - rotation) * Constants.TELEOP_LIMITER);
             leftBackMotor.setPower((speed * adjustedXHeading + rotation) * Constants.TELEOP_LIMITER);
             rightBackMotor.setPower((speed * adjustedYHeading - rotation) * Constants.TELEOP_LIMITER);
-            DriveTelemetry(telemetry);
             Thread.sleep(20);
-            telemetry.addData("Counter", timerLength);
-            telemetry.update();
             timerLength--;
         }
 
@@ -124,145 +147,136 @@ public class DriveTrain {
         leftBackMotor.setPower(0);
         rightBackMotor.setPower(0);
     }
+    public static void cartesianDriveRing(double x, double y) throws InterruptedException {
+        double speed = Math.sqrt(2) * Math.hypot(x, y);
+        double command = Math.atan2(y, -x) + Math.PI/2;
+        double rotation = 0;
+        double startingHeading = 0;
+        double currentError = 0;
+        double adjustedXHeading = 0;
+        double adjustedYHeading = 0;
+
+        double ringDistance = 0;
 
 
-//    public void Drive(String input, int encoderTicks, double power){
-//        if(input.equals("STRAFE_RIGHT")){
-//            leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + encoderTicks);
-//            leftBackMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() - encoderTicks);
-//            rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() - encoderTicks);
-//            rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() + encoderTicks);
-//            setRunMode("RUN_TO_POSITION");
-//
-//            while(anyDriveMotorsBusy()) {
-//                leftFrontMotor.setPower(power);
-//                leftBackMotor.setPower(-power);
-//                rightFrontMotor.setPower(-power);
-//                rightBackMotor.setPower(power);
-//            }
-//        }
-//        if(input.equals("STRAFE_LEFT")){
-//            leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() - encoderTicks);
-//            leftBackMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + encoderTicks);
-//            rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + encoderTicks);
-//            rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() - encoderTicks);
-//            setRunMode("RUN_TO_POSITION");
-//
-//            while(anyDriveMotorsBusy()){
-//                leftFrontMotor.setPower(-power);
-//                leftBackMotor.setPower(power);
-//                rightFrontMotor.setPower(power);
-//                rightBackMotor.setPower(-power);
-//            }
-//        }
-//        if(input.equals("FORWARD")){
-//            leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + encoderTicks);
-//            leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + encoderTicks);
-//            rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + encoderTicks);
-//            rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() + encoderTicks);
-//            setRunMode("RUN_TO_POSITION");
-//
-//            while(anyDriveMotorsBusy()){
-//                leftFrontMotor.setPower(power);
-//                leftBackMotor.setPower(power);
-//                rightFrontMotor.setPower(power);
-//                rightBackMotor.setPower(power);
-//            }
-//        }
-//        if(input.equals("REVERSE")) {
-//            leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() - encoderTicks);
-//            leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() - encoderTicks);
-//            rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() - encoderTicks);
-//            rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() - encoderTicks);
-//            setRunMode("RUN_TO_POSITION");
-//
-//            while (anyDriveMotorsBusy()) {
-//                leftFrontMotor.setPower(-power);
-//                leftBackMotor.setPower(-power);
-//                rightFrontMotor.setPower(-power);
-//                rightBackMotor.setPower(-power);
-//            }
-//        }
-//        if(input.equals("FORWARD_LEFT")){
-//            leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() - encoderTicks);
-//            leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + (6 * encoderTicks));
-//            rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + (6 * encoderTicks));
-//            rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() - encoderTicks);
-//            setRunMode("RUN_TO_POSITION");
-//
-//            while(anyDriveMotorsBusy()){
-//                leftFrontMotor.setPower(power * -.5);
-//                leftBackMotor.setPower(power * 3);
-//                rightFrontMotor.setPower(power * 3);
-//                rightBackMotor.setPower(power * -.5);
-//            }
-//        }
-//        if(input.equals("SLIGHTLY_LEFT")){
-//            leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() - encoderTicks);
-//            leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() - encoderTicks);
-//            rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() - (2 * encoderTicks));
-//            rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() - (2 * encoderTicks));
-//            setRunMode("RUN_TO_POSITION");
-//
-//            while(anyDriveMotorsBusy()){
-//                leftFrontMotor.setPower(power * -0.8);
-//                leftBackMotor.setPower(power * -0.8);
-//                rightFrontMotor.setPower(power * -1.6);
-//                rightBackMotor.setPower(power * -1.6);
-//            }
-//        }
-//        if(input.equals("FORWARD_LEFT")){
-//            leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() - encoderTicks);
-//            leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + (6 * encoderTicks));
-//            rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + (6 * encoderTicks));
-//            rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() - encoderTicks);
-//            setRunMode("RUN_TO_POSITION");
-//
-//            while(anyDriveMotorsBusy()){
-//                leftFrontMotor.setPower(power * -.5);
-//                leftBackMotor.setPower(power * 3);
-//                rightFrontMotor.setPower(power * 3);
-//                rightBackMotor.setPower(power * -.5);
-//            }
-//        }
-//
-//        leftFrontMotor.setPower(0);
-//        leftBackMotor.setPower(0);
-//        rightFrontMotor.setPower(0);
-//        rightBackMotor.setPower(0);
-//    }
-    public void driveToRing(double power){
-        while(driveDistanceSensor.getDistance(DistanceUnit.CM) > 10) {
-                leftFrontMotor.setPower(power);
-                leftBackMotor.setPower(power);
-                rightFrontMotor.setPower(power);
-                rightBackMotor.setPower(power);
+        while(ringDistance > 10) {
+
+            ringDistance = driveDistanceSensor.getDistance(DistanceUnit.CM);
+
+            angles = DriveTrain.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+
+            adjustedXHeading = Math.cos(command + angles.firstAngle + Math.PI / 4);
+            adjustedYHeading = Math.sin(command + angles.firstAngle + Math.PI / 4);
+
+            currentError = angles.firstAngle - startingHeading;
+
+            if(Math.abs(currentError) > (Math.PI / 12)){
+                rotation = 0.40;
+            }
+            else{
+                if(Math.abs(currentError) > (Math.PI / 60)){
+                    rotation = Math.abs(currentError / 0.6);
+                }
+                else{
+                    rotation = 0;
+                }
+            }
+
+            if(currentError < 0){
+                rotation = rotation * -1;
+            }
+
+            leftFrontMotor.setPower((speed * adjustedYHeading + rotation) * Constants.TELEOP_LIMITER);
+            rightFrontMotor.setPower((speed * adjustedXHeading - rotation) * Constants.TELEOP_LIMITER);
+            leftBackMotor.setPower((speed * adjustedXHeading + rotation) * Constants.TELEOP_LIMITER);
+            rightBackMotor.setPower((speed * adjustedYHeading - rotation) * Constants.TELEOP_LIMITER);
+
+            ringDistance = driveDistanceSensor.getDistance(DistanceUnit.CM);
+
         }
 
         leftFrontMotor.setPower(0);
-        leftBackMotor.setPower(0);
         rightFrontMotor.setPower(0);
+        leftBackMotor.setPower(0);
         rightBackMotor.setPower(0);
+    }
 
+    public static void cartesianDriveDistance(double x, double y, String side) throws InterruptedException {
+        double speed = Math.sqrt(2) * Math.hypot(x, y);
+        double command = Math.atan2(y, -x) + Math.PI/2;
+        double rotation = 0;
+        double startingHeading = 0;
+        double currentError = 0;
+        double adjustedXHeading = 0;
+        double adjustedYHeading = 0;
+
+        double lengthSideWall = 0;
+        double lengthBackWall = 0;
+
+        while(/*lengthBackWall > 0 &&*/ lengthSideWall < 16) {
+
+            if(side.equals("RED")){
+                lengthSideWall = leftDistanceSensor.getDistance(DistanceUnit.CM);//leftDistanceSensor
+            }
+            else if (side.equals("BLUE")){
+//                lengthSideWall = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
+            }
+
+            angles = DriveTrain.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+
+            adjustedXHeading = Math.cos(command + angles.firstAngle + Math.PI / 4);
+            adjustedYHeading = Math.sin(command + angles.firstAngle + Math.PI / 4);
+
+            currentError = angles.firstAngle - startingHeading;
+
+            if(Math.abs(currentError) > (Math.PI / 12)){
+                rotation = 0.40;
+            }
+            else{
+                if(Math.abs(currentError) > (Math.PI / 60)){
+                    rotation = Math.abs(currentError / 0.6);
+                }
+                else{
+                    rotation = 0;
+                }
+            }
+
+            if(currentError < 0){
+                rotation = rotation * -1;
+            }
+
+            leftFrontMotor.setPower((speed * adjustedYHeading + rotation) * Constants.TELEOP_LIMITER);
+            rightFrontMotor.setPower((speed * adjustedXHeading - rotation) * Constants.TELEOP_LIMITER);
+            leftBackMotor.setPower((speed * adjustedXHeading + rotation) * Constants.TELEOP_LIMITER);
+            rightBackMotor.setPower((speed * adjustedYHeading - rotation) * Constants.TELEOP_LIMITER);
+
+            if(side.equals("RED")){
+                lengthSideWall = leftDistanceSensor.getDistance(DistanceUnit.CM);//leftDistanceSensor
+            }
+            else if (side.equals("BLUE")){
+//                lengthSideWall = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
+            }
+        }
+
+        leftFrontMotor.setPower(0);
+        rightFrontMotor.setPower(0);
+        leftBackMotor.setPower(0);
+        rightBackMotor.setPower(0);
     }
 
     public static void autoAlign(){
-
         driveTrainError = angles.firstAngle - 0;
-
-        if(Math.abs(driveTrainError) > (Math.PI / 6) /* || driveTrainError < -(Math.PI / 6)*/){
+        if(Math.abs(driveTrainError) > (Math.PI / 6)){
             driveTrainPower = 1;
         }
         else{
-            if(Math.abs(driveTrainError) < (Math.PI / 60) /*|| angles.firstAngle > -(Math.PI / 60)*/){
+            if(Math.abs(driveTrainError) < (Math.PI / 60)){
                 driveTrainPower = 0;
-
             }
-            else if(Math.abs(driveTrainError) > (Math.PI / 60) /*|| angles.firstAngle < -(Math.PI / 60)*/) {
+            else if(Math.abs(driveTrainError) > (Math.PI / 60)) {
                 driveTrainPower = Math.abs(driveTrainError / (Math.PI / 5.2)) + 0.1;
             }
         }
-
         if(driveTrainError > 0){
             cartesianDrive(0, 0, driveTrainPower);
         }
@@ -270,33 +284,34 @@ public class DriveTrain {
             cartesianDrive(0, 0, -driveTrainPower);
         }
     }
-//    public void Turn(String input, double power, double degrees){
-//        if(input.equals("TURN_LEFT")){
-//            double targetLocation = angles.firstAngle - degrees;
-//            if(targetLocation < -180){
-//                targetLocation = Math.abs(targetLocation + 180);
-//            }
-//            while (angles.firstAngle < targetLocation - 2 && angles.firstAngle > targetLocation + 2) {
-//                leftFrontMotor.setPower(-power);
-//                leftBackMotor.setPower(-power);
-//                rightFrontMotor.setPower(power);
-//                rightBackMotor.setPower(power);
-//            }
-//        }
-//        if(input.equals("TURN_RIGHT")){
-//            double targetLocation = angles.firstAngle + degrees;
-//            if(targetLocation > 180){
-//                targetLocation = -(targetLocation - 180);
-//            }
-//            while (angles.firstAngle < targetLocation - 2 && angles.firstAngle > targetLocation + 2) {
-//                leftFrontMotor.setPower(power);
-//                leftBackMotor.setPower(power);
-//                rightFrontMotor.setPower(-power);
-//                rightBackMotor.setPower(-power);
-//            }
-//        }
-//
-//    }
+
+    public static void driveToLine(String color){
+        if(color.equals("RED")){
+            while(floorColorSensor.red() < 1000 && floorColorSensor.blue() < 1000){//240, 82
+                leftFrontMotor.setPower(0.3);
+                rightFrontMotor.setPower(0.3);
+                leftBackMotor.setPower(0.3);
+                rightBackMotor.setPower(0.3);
+            }
+            leftFrontMotor.setPower(0);
+            rightFrontMotor.setPower(0);
+            leftBackMotor.setPower(0);
+            rightBackMotor.setPower(0);
+        }
+        else if(color.equals("WHITE")) {
+            while(floorColorSensor.alpha() < 1000){//480, 680
+                leftFrontMotor.setPower(0.3);
+                rightFrontMotor.setPower(0.3);
+                leftBackMotor.setPower(0.3);
+                rightBackMotor.setPower(0.3);
+            }
+            leftFrontMotor.setPower(0);
+            rightFrontMotor.setPower(0);
+            leftBackMotor.setPower(0);
+            rightBackMotor.setPower(0);
+        }
+    }
+
     public static void setRunMode(String input) {
         if (input.equals("STOP_AND_RESET_ENCODER")) {
             leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -324,17 +339,7 @@ public class DriveTrain {
         }
     }
 
-
-    //Returns TRUE if any drive motors are busy and FALSE if not.
-    public boolean anyDriveMotorsBusy() {
-        if (leftFrontMotor.isBusy() /*|| leftBackMotor.isBusy() || rightFrontMotor.isBusy() || rightBackMotor.isBusy()*/) {
-            return (true);
-        } else {
-            return (false);
-        }
-    }
-
-    public static void DriveTelemetry(Telemetry telemetry){
+    public static void driveTelemetry(Telemetry telemetry){
 //        telemetry.addData("left front encoder", leftFrontMotor.getCurrentPosition());
 //        telemetry.addData("left back encoder", leftBackMotor.getCurrentPosition());
 //        telemetry.addData("right front encoder", rightFrontMotor.getCurrentPosition());
@@ -344,8 +349,8 @@ public class DriveTrain {
 //        telemetry.addData("left back power", leftBackMotor.getPower());
 //        telemetry.addData("right front power", rightFrontMotor.getPower());
 //        telemetry.addData("right back power", rightBackMotor.getPower());
-        telemetry.addData("DriveTrainError", driveTrainError);
-        telemetry.addData("DriveTrainPower", driveTrainPower);
+//        telemetry.addData("DriveTrainError", driveTrainError);
+//        telemetry.addData("DriveTrainPower", driveTrainPower);
 //        telemetry.addLine();
 //        telemetry.addLine();
 //                    telemetry.addLine()
@@ -357,34 +362,8 @@ public class DriveTrain {
 //        telemetry.addData("range2", String.format("%.3f cm",Constants.Distance2.getAverage() + Constants.cal2));
 //        telemetry.addData("laserboi", String.format("%.3f cm", driveDistanceSensor.getDistance(DistanceUnit.CM)));
 //        telemetry.addLine();
+        telemetry.addData("BaccDistanceSensor", backDistanceSensor.getDistance(DistanceUnit.CM));
         telemetry.addLine();
-    }
-
-    public void DriveToLine(String color){
-        if(color.equals("RED")){
-            while(floorColorSensor.red() < 175){//240, 82
-                leftFrontMotor.setPower(0.3);
-                rightFrontMotor.setPower(0.3);
-                leftBackMotor.setPower(0.3);
-                rightBackMotor.setPower(0.3);
-            }
-            leftFrontMotor.setPower(0);
-            rightFrontMotor.setPower(0);
-            leftBackMotor.setPower(0);
-            rightBackMotor.setPower(0);
-        }
-        else if(color.equals("WHITE")) {
-            while(floorColorSensor.red() < 190){//480, 680
-                leftFrontMotor.setPower(0.4);
-                rightFrontMotor.setPower(0.4);
-                leftBackMotor.setPower(0.4);
-                rightBackMotor.setPower(0.4);
-            }
-            leftFrontMotor.setPower(0);
-            rightFrontMotor.setPower(0);
-            leftBackMotor.setPower(0);
-            rightBackMotor.setPower(0);
-        }
     }
 
     public static void composeTelemetry (Telemetry telemetry) {
@@ -455,4 +434,3 @@ public class DriveTrain {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.RADIANS.normalize(degrees));
     }
 }
-

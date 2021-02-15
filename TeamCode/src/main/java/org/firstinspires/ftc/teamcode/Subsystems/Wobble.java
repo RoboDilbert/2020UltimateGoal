@@ -5,20 +5,29 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import org.firstinspires.ftc.teamcode.Util.Constants;
 
 import java.io.CharArrayWriter;
+import java.security.PrivateKey;
 
 public class Wobble {
 
     public static DcMotor wobbleMotor;
 
-    private static Servo wobble1;
-    private static Servo wobble2;
+    //private static Servo wobble1;
+    private static Servo wobble;
 
     private static Servo grabber; //Control hub, port 1
+
+    private static final double GRABBER_OPEN = 0.7;
+    private static final double GRABBER_CLOSED = 1.0;
+    private static final double WOBBLE_OPEN = 0.1;
+    private static final double WOBBLE_CLOSED = 0.5;
+
+    private static final double WOBBLE_MOTOR_ERROR = 0.1;
 
     //Constuctor
     public Wobble(){}
@@ -27,29 +36,30 @@ public class Wobble {
         Constants.HwMap = hwm;
         wobbleMotor = Constants.HwMap.dcMotor.get("wobbleMotor");
 
-        wobble1 = Constants.HwMap.servo.get("wobble1");
-        wobble2 = Constants.HwMap.servo.get("wobble2");
+        //wobble1 = Constants.HwMap.servo.get("wobble1");
+        wobble = Constants.HwMap.servo.get("wobble");
 
         grabber = Constants.HwMap.servo.get("grabber");
 
         wobbleMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         wobbleMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         wobbleMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        grabber.setPosition(1);
     }
 
     public static void open(){
-        wobble2.setPosition(.1);
+        wobble.setPosition(WOBBLE_OPEN);
     }
 
     public static void close(){
-        wobble2.setPosition(.5);
+        wobble.setPosition(WOBBLE_CLOSED);
     }
 
     public static void grab(){
-        grabber.setPosition(0.7);
+        grabber.setPosition(GRABBER_CLOSED);
     }
     public static void drop(){
-        grabber.setPosition(1);
+        grabber.setPosition(GRABBER_OPEN);
     }
 
     public static void lift(int lifterTP, boolean right_bumper){
@@ -69,7 +79,7 @@ public class Wobble {
             Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             Wobble.wobbleMotor.setPower(.3);
         }
-        if (Math.abs(Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1)) {
+        if (Math.abs(Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * WOBBLE_MOTOR_ERROR)) {
             Wobble.wobbleMotor.setPower(0.4);
         }
     }
@@ -80,9 +90,8 @@ public class Wobble {
         telemetry.addData("Lifter TP: ", Wobble.wobbleMotor.getTargetPosition());
         telemetry.addData("Lifter Pow: ", Wobble.wobbleMotor.getPower());
         telemetry.addLine();
-        telemetry.addData("wobble1:", wobble1.getPosition());
-        telemetry.addData("wobble2:", wobble2.getPosition());
+        //telemetry.addData("wobble1:", wobble1.getPosition());
+        telemetry.addData("wobble2:", wobble.getPosition());
         telemetry.addLine();
-        telemetry.update();
     }
 }
