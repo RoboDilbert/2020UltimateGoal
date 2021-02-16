@@ -2,61 +2,83 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.StarterTeleop;
-import org.firstinspires.ftc.teamcode.Util.HardwarePresets;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+import org.firstinspires.ftc.teamcode.Util.Constants;
 
-public class Shooter{
+public class Shooter {
 
-    private DcMotorEx shooter; //Control hub, port 0
-    public Servo vibrator;
-    public Servo angleAdjust; //Control hub, port
+    public static DcMotorEx shooter; //Control hub, port 0
+    public static Shooter mainShooter;
+    private static Servo angleAdjust; //Control hub, port 2
 
     private static double NEW_P;//18.6
     private static double NEW_I;
     private static double NEW_D;
     private static double NEW_F;
-    private static PIDFCoefficients pidOrig;
-    private static PIDFCoefficients pidModified;
+    //private static PIDFCoefficients pidOrig;
+    //private static PIDFCoefficients pidModified;
 
     //Constructor
-    public Shooter(double P, double I, double D, double F, HardwareMap hardwareMap){
+    public void Shooter(){
 
-//        PIDFCoefficients pidOrig = robot.shooter.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+        //PIDFCoefficients pidOrig = shooter.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        NEW_P = P;
-        NEW_I = I;
-        NEW_D = D;
-        NEW_F = F;
+        NEW_P = 200;
+        NEW_I = 0.001;
+        NEW_D = 0.001;
+        NEW_F = 0;
+
+        updateShooterConstants(NEW_P, NEW_I, NEW_D, NEW_F);
+    }
+
+    public static void initShooter(HardwareMap hwm){
+        Constants.HwMap = hwm;
+        shooter = Constants.HwMap.get(DcMotorEx.class, "shooter");
+        angleAdjust = Constants.HwMap.servo.get("angleAdjust");
+
+        shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        shooter.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        Shooter.shooterRunMode("STOP_AND_RESET_ENCODER");
+        Shooter.shooterRunMode("RUN_USING_ENCODER");
+
+        mainShooter = new Shooter();
+
+        mainShooter.setPosition("RINGS");
+    }
+    public static void updateShooterConstants(double p, double i, double d, double f){
+        NEW_P = p;
+        NEW_I = i;
+        NEW_D = d;
+        NEW_F = f;
 
         // change coefficients using methods included with DcMotorEx class.
         PIDFCoefficients pidNew = new PIDFCoefficients(NEW_P, NEW_I, NEW_D, NEW_F);
         shooter.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidNew);
 
         // re-read coefficients and verify change.
-        PIDFCoefficients pidModified = shooter.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+        //PIDFCoefficients pidModified = shooter.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public Shooter(){
-
+    public static void shooterTelemetry(Telemetry telemetry){
+//        telemetry.addData("P,I,D (orig)", "%.04f, %.04f, %.0f",
+//                mainShooter.getOldP(), mainShooter.getOldI(), mainShooter.getOldD());
+//        telemetry.addData("P,I,D (modified)", "%.04f, %.04f, %.04f",
+//                mainShooter.getNewP(), mainShooter.getNewI(), mainShooter.getNewD());
+        telemetry.addLine();
     }
 
-    public void initShooter(HardwareMap hardwareMap){
-        vibrator = hardwareMap.servo.get("vibrator");
-        shooter = hardwareMap.get(DcMotorEx.class, "shooter");
-        angleAdjust = hardwareMap.servo.get("angleAdjust");
-    }
     //Methods
-    public void shoot(double power){
-        shooter.setPower(power);
-    }
-    public double getShooterSpeed(){
+    public static double getShooterSpeed(){
         return shooter.getVelocity();
     }
-    public void angleAdjustUp(String position){
+    public static void setPosition(String position){
         if(position.equals("INDEX")){
             angleAdjust.setPosition(0.7);
         }
@@ -66,29 +88,42 @@ public class Shooter{
         else if(position.equals("RINGS")){
             angleAdjust.setPosition(0.5);
         }
+        else if (position.equals("SHOOTING")){
+            angleAdjust.setPosition(0.5);
+        }
     }
 
+//    public double getNewP(){
+//        return pidModified.p;
+//    }
+//    public double getNewI(){
+//        return pidModified.i;
+//    }
+//    public double getNewD(){
+//        return pidModified.d;
+//    }
+//    public double getOldP(){return pidOrig.p;}
+//    public double getOldI(){
+//        return pidOrig.i;
+//    }
+//    public double getOldD(){
+//        return pidOrig.d;
+//    }
 
+    public static void shoot(double power){
+        shooter.setPower(power);
+   }
 
+    public static void shooterRunMode(String mode){
+        if(mode.equals("RUN_USING_ENCODER")){
+            shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+        else if(mode.equals("RUN_WITHOUT_ENCODER")){
+            shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+        else if(mode.equals("STOP_AND_RESET_ENCODER")){
+            shooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-    public double getNewP(){
-        return pidModified.p;
+        }
     }
-    public double getNewI(){
-        return pidModified.i;
-    }
-    public double getNewD(){
-        return pidModified.d;
-    }
-    public double getOldP(){
-        return pidOrig.p;
-    }
-    public double getOldI(){
-        return pidOrig.i;
-    }
-    public double getOldD(){
-        return pidOrig.d;
-    }
-
-
 }

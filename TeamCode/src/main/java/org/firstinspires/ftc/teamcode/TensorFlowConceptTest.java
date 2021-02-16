@@ -20,7 +20,6 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaLocalizerImpl;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
-import org.firstinspires.ftc.teamcode.Util.HardwarePresets;
 
 import com.vuforia.Vuforia;
 
@@ -31,7 +30,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
 @TeleOp(name = "TensorFlowTest", group = "TeleOp")
-public class TensorFlowConceptTest extends HardwarePresets {
+public class TensorFlowConceptTest extends LinearOpMode {
 
     private static MasterVision vision;
     private static VuforiaLocalizer.Parameters parameters;
@@ -71,7 +70,6 @@ public class TensorFlowConceptTest extends HardwarePresets {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        super.init(hardwareMap);
         initVuforia();
         initTfod();
         drive.setRunMode("RUN_USING_ENCODER");
