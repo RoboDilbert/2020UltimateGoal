@@ -24,11 +24,6 @@ import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.vuforia.Vuforia;
 
-import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
-import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
 public class TensorFlowClass{
 
@@ -70,13 +65,25 @@ public class TensorFlowClass{
     public static List<Recognition> getRecognitions() {
         return tfod.getUpdatedRecognitions();
     }
+    public static double getConfidence() {
+        List<Recognition> tfodRecogntions = tfod.getUpdatedRecognitions();
+        for (Recognition recognition : tfodRecogntions) {
+            if (recognition != null) {
+                return recognition.getConfidence();
+            }
+
+        }
+        return 0;
+    }
 
     public static String getLabel(){
         List<Recognition> tfodRecogntions = tfod.getUpdatedRecognitions();
         for(Recognition recognition : tfodRecogntions){
-            return recognition.getLabel();
+            if(recognition != null) {
+                return recognition.getLabel();
+            }
         }
-       return "ZERO";
+        return "ZERO";
     }
 
 

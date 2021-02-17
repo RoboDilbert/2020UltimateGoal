@@ -110,7 +110,7 @@ public class BlueComplete extends LinearOpMode{
             //Get to line
         }
 
-        if(TensorFlowClass.getLabel().equals("Single")) {
+        else if(TensorFlowClass.getLabel().equals("Single")) {
             //--------1-----------
             //Strafe Left
             DriveTrain.cartesianDriveTimer(-0.6, 0, 10);
@@ -168,7 +168,7 @@ public class BlueComplete extends LinearOpMode{
             //Get to line
         }
 
-        if(TensorFlowClass.getLabel().equals("Quad")) {
+        else if(TensorFlowClass.getLabel().equals("Quad")) {
             //------------4------------
             //Strafe Left
             DriveTrain.cartesianDriveTimer(-0.6, 0, 10);
