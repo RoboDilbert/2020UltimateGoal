@@ -156,7 +156,7 @@ public class DriveTrain {
         double adjustedXHeading = 0;
         double adjustedYHeading = 0;
 
-        double ringDistance = 0;
+        double ringDistance = Double.MAX_VALUE;
 
 
         while(ringDistance > 10) {

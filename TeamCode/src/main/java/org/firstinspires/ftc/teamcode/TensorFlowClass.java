@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
@@ -25,7 +26,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.vuforia.Vuforia;
 
 
-public class TensorFlowClass{
+public class TensorFlowClass extends LinearOpMode{
 
     private static MasterVision vision;
     private static VuforiaLocalizer.Parameters parameters;
@@ -36,6 +37,7 @@ public class TensorFlowClass{
     private static final String LABEL_FIRST_ELEMENT = "Quad";
     private static final String LABEL_SECOND_ELEMENT = "Single";
 
+    private static List<Recognition> tfodRecogntions;
 
     TFObjectDetector.Parameters param = new TFObjectDetector.Parameters();
 
@@ -46,18 +48,12 @@ public class TensorFlowClass{
         vision = new MasterVision(parameters, hardwareMap, true, MasterVision.TFLiteAlgorithm.INFER_NONE);
         vision.enable();
         activate();
+        tfodRecogntions = tfod.getRecognitions();
     }
 
     public static void activate() {
         if (tfod != null) {
             tfod.activate();
-
-            // The TensorFlow software will scale the input images from the camera to a lower resolution.
-            // This can result in lower detection accuracy at longer distances (> 55cm or 22").
-            // If your target is at distance greater than 50 cm (20") you can adjust the magnification value
-            // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
-            // should be set to the value of the images used to create the TensorFlow Object Detection model
-            // (typically 16/9).
             tfod.setZoom(1, 16.0 / 9.0);
         }
     }
@@ -77,7 +73,7 @@ public class TensorFlowClass{
     }
 
     public static String getLabel(){
-        List<Recognition> tfodRecogntions = tfod.getUpdatedRecognitions();
+        tfodRecogntions = tfod.getUpdatedRecognitions();
         for(Recognition recognition : tfodRecogntions){
             if(recognition != null) {
                 return recognition.getLabel();
@@ -86,82 +82,14 @@ public class TensorFlowClass{
         return "ZERO";
     }
 
-
-//        if (opModeIsActive()) {
-//            while (opModeIsActive()) {
-//                vision.enable();
-//                if (tfod != null) {
-//                    // getUpdatedRecognitions() will return null if no new information is available since
-//                    // the last time that call was made.
-//                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-//                    if (updatedRecognitions != null) {
-//                        telemetry.addData("# Object Detected", updatedRecognitions.size());
-//
-//                        // step through the list of recognitions and display boundary info.
-//                        int i = 0;
-//                        for (Recognition recognition : updatedRecognitions) {
-//                            telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-//                            telemetry.addData(String.format("confidence (%d)", i), recognition.getConfidence());
-//                            telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
-//                                    recognition.getLeft(), recognition.getTop());
-//                            telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
-//                                    recognition.getRight(), recognition.getBottom());
-//                            telemetry.addData("power", leftPower);
-//
-//                            if (recognition.getLeft() > 500) {
-//                                leftPower = (Math.pow((recognition.getLeft() - 400) / 1000, 1.2) * 2);
-//                                rightPower = -(Math.pow((recognition.getLeft() - 400) / 1000, 1.2) * 2);
-//                                if (Math.abs(leftPower) < 0.03) {
-//                                    leftPower = 0;
-//                                    rightPower = 0;
-//                                }
-//
-//                            }
-//                            else if (recognition.getLeft() < 460) {
-//                                leftPower = -(Math.pow((460 - recognition.getLeft()) / 1000, 1.2) * 2);
-//                                rightPower = (Math.pow((460 - recognition.getLeft()) / 1000, 1.2) * 2);
-//                                if (Math.abs(leftPower) < 0.03) {
-//                                    leftPower = 0;
-//                                    rightPower = 0;
-//                                }
-//                            }
-//                            else{
-//                                leftPower = 0;
-//                                rightPower = 0;
-//                            }
-//                        }
-//                        drive.leftBackMotor.setPower(leftPower);
-//                        drive.leftFrontMotor.setPower(leftPower);
-//                        drive.rightBackMotor.setPower(rightPower);
-//                        drive.rightFrontMotor.setPower(rightPower);
-//                        telemetry.update();
-//                    }
-//                    else{
-//                        drive.leftBackMotor.setPower(0);
-//                        drive.leftFrontMotor.setPower(0);
-//                        drive.rightBackMotor.setPower(0);
-//                        drive.rightFrontMotor.setPower(0);
-//                    }
-//                }
-//            }
-//        }
-
-
     public static void initVuforia() {
-        /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-         */
-//        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-//        parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
         parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraDirection = CameraDirection.BACK;
 
-        //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
     }
     public static void initTfod(HardwareMap hardwareMap) {
 
@@ -174,5 +102,16 @@ public class TensorFlowClass{
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
+    public static void tfodTelemetry(Telemetry telemetry){
+        tfodRecogntions = tfod.getUpdatedRecognitions();
+        telemetry.addData("Recognitions: ", tfodRecogntions);
+        telemetry.addData("Rings: ", getLabel());
+        telemetry.update();
+    }
 
+    @Override
+    public void runOpMode() throws InterruptedException {
+        initTensorFlow(hardwareMap);
+        tfodRecogntions = tfod.getUpdatedRecognitions();
+    }
 }

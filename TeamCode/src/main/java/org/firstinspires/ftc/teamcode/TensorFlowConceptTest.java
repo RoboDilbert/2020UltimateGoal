@@ -73,7 +73,7 @@ public class TensorFlowConceptTest extends LinearOpMode {
 
         initVuforia();
         initTfod();
-        drive.setRunMode("RUN_USING_ENCODER");
+        //drive.setRunMode("RUN_USING_ENCODER");
 
         vision = new MasterVision(parameters, hardwareMap, true, MasterVision.TFLiteAlgorithm.INFER_NONE);
         vision.enable();
@@ -183,6 +183,7 @@ public class TensorFlowConceptTest extends LinearOpMode {
         }
 
         // Disable Tracking when we are done;
+        tfod.deactivate();
         targetsUltimateGoal.deactivate();
 
 //        if (opModeIsActive()) {

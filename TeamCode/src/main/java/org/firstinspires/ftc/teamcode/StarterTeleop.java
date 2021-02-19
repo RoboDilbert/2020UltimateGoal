@@ -132,8 +132,8 @@ public class StarterTeleop extends LinearOpMode {
                 Intake.defaultPos();
             }
 
-            DriveTrain.driveTelemetry(telemetry);
-//            Intake.intakeTelemetry(telemetry);
+            //DriveTrain.driveTelemetry(telemetry);
+            Intake.intakeTelemetry(telemetry);
 //            Shooter.shooterTelemetry(telemetry);
 //            Wobble.wobbleTelemetry(telemetry);
 

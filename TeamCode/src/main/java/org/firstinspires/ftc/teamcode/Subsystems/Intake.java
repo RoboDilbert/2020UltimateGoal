@@ -24,8 +24,8 @@ public class Intake {
 
     private static Servo vibrator; //Control hub, port  0
 
-    private static final double VIBRATOR_CLOSED = 0.7;
-    private static final double VIBRATOR_OPEN = 0.45;
+    private static final double VIBRATOR_CLOSED = 0.4;
+    private static final double VIBRATOR_OPEN = 0.55;
 
     //Constructor
     public Intake() {}
@@ -39,10 +39,10 @@ public class Intake {
         indexSensor = Constants.HwMap.get(DistanceSensor.class, "indexSensor");
 
         vibrator = Constants.HwMap.servo.get("vibrator");
-        vibrator.setPosition(VIBRATOR_CLOSED);
+        vibrator.setPosition(VIBRATOR_OPEN);
 
-        frontIntakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rearIntakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontIntakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rearIntakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
     //Release 1
@@ -141,12 +141,12 @@ public class Intake {
 
     public static void intakeTelemetry(Telemetry telemetry){
         telemetry.addData("Vibrator:", vibrator.getPosition());
-        telemetry.addLine();
-        telemetry.addData("indexSensor", String.format("%.3f cm", Intake.indexSensor.getDistance(DistanceUnit.CM)));
-        telemetry.addData("rings: ", rings);
-        telemetry.addData("Ring Flag: ", ringCountFlag);
-        telemetry.addData("Intake Array Size:", rings.lastIndexOf(true));
-        telemetry.addLine();
+//        telemetry.addLine();
+//        telemetry.addData("indexSensor", String.format("%.3f cm", Intake.indexSensor.getDistance(DistanceUnit.CM)));
+//        telemetry.addData("rings: ", rings);
+//        telemetry.addData("Ring Flag: ", ringCountFlag);
+//        telemetry.addData("Intake Array Size:", rings.lastIndexOf(true));
+//        telemetry.addLine();
     }
 
     public static void setForward(){
@@ -178,6 +178,6 @@ public class Intake {
         Thread.sleep(100);
     }
     public static void defaultPos(){
-        vibrator.setPosition(0.6);
+        vibrator.setPosition(0.55);
     }
 }
