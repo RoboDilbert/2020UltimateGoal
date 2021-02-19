@@ -90,209 +90,225 @@ public class BlueComplete extends LinearOpMode{
             tfod.setZoom(1, 16.0 / 9.0);
         }
 
-        sleep(5500);
+        sleep(500);
 
         tfodRecogntions = tfod.getUpdatedRecognitions();
 
         for (Recognition recognition : tfodRecogntions) {
-            if(recognition == null){
-                label = "ZERO";
-            }
-            else{
-                label = recognition.getLabel();
-            }
+            label = recognition.getLabel();
         }
+
+        if(tfodRecogntions.isEmpty()){
+            label = "ZERO";
+        }
+
+//        if(label == null){
+//            label = "ZERO";
+//        }
 
         telemetry.addData("Rings: ", label);
         telemetry.update();
 
-        int timer = 0;
-        while(timer < 1000000) {
-            sleep(3000);
+        while(!isStarted()) {
+            sleep(500);
 
             tfodRecogntions = tfod.getUpdatedRecognitions();
 
+
             for (Recognition recognition : tfodRecogntions) {
-                if(recognition == null){
-                    label = "ZERO";
-                }
-                else{
                     label = recognition.getLabel();
-                }
             }
+
+            if(tfodRecogntions.isEmpty()){
+                label = "ZERO";
+            }
+
+//            if(label == null){
+//                label = "ZERO";
+//            }
 
             telemetry.addData("Rings: ", label);
             telemetry.update();
         }
 
         waitForStart();
-//
-//        sleep(100);
-//        //Read the stack
-//
-//        //--------0----------
-//        if(label == null || label.equals("ZERO")) {
-//            //Drive forward to white line
-//            Shooter.shoot(Constants.SHOOTER_POWER);
-//            sleep(100);
-//            DriveTrain.cartesianDriveTimer(0, -0.6, 42);
-//            sleep(1000);
-//            DriveTrain.driveToLine("WHITE");
-//            sleep(100);
-//
-//            //Shoot
-//            Shooter.setPosition("WHITE_LINE");
-//            sleep(100);
-//            DriveTrain.cartesianDriveTimer(0, 0.3, 40);
-//            sleep(100);
-//            Intake.releaseAll();
-//            Shooter.shoot(0);
-//            sleep(100);
-//            Shooter.setPosition("INDEX");
-//            sleep(100);
-//
-//            //Strafe over to wall
-//            DriveTrain.cartesianDriveTimer(0.8, 0, 70);
-//
-//            //Drop wobb
-//            Wobble.drop();
-//
-//            //backup along wall with timer
-//            DriveTrain.cartesianDriveTimer(0, 0.6, 21);
-//            sleep(1000);
-//
-//            //strafe over until change
-//            DriveTrain.cartesianDriveDistance(-0.45, 0, "RED");
-//
-//            //Use distance sensor to measure distance to wobble
-//
-//            //Pick it up
-//
-//            //Strafe and turn at the same time
-//            //Drop off wobble
-//            //Get to line
-//        }
-//
-//        else if(label.equals("Single")) {
-//            //--------1-----------//
-//            //Strafe Left
-//            DriveTrain.cartesianDriveTimer(-0.6, 0, 10);
-//
-//            //Drive Forward to ring
-//            Shooter.shoot(Constants.SHOOTER_POWER);
-//            Shooter.setPosition("RINGS");
-//            DriveTrain.cartesianDriveRing(0, -0.4);
-//
-//            //Shoot our shot
-//            Intake.releaseAll();
-//            //Turn on intake
-//            Intake.intake();
-//
-//            //Drive forward to white line
-////        DriveTrain.cartesianDriveTimer(0, -0.6 , 42);
-////        sleep(1000);
-//            DriveTrain.driveToLine("WHITE");
-//            sleep(100);
-//
-//            //Shoot
-//            Shooter.setPosition("WHITE_LINE");
-//            sleep(100);
-//            DriveTrain.cartesianDriveTimer(0, 0.3, 40);
-//            sleep(100);
-//            Intake.releaseAll();
-//            Shooter.shoot(0);
-//            Shooter.setPosition("INDEX");
-//            sleep(100);
-//
-//            //Drive Forward to red Line
-//            DriveTrain.driveToLine("RED");
-//
-//            //Drop wobb
-//            Wobble.drop();
-//
-//            //Strafe to wall
-//            DriveTrain.cartesianDriveTimer(-0.6, 0, 40);
-//
-//            //backup along wall with timer
-//            DriveTrain.cartesianDriveTimer(0, 0.6, 25);
-//            sleep(100);
-//
-//            //strafe over until change
-//            DriveTrain.cartesianDriveDistance(-0.45, 0, "RED");
-//
-//            //Use distance sensor to measure distance to wobble
-//
-//            //Pick it up
-//
-//            //Strafe and turn at the same time
-//            //Drop off wobble
-//            //Rotate
-//            //Get to line
-//        }
-//
-//        else if(label.equals("Quad")) {
-//            //------------4------------
-//            //Strafe Left
-//            DriveTrain.cartesianDriveTimer(-0.6, 0, 10);
-//
-//            //Drive Forward to ring
-//            Shooter.shoot(Constants.SHOOTER_POWER);
-//            Shooter.setPosition("RINGS");
-//            DriveTrain.cartesianDriveRing(0, -0.4);
-//
-//            //Shoot our shot
-//            Intake.releaseAll();
-//
-//            //Turn on intake
-//            Intake.intake();
-//
-//            //Drive forward to white line
-////        DriveTrain.cartesianDriveTimer(0, -0.6 , 42);
-////        sleep(1000);
-//            //TODO MAKE SURE WE DON"T GET FOUR (Splay out rings, pick up 3, stop intake with sensor, then shoot and pick up the last one hopefully)
-//            DriveTrain.driveToLine("WHITE");
-//            sleep(100);
-//
-//            //Shoot
-//            Shooter.setPosition("WHITE_LINE");
-//            sleep(100);
-//            DriveTrain.cartesianDriveTimer(0, 0.3, 40);
-//            sleep(100);
-//            Intake.releaseAll();
-//            Shooter.shoot(0);
-//            Shooter.setPosition("INDEX");
-//            sleep(100);
-//
-//            //Drive to white line again
-//            DriveTrain.driveToLine("WHITE");
-//
-//            //Strafe over to wall
-//            DriveTrain.cartesianDriveTimer(0.8, 0, 70);
-//
-//            //Drive Forward to 2 red Lines
-//            DriveTrain.driveToLine("RED");
-//            sleep(100);
-//            DriveTrain.driveToLine("RED");
-//
-//            //Drop wobb
-//            Wobble.drop();
-//
-//            //backup along wall with timer
-//            DriveTrain.cartesianDriveTimer(0, 0.6, 35);
-//            sleep(100);
-//
-//            //strafe over until change
-//            DriveTrain.cartesianDriveDistance(-0.45, 0, "RED");
-//
-//            //Use distance sensor to measure distance to wobble
-//
-//            //Pick it up
-//
-//            //Strafe and turn at the same time
-//            //Drop off wobble
-//            //Rotate
-//            //Get to line
-//        }
+
+
+
+        //--------0----------
+        if(label == null || label.equals("ZERO")) {
+            //Drive forward to white line
+            Shooter.shoot(Constants.SHOOTER_POWER);
+            sleep(100);
+            DriveTrain.cartesianDriveTimer(0, -0.6, 42);
+            sleep(1000);
+            DriveTrain.driveToLine("WHITE");
+            sleep(100);
+
+            //Shoot
+            Shooter.setPosition("WHITE_LINE");
+            sleep(100);
+            DriveTrain.cartesianDriveTimer(0, 0.3, 40);
+            sleep(100);
+            Intake.releaseAll();
+            Shooter.shoot(0);
+            sleep(100);
+            Shooter.setPosition("INDEX");
+            sleep(100);
+
+            // move forward slightly to white line to drop wobble into zone
+            DriveTrain.cartesianDriveTimer(0, -0.3, 25);
+            sleep(100);
+
+            //Strafe over to wall
+            DriveTrain.cartesianDriveDistance(0.7, 0, "BLUE");
+
+            //Drop wobb
+            Wobble.drop();
+
+            //backup along wall with timer
+            DriveTrain.cartesianDriveTimer(0, 0.6, 21);
+            sleep(1000);
+
+            DriveTrain.driveTelemetry(telemetry);
+            sleep(5000);
+            //Use distance sensor to measure distance to wobble
+
+            //Pick it up
+
+            //Strafe and turn at the same time
+            //Drop off wobble
+            //Get to line
+        }
+
+        else if(label.equals("Single")) {
+            //--------1-----------//
+
+            //Drive Forward to ring
+            Shooter.shoot(Constants.SHOOTER_POWER);
+            Shooter.setPosition("RINGS");
+            DriveTrain.cartesianDriveTimer(0, -0.3, 60);
+
+            //Shoot our shot
+            Intake.releaseAll();
+            Intake.defaultPos();
+            //Turn on intake
+            Intake.intake();
+
+            DriveTrain.cartesianDriveTimer(0, -0.5, 20);
+            //Drive forward to white line
+//        DriveTrain.cartesianDriveTimer(0, -0.6 , 42);
+//        sleep(1000);
+            DriveTrain.driveToLine("WHITE");
+            sleep(100);
+
+            //Shoot
+            Shooter.setPosition("WHITE_LINE");
+            DriveTrain.cartesianDriveTimer(-0.7, 0, 10);
+            sleep(100);
+            DriveTrain.cartesianDriveTimer(0, 0.3, 40);
+            sleep(100);
+            Intake.releaseAll();
+            Intake.defaultPos();
+            Shooter.shoot(0);
+            Shooter.setPosition("INDEX");
+            sleep(100);
+
+            //Drive Forward to red Line
+            DriveTrain.driveToLine("WHITE");
+
+            DriveTrain.cartesianDriveTimer(0, -0.3, 20);
+
+            DriveTrain.driveToLine("RED");
+
+            //Drop wobb
+            Wobble.drop();
+
+            //Strafe to wall
+            DriveTrain.cartesianDriveDistance(0.7, 0, "BLUE");
+
+            //backup along wall with timer
+            DriveTrain.cartesianDriveTimer(0, 0.6, 40);
+            sleep(100);
+
+
+            //Use distance sensor to measure distance to wobble
+
+            //Pick it up
+
+            //Strafe and turn at the same time
+            //Drop off wobble
+            //Rotate
+            //Get to line
+        }
+
+        else if(label.equals("Quad")) {
+            //------------4------------
+
+            //Drive Forward to ring
+            Shooter.shoot(Constants.SHOOTER_POWER);
+            Shooter.setPosition("RINGS");
+            DriveTrain.cartesianDriveTimer(0, -0.3, 60);
+
+            //Shoot our shot
+            Intake.releaseAll();
+            Intake.defaultPos();
+            //Turn on intake
+            Intake.intake();
+
+            //Drive forward to white line
+//        DriveTrain.cartesianDriveTimer(0, -0.6 , 42);
+//        sleep(1000);
+            //TODO MAKE SURE WE DON"T GET FOUR (Splay out rings, pick up 3, stop intake with sensor, then shoot and pick up the last one hopefully)
+            DriveTrain.driveToLine("WHITE");
+            sleep(100);
+
+            //Shoot
+            Shooter.setPosition("WHITE_LINE");
+            DriveTrain.cartesianDriveTimer(-0.7, 0, 10);
+            sleep(100);
+            DriveTrain.cartesianDriveTimer(0, 0.3, 40);
+            sleep(100);
+            Intake.releaseAll();
+            Intake.defaultPos();
+            Shooter.shoot(0);
+            Shooter.setPosition("INDEX");
+            sleep(100);
+
+            //Drive to white line again
+            DriveTrain.driveToLine("WHITE");
+           sleep(100);
+
+            //Strafe over to wall
+            DriveTrain.cartesianDriveDistance(0.7, 0, "BLUE");
+            sleep(200);
+
+            //Drive Forward to 2 red Lines
+            DriveTrain.cartesianDriveTimer(0, -0.3, 10);
+            sleep(100);
+            DriveTrain.driveToLine("RED");
+            DriveTrain.cartesianDriveTimer(0, -0.3, 20);
+            sleep(100);
+            DriveTrain.driveToLine("RED");
+            DriveTrain.cartesianDriveTimer(0, -0.3, 20);
+
+
+            //Drop wobb
+            Wobble.drop();
+
+            //backup along wall with timer
+            DriveTrain.cartesianDriveTimer(0, 0.6, 55);
+            sleep(100);
+
+            //Use distance sensor to measure distance to wobble
+
+            //Pick it up
+
+            //Strafe and turn at the same time
+            //Drop off wobble
+            //Rotate
+            //Get to line
+        }
 
 
     }
@@ -312,7 +328,7 @@ public class BlueComplete extends LinearOpMode{
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.timingBufferSize = 1;
         tfodParameters.maxFrameRate = 100;
-        tfodParameters.minResultConfidence = 0.8f; // minimum confidence in object detection 80%
+        tfodParameters.minResultConfidence = 0.5f; // minimum confidence in object detection 80%
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }

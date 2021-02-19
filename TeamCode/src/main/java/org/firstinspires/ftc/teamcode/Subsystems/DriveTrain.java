@@ -210,15 +210,15 @@ public class DriveTrain {
         double adjustedXHeading = 0;
         double adjustedYHeading = 0;
 
-        double lengthSideWall = 0;
-        double lengthBackWall = 0;
+        double lengthSideWall = Double.MAX_VALUE;
+        double lengthBackWall = Double.MAX_VALUE;
 
-        while(/*lengthBackWall > 0 &&*/ lengthSideWall < 16) {
+        while(/*lengthBackWall > 0 &&*/ lengthSideWall > 20) {
 
-            if(side.equals("RED")){
+            if(side.equals("BLUE")){
                 lengthSideWall = leftDistanceSensor.getDistance(DistanceUnit.CM);//leftDistanceSensor
             }
-            else if (side.equals("BLUE")){
+            else if (side.equals("RED")){
 //                lengthSideWall = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
             }
 
@@ -287,7 +287,7 @@ public class DriveTrain {
 
     public static void driveToLine(String color){
         if(color.equals("RED")){
-            while(floorColorSensor.red() < 1000 && floorColorSensor.blue() < 1000){//240, 82
+            while(floorColorSensor.red() < 1000 /*&& floorColorSensor.blue() < 400*/){//240, 82
                 leftFrontMotor.setPower(0.3);
                 rightFrontMotor.setPower(0.3);
                 leftBackMotor.setPower(0.3);
@@ -300,10 +300,10 @@ public class DriveTrain {
         }
         else if(color.equals("WHITE")) {
             while(floorColorSensor.alpha() < 1000){//480, 680
-                leftFrontMotor.setPower(0.3);
-                rightFrontMotor.setPower(0.3);
-                leftBackMotor.setPower(0.3);
-                rightBackMotor.setPower(0.3);
+                leftFrontMotor.setPower(0.25);
+                rightFrontMotor.setPower(0.25);
+                leftBackMotor.setPower(0.25);
+                rightBackMotor.setPower(0.25);
             }
             leftFrontMotor.setPower(0);
             rightFrontMotor.setPower(0);
@@ -362,7 +362,8 @@ public class DriveTrain {
 //        telemetry.addData("range2", String.format("%.3f cm",Constants.Distance2.getAverage() + Constants.cal2));
 //        telemetry.addData("laserboi", String.format("%.3f cm", driveDistanceSensor.getDistance(DistanceUnit.CM)));
 //        telemetry.addLine();
-        telemetry.addData("BaccDistanceSensor", backDistanceSensor.getDistance(DistanceUnit.CM));
+        telemetry.addData("leftWallDistance", leftDistanceSensor.getDistance(DistanceUnit.CM));
+//        telemetry.addData("BaccDistanceSensor", backDistanceSensor.getDistance(DistanceUnit.CM));
         telemetry.addLine();
     }
 
