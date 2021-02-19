@@ -221,6 +221,9 @@ public class DriveTrain {
             else if (side.equals("RED")){
 //                lengthSideWall = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
             }
+            else if ( side.equals("FRONT")){
+                lengthSideWall = driveDistanceSensor.getDistance(DistanceUnit.CM);
+            }
 
             angles = DriveTrain.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
 

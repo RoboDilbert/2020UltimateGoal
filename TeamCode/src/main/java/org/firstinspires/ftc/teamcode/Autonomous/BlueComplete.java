@@ -283,14 +283,18 @@ public class BlueComplete extends LinearOpMode{
             DriveTrain.cartesianDriveDistance(0.7, 0, "BLUE");
             sleep(200);
 
+            //drive to front wall
+            //TODO output distance sensor, didnt move when tested
+            DriveTrain.cartesianDriveDistance(0.3, 0, "FRONT");
+            sleep(100);
             //Drive Forward to 2 red Lines
-            DriveTrain.cartesianDriveTimer(0, -0.3, 10);
-            sleep(100);
-            DriveTrain.driveToLine("RED");
-            DriveTrain.cartesianDriveTimer(0, -0.3, 20);
-            sleep(100);
-            DriveTrain.driveToLine("RED");
-            DriveTrain.cartesianDriveTimer(0, -0.3, 20);
+//            DriveTrain.cartesianDriveTimer(0, -0.3, 10);
+//            sleep(100);
+//            DriveTrain.driveToLine("RED");
+//            DriveTrain.cartesianDriveTimer(0, -0.3, 20);
+//            sleep(100);
+//            DriveTrain.driveToLine("RED");
+//            DriveTrain.cartesianDriveTimer(0, -0.3, 20);
 
 
             //Drop wobb
