@@ -15,17 +15,17 @@ import java.security.PrivateKey;
 
 public class Wobble {
 
-    public static DcMotor wobbleMotor;
+    public static DcMotor wobbleMotor;//Control hub, port 1
 
     //private static Servo wobble1;
-    private static Servo wobble;
+    private static Servo wobble;//Control hub, port 3
 
     private static Servo grabber; //Control hub, port 1
 
     private static final double GRABBER_OPEN = 0.7;
     private static final double GRABBER_CLOSED = 1.0;
     private static final double WOBBLE_OPEN = 0.1;
-    private static final double WOBBLE_CLOSED = 0.5;
+    private static final double WOBBLE_CLOSED = 0.4;
 
     private static final double WOBBLE_MOTOR_ERROR = 0.1;
 
@@ -62,36 +62,36 @@ public class Wobble {
         grabber.setPosition(GRABBER_OPEN);
     }
 
-    public static void lift(int lifterTP, boolean right_bumper){
+    public static void lift(int lifterTP){
         Wobble.wobbleMotor.setTargetPosition(lifterTP);
         Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Wobble.wobbleMotor.setPower(.3);
-        if (Math.abs(lifterTP - Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1)) {
+        if (Math.abs(lifterTP - Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * WOBBLE_MOTOR_ERROR)) {
             Wobble.wobbleMotor.setPower(0);
         }
 //        if (Math.abs(Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1)) {
 //            Wobble.wobbleMotor.setPower(0.4);
 //        }
     }
-    public static void unlift(int lifterTP, boolean right_bumper){
-        if(Math.abs(lifterTP - Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1) && !right_bumper) {
-            Wobble.wobbleMotor.setTargetPosition(-lifterTP);
+    public static void unlift(int lifterTP){
+        if(Math.abs(lifterTP - Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1)) {
+            Wobble.wobbleMotor.setTargetPosition(lifterTP);
             Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            Wobble.wobbleMotor.setPower(.3);
+            Wobble.wobbleMotor.setPower(-.15);
         }
-        if (Math.abs(Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * WOBBLE_MOTOR_ERROR)) {
-            Wobble.wobbleMotor.setPower(0.4);
+        if (Math.abs(Wobble.wobbleMotor.getCurrentPosition()) < Math.abs(lifterTP * WOBBLE_MOTOR_ERROR)) {
+            Wobble.wobbleMotor.setPower(0);
         }
     }
 
 
     public static void wobbleTelemetry(Telemetry telemetry){
-        telemetry.addData("Lifter Pos: ", Wobble.wobbleMotor.getCurrentPosition());
-        telemetry.addData("Lifter TP: ", Wobble.wobbleMotor.getTargetPosition());
-        telemetry.addData("Lifter Pow: ", Wobble.wobbleMotor.getPower());
+//        telemetry.addData("Lifter Pos: ", Wobble.wobbleMotor.getCurrentPosition());
+//        telemetry.addData("Lifter TP: ", Wobble.wobbleMotor.getTargetPosition());
+//        telemetry.addData("Lifter Pow: ", Wobble.wobbleMotor.getPower());
         telemetry.addLine();
         //telemetry.addData("wobble1:", wobble1.getPosition());
-        telemetry.addData("wobble2:", wobble.getPosition());
+        telemetry.addData("wobble:", wobble.getPosition());
         telemetry.addLine();
     }
 }

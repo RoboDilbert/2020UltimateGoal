@@ -30,7 +30,7 @@ public class DriveTrain {
     public static DcMotor rightFrontMotor; //Expansion hub, port 3
     public static DcMotor rightBackMotor; //Expansion hub, port 2
 
-    public static ColorSensor floorColorSensor; //Control hub, I2C Bus 1
+    public static ColorSensor floorColorSensor; //Expansion hub, I2C Bus 3
 
     public static BNO055IMU imu; //Control hub, I2C Bus 0
     public static Orientation angles;
@@ -40,10 +40,10 @@ public class DriveTrain {
     public static double driveTrainPower = 0;
 
     //2m distance sensors
-    public static DistanceSensor driveDistanceSensor; //Control hub, I2C Bus 2;
-    public static DistanceSensor backDistanceSensor; //Expansion hub, I2C Bus 0
+    public static DistanceSensor driveDistanceSensor; //Expansion hub, I2C Bus 2;
+    public static DistanceSensor backDistanceSensor; //Control hub, I2C Bus 2
     public static DistanceSensor leftDistanceSensor; //Control hub, I2C Bus 0;
-//    public static DistanceSensor rightDistanceSensor;
+//    public static DistanceSensor rightDistanceSensor;//Control hub, I2C Bus 1
 
     //Constructor
     public DriveTrain(){}
@@ -201,7 +201,7 @@ public class DriveTrain {
         rightBackMotor.setPower(0);
     }
 
-    public static void cartesianDriveDistance(double x, double y, String side) throws InterruptedException {
+    public static void cartesianDriveDistance(double x, double y, String side, Telemetry telemetry) throws InterruptedException {
         double speed = Math.sqrt(2) * Math.hypot(x, y);
         double command = Math.atan2(y, -x) + Math.PI/2;
         double rotation = 0;
@@ -215,14 +215,17 @@ public class DriveTrain {
 
         while(/*lengthBackWall > 0 &&*/ lengthSideWall > 20) {
 
-            if(side.equals("BLUE")){
+            if(side.equals("LEFT")){
                 lengthSideWall = leftDistanceSensor.getDistance(DistanceUnit.CM);//leftDistanceSensor
+                telemetry.addData("Left Distance Sensor", leftDistanceSensor.getDistance(DistanceUnit.CM));
             }
-            else if (side.equals("RED")){
+            else if (side.equals("RIGHT")){
 //                lengthSideWall = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
+                //telemetry.addData("Right Distance Sensor", rightDistanceSensor.getDistance(DistanceUnit.CM));
             }
             else if ( side.equals("FRONT")){
                 lengthSideWall = driveDistanceSensor.getDistance(DistanceUnit.CM);
+                telemetry.addData("Front Distance Sensor", driveDistanceSensor.getDistance(DistanceUnit.CM));
             }
 
             angles = DriveTrain.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
@@ -259,6 +262,7 @@ public class DriveTrain {
             else if (side.equals("BLUE")){
 //                lengthSideWall = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
             }
+            telemetry.update();
         }
 
         leftFrontMotor.setPower(0);

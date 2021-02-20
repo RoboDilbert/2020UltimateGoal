@@ -133,8 +133,6 @@ public class BlueComplete extends LinearOpMode{
 
         waitForStart();
 
-
-
         //--------0----------
         if(label == null || label.equals("ZERO")) {
             //Drive forward to white line
@@ -161,7 +159,7 @@ public class BlueComplete extends LinearOpMode{
             sleep(100);
 
             //Strafe over to wall
-            DriveTrain.cartesianDriveDistance(0.7, 0, "BLUE");
+            DriveTrain.cartesianDriveDistance(0.7, 0, "LEFT", telemetry);
 
             //Drop wobb
             Wobble.drop();
@@ -225,7 +223,7 @@ public class BlueComplete extends LinearOpMode{
             Wobble.drop();
 
             //Strafe to wall
-            DriveTrain.cartesianDriveDistance(0.7, 0, "BLUE");
+            DriveTrain.cartesianDriveDistance(0.7, 0, "LEFT", telemetry);
 
             //backup along wall with timer
             DriveTrain.cartesianDriveTimer(0, 0.6, 40);
@@ -259,7 +257,7 @@ public class BlueComplete extends LinearOpMode{
             //Drive forward to white line
 //        DriveTrain.cartesianDriveTimer(0, -0.6 , 42);
 //        sleep(1000);
-            //TODO MAKE SURE WE DON"T GET FOUR (Splay out rings, pick up 3, stop intake with sensor, then shoot and pick up the last one hopefully)
+
             DriveTrain.driveToLine("WHITE");
             sleep(100);
 
@@ -280,13 +278,15 @@ public class BlueComplete extends LinearOpMode{
            sleep(100);
 
             //Strafe over to wall
-            DriveTrain.cartesianDriveDistance(0.7, 0, "BLUE");
+            DriveTrain.cartesianDriveDistance(0.7, 0, "LEFT", telemetry);
             sleep(200);
 
             //drive to front wall
             //TODO output distance sensor, didnt move when tested
-            DriveTrain.cartesianDriveDistance(0.3, 0, "FRONT");
+            DriveTrain.cartesianDriveDistance(0, -0.4, "FRONT", telemetry);
             sleep(100);
+
+
             //Drive Forward to 2 red Lines
 //            DriveTrain.cartesianDriveTimer(0, -0.3, 10);
 //            sleep(100);

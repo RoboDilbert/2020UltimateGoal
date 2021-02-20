@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Util.Constants;
 
 public class Shooter {
@@ -71,6 +73,7 @@ public class Shooter {
 //                mainShooter.getOldP(), mainShooter.getOldI(), mainShooter.getOldD());
 //        telemetry.addData("P,I,D (modified)", "%.04f, %.04f, %.04f",
 //                mainShooter.getNewP(), mainShooter.getNewI(), mainShooter.getNewD());
+        telemetry.addData("Shooty velo", shooter.getVelocity());
         telemetry.addLine();
     }
 
@@ -78,6 +81,7 @@ public class Shooter {
     public static double getShooterSpeed(){
         return shooter.getVelocity();
     }
+
     public static void setPosition(String position){
         if(position.equals("INDEX")){
             angleAdjust.setPosition(0.7);
@@ -111,6 +115,7 @@ public class Shooter {
 //    }
 
     public static void shoot(double power){
+      //  shooter.setVelocity(0, AngleUnit.RADIANS);
         shooter.setPower(power);
    }
 

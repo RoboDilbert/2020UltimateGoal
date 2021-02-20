@@ -108,14 +108,14 @@ public class StarterTeleop extends LinearOpMode {
             }
 
             //Lifter
-            if (gamepad1.right_bumper) {
-                Wobble.lift(420, gamepad1.right_bumper);
+            if (gamepad2.right_bumper) {
+                Wobble.lift(420);
             }
-//            else if(!gamepad1.right_bumper){
-//                Wobble.unlift(-100, gamepad1.right_bumper);
-//            }
+            else{
+                Wobble.unlift(-100);
+            }
 
-            if(gamepad2.right_bumper){
+            if(gamepad2.left_bumper){
                 Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 Wobble.wobbleMotor.setPower(0);
             }
@@ -134,8 +134,8 @@ public class StarterTeleop extends LinearOpMode {
 
             //DriveTrain.driveTelemetry(telemetry);
             Intake.intakeTelemetry(telemetry);
-//            Shooter.shooterTelemetry(telemetry);
-//            Wobble.wobbleTelemetry(telemetry);
+            Shooter.shooterTelemetry(telemetry);
+            Wobble.wobbleTelemetry(telemetry);
 
 //            telemetry.addData("wobble:", Wobble.wobbleMotor.getCurrentPosition());
 //            telemetry.addData("wobble mode:", Wobble.wobbleMotor.getMode());

@@ -17,12 +17,12 @@ public class Intake {
     private static boolean ringCountFlag = false;
     private static final double ringDistance = 13;
 
-    private static DistanceSensor indexSensor;
+    private static DistanceSensor indexSensor; //Expansion hub, port 1
 
-    private static DcMotor frontIntakeMotor; //Control hub, port 1
-    private static DcMotor rearIntakeMotor; //Control hub, port 2
+    private static DcMotor frontIntakeMotor; //Control hub, port 2
+    private static DcMotor rearIntakeMotor; //Control hub, port 3
 
-    private static Servo vibrator; //Control hub, port  0
+    private static Servo vibrator; //Control hub, port 0
 
     private static final double VIBRATOR_CLOSED = 0.4;
     private static final double VIBRATOR_OPEN = 0.55;
@@ -140,10 +140,10 @@ public class Intake {
     }
 
     public static void intakeTelemetry(Telemetry telemetry){
-        telemetry.addData("Vibrator:", vibrator.getPosition());
+        //telemetry.addData("Vibrator:", vibrator.getPosition());
 //        telemetry.addLine();
 //        telemetry.addData("indexSensor", String.format("%.3f cm", Intake.indexSensor.getDistance(DistanceUnit.CM)));
-//        telemetry.addData("rings: ", rings);
+        telemetry.addData("rings: ", rings);
 //        telemetry.addData("Ring Flag: ", ringCountFlag);
 //        telemetry.addData("Intake Array Size:", rings.lastIndexOf(true));
 //        telemetry.addLine();
