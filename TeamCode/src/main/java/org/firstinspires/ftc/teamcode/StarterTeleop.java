@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.view.View;
-
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
@@ -27,6 +27,11 @@ public class StarterTeleop extends LinearOpMode {
 
     private long mLastClickTime;
 
+    FtcDashboard dashboard = FtcDashboard.getInstance();
+    Telemetry dashboardTelemetry = dashboard.getTelemetry();
+
+
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -46,7 +51,7 @@ public class StarterTeleop extends LinearOpMode {
         while (opModeIsActive()) {
 
             // 2m Distance sensor stuff
-            Constants.Distance1.add(DriveTrain.driveDistanceSensor.getDistance(DistanceUnit.CM));
+            Constants.Distance1.add(DriveTrain.frontDistanceSensor.getDistance(DistanceUnit.CM));
 
             DriveTrain.floorColorSensor.enableLed(true);
 
@@ -132,10 +137,10 @@ public class StarterTeleop extends LinearOpMode {
                 Intake.defaultPos();
             }
 
-            //DriveTrain.driveTelemetry(telemetry);
+            DriveTrain.driveTelemetry(telemetry);
             Intake.intakeTelemetry(telemetry);
-            Shooter.shooterTelemetry(telemetry);
-            Wobble.wobbleTelemetry(telemetry);
+//            Shooter.shooterTelemetry(telemetry);
+//            Wobble.wobbleTelemetry(telemetry);
 
 //            telemetry.addData("wobble:", Wobble.wobbleMotor.getCurrentPosition());
 //            telemetry.addData("wobble mode:", Wobble.wobbleMotor.getMode());
@@ -147,6 +152,8 @@ public class StarterTeleop extends LinearOpMode {
 
             //telemetry.addData("grapfroot encoder", robot.grapfroot.getCurrentPosition());
 //            telemetry.addData("Runtime", "%.03f", getRuntime());
+            dashboardTelemetry.addData("Shooter Velocity", Shooter.getShooterSpeed());
+            dashboardTelemetry.update();
             telemetry.update();
         }
     }

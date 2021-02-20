@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -40,10 +38,10 @@ public class DriveTrain {
     public static double driveTrainPower = 0;
 
     //2m distance sensors
-    public static DistanceSensor driveDistanceSensor; //Expansion hub, I2C Bus 2;
+    public static DistanceSensor frontDistanceSensor; //Expansion hub, I2C Bus 2;
     public static DistanceSensor backDistanceSensor; //Control hub, I2C Bus 2
     public static DistanceSensor leftDistanceSensor; //Control hub, I2C Bus 0;
-//    public static DistanceSensor rightDistanceSensor;//Control hub, I2C Bus 1
+    public static DistanceSensor rightDistanceSensor;//Control hub, I2C Bus 1
 
     //Constructor
     public DriveTrain(){}
@@ -58,10 +56,10 @@ public class DriveTrain {
 
         floorColorSensor = Constants.HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "floorColorSensor");
 
-        driveDistanceSensor = Constants.HwMap.get(DistanceSensor.class, "driveDistanceSensor");
+        frontDistanceSensor = Constants.HwMap.get(DistanceSensor.class, "driveDistanceSensor");
         backDistanceSensor = Constants.HwMap.get(DistanceSensor.class, "backDistanceSensor");
         leftDistanceSensor = Constants.HwMap.get(DistanceSensor.class, "leftDistanceSensor");
-//        rightDistanceSensor = Constants.HwMap.get(DistanceSensor.class, "rightDistanceSensor");
+        rightDistanceSensor = Constants.HwMap.get(DistanceSensor.class, "rightDistanceSensor");
 
         imu = Constants.HwMap.get(BNO055IMU.class, "imu");
 
@@ -83,6 +81,8 @@ public class DriveTrain {
         parameters1.loggingTag = "IMU";
         parameters1.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
         imu.initialize(parameters1);
+
+        angles = DriveTrain.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
     }
 
     public static void cartesianDrive(double x, double y, double z){
@@ -161,7 +161,7 @@ public class DriveTrain {
 
         while(ringDistance > 10) {
 
-            ringDistance = driveDistanceSensor.getDistance(DistanceUnit.CM);
+            ringDistance = frontDistanceSensor.getDistance(DistanceUnit.CM);
 
             angles = DriveTrain.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
 
@@ -191,7 +191,7 @@ public class DriveTrain {
             leftBackMotor.setPower((speed * adjustedXHeading + rotation) * Constants.TELEOP_LIMITER);
             rightBackMotor.setPower((speed * adjustedYHeading - rotation) * Constants.TELEOP_LIMITER);
 
-            ringDistance = driveDistanceSensor.getDistance(DistanceUnit.CM);
+            ringDistance = frontDistanceSensor.getDistance(DistanceUnit.CM);
 
         }
 
@@ -211,21 +211,29 @@ public class DriveTrain {
         double adjustedYHeading = 0;
 
         double lengthSideWall = Double.MAX_VALUE;
-        double lengthBackWall = Double.MAX_VALUE;
+        double exitValue = 20;
 
-        while(/*lengthBackWall > 0 &&*/ lengthSideWall > 20) {
+        while(lengthSideWall > exitValue) {
 
             if(side.equals("LEFT")){
                 lengthSideWall = leftDistanceSensor.getDistance(DistanceUnit.CM);//leftDistanceSensor
                 telemetry.addData("Left Distance Sensor", leftDistanceSensor.getDistance(DistanceUnit.CM));
+                exitValue = 25;
             }
             else if (side.equals("RIGHT")){
-//                lengthSideWall = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
-                //telemetry.addData("Right Distance Sensor", rightDistanceSensor.getDistance(DistanceUnit.CM));
+                lengthSideWall = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
+                telemetry.addData("Right Distance Sensor", rightDistanceSensor.getDistance(DistanceUnit.CM));
+                exitValue = 20;
             }
-            else if ( side.equals("FRONT")){
-                lengthSideWall = driveDistanceSensor.getDistance(DistanceUnit.CM);
-                telemetry.addData("Front Distance Sensor", driveDistanceSensor.getDistance(DistanceUnit.CM));
+            else if (side.equals("FRONT")){
+                lengthSideWall = frontDistanceSensor.getDistance(DistanceUnit.CM);
+                telemetry.addData("Front Distance Sensor", frontDistanceSensor.getDistance(DistanceUnit.CM));
+                exitValue = 30;
+            }
+            else if(side.equals("BACK")){
+                lengthSideWall = backDistanceSensor.getDistance(DistanceUnit.CM);
+                telemetry.addData("Back Distance Sensor", backDistanceSensor.getDistance(DistanceUnit.CM));
+                exitValue = 16;
             }
 
             angles = DriveTrain.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
@@ -256,11 +264,17 @@ public class DriveTrain {
             leftBackMotor.setPower((speed * adjustedXHeading + rotation) * Constants.TELEOP_LIMITER);
             rightBackMotor.setPower((speed * adjustedYHeading - rotation) * Constants.TELEOP_LIMITER);
 
-            if(side.equals("RED")){
+            if(side.equals("LEFT")){
                 lengthSideWall = leftDistanceSensor.getDistance(DistanceUnit.CM);//leftDistanceSensor
             }
-            else if (side.equals("BLUE")){
-//                lengthSideWall = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
+            else if (side.equals("RIGHT")){
+                lengthSideWall = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
+            }
+            else if(side.equals("FRONT")){
+                lengthSideWall = frontDistanceSensor.getDistance(DistanceUnit.CM);
+            }
+            else if(side.equals("BACK")){
+                lengthSideWall = backDistanceSensor.getDistance(DistanceUnit.CM);
             }
             telemetry.update();
         }
@@ -269,6 +283,39 @@ public class DriveTrain {
         rightFrontMotor.setPower(0);
         leftBackMotor.setPower(0);
         rightBackMotor.setPower(0);
+    }
+
+    public static void DriveAndTwist(double x, double y, double z, int timer, Telemetry telemetry){
+        double speed = Math.sqrt(2) * Math.hypot(x, y);
+        double command = Math.atan2(y, -x) + Math.PI/2;
+        double rotation = z;
+
+        angles = DriveTrain.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+        double adjustedXHeading = Math.cos(command + angles.firstAngle + Math.PI/4);
+        double adjustedYHeading = Math.sin(command + angles.firstAngle + Math.PI/4);
+
+        driveTrainError = angles.firstAngle - Math.PI;
+
+        while(timer > 0){
+            driveTrainError = angles.firstAngle - Math.PI;
+            if(Math.abs(driveTrainError) > (Math.PI / 30)){
+                rotation = 0;
+            }
+            if(driveTrainError < 0){
+                rotation = -z;
+            }
+
+            DriveTrain.leftFrontMotor.setPower((speed * adjustedYHeading + rotation) * Constants.TELEOP_LIMITER);
+            DriveTrain.rightFrontMotor.setPower((speed * adjustedXHeading - rotation) * Constants.TELEOP_LIMITER);
+            DriveTrain.leftBackMotor.setPower((speed * adjustedXHeading + rotation) * Constants.TELEOP_LIMITER);
+            DriveTrain.rightBackMotor.setPower((speed * adjustedYHeading - rotation) * Constants.TELEOP_LIMITER);
+            timer--;
+        }
+
+        DriveTrain.leftFrontMotor.setPower(0);
+        DriveTrain.rightFrontMotor.setPower(0);
+        DriveTrain.leftBackMotor.setPower(0);
+        DriveTrain.rightBackMotor.setPower(0);
     }
 
     public static void autoAlign(){
@@ -284,6 +331,28 @@ public class DriveTrain {
                 driveTrainPower = Math.abs(driveTrainError / (Math.PI / 5.2)) + 0.1;
             }
         }
+        if(driveTrainError > 0){
+            cartesianDrive(0, 0, driveTrainPower);
+        }
+        else if(driveTrainError < 0){
+            cartesianDrive(0, 0, -driveTrainPower);
+        }
+    }
+
+    public static void autoAlignAuto(double finalAngle){
+        driveTrainError = angles.firstAngle - finalAngle;
+        if(Math.abs(driveTrainError) > (Math.PI / 6)){
+            driveTrainPower = 0.5;
+        }
+        else{
+            if(Math.abs(driveTrainError) < (Math.PI / 60)){
+                driveTrainPower = 0;
+            }
+            else if(Math.abs(driveTrainError) > (Math.PI / 60)) {
+                driveTrainPower = Math.abs(driveTrainError / (Math.PI / 2)) + 0.1;
+            }
+        }
+        driveTrainError = angles.firstAngle - finalAngle;
         if(driveTrainError > 0){
             cartesianDrive(0, 0, driveTrainPower);
         }
@@ -367,10 +436,10 @@ public class DriveTrain {
 //        telemetry.addLine();
 //        telemetry.addData("range1", String.format("%.3f cm", Constants.Distance1.getAverage() + Constants.cal1));
 //        telemetry.addData("range2", String.format("%.3f cm",Constants.Distance2.getAverage() + Constants.cal2));
-//        telemetry.addData("laserboi", String.format("%.3f cm", driveDistanceSensor.getDistance(DistanceUnit.CM)));
 //        telemetry.addLine();
+        telemetry.addData("Front", String.format("%.3f cm", frontDistanceSensor.getDistance(DistanceUnit.CM)));
         telemetry.addData("leftWallDistance", leftDistanceSensor.getDistance(DistanceUnit.CM));
-//        telemetry.addData("BaccDistanceSensor", backDistanceSensor.getDistance(DistanceUnit.CM));
+        telemetry.addData("BaccDistanceSensor", backDistanceSensor.getDistance(DistanceUnit.CM));
         telemetry.addLine();
     }
 
