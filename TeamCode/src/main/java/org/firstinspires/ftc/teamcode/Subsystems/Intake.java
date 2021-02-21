@@ -60,13 +60,25 @@ public class Intake {
         vibrator.setPosition(VIBRATOR_OPEN);
         Thread.sleep(150);
         vibrator.setPosition(VIBRATOR_CLOSED);
-        Thread.sleep(200);
+        Thread.sleep(100);
         Shooter.setPosition("SHOOTING");
+        //Thread.sleep(100);
         for(int i = 0; i < 8; i++) {
             vibrator.setPosition(VIBRATOR_OPEN);
             Thread.sleep(150);
             vibrator.setPosition(VIBRATOR_CLOSED);
             Thread.sleep(100);
+        }
+        Shooter.setPosition("WHITE_LINE");
+        rings.clear();
+    }
+
+    public static void releaseAllRings() throws InterruptedException {
+        for(int i = 0; i < 5; i++) {
+            vibrator.setPosition(VIBRATOR_OPEN);
+            Thread.sleep(150);
+            vibrator.setPosition(VIBRATOR_CLOSED);
+            Thread.sleep(500);
         }
         Shooter.setPosition("WHITE_LINE");
         rings.clear();

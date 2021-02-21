@@ -14,7 +14,7 @@ public class Constants {
     public static Rolling Distance1 = new Rolling(20);
 
     //Shooter Constants
-    public static final double SHOOTER_POWER = 0.58;
+    public static final double SHOOTER_POWER = 0.575;
 
     //Intake Constants
 

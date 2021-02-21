@@ -48,6 +48,10 @@ public class StarterTeleop extends LinearOpMode {
         DriveTrain.composeTelemetry(telemetry);
         waitForStart();
 
+        double P = 40;
+        double I = 2;
+        double D = 2;
+
         while (opModeIsActive()) {
 
             // 2m Distance sensor stuff
@@ -92,21 +96,29 @@ public class StarterTeleop extends LinearOpMode {
             }
 
             //White Line
-            if (gamepad2.dpad_up) {
+            if (gamepad1.dpad_up) {
                 Shooter.setPosition("WHITE_LINE");
             }
             //In front of rings
-            if (gamepad2.dpad_left) {
-                Shooter.mainShooter.setPosition("RINGS");
+            if (gamepad1.dpad_left) {
+                Shooter.setPosition("WHITE_LINE");
+                Intake.releaseAllRings();
             }
 
-            if (gamepad2.x) {
-                Wobble.close();
-                //wobble grabber close position
+//            if (gamepad2.x) {
+//                Wobble.close();
+//                //wobble grabber close position
+//            }
+//            if (gamepad2.b) {
+//                Wobble.open();
+//                //wobble grabber open position
+//            }
+
+            if(gamepad2.a){
+                P = P + 2;
             }
-            if (gamepad2.b) {
-                Wobble.open();
-                //wobble grabber open position
+            if(gamepad2.y){
+                P = P - 2;
             }
             if (gamepad1.y) {
                 Shooter.shoot(0);
@@ -126,20 +138,27 @@ public class StarterTeleop extends LinearOpMode {
             }
 
             if (gamepad1.dpad_right) {
+                Shooter.setPosition("WHITE_LINE");
                 Intake.releaseAll();
             } else {
                 Intake.defaultPos();
             }
 
-            if (gamepad1.dpad_left) {
+
+
+            if (gamepad1.dpad_down) {
                 Intake.shootOneNoClear();
             } else {
                 Intake.defaultPos();
             }
 
+            Shooter.updateShooterConstants(P, I, D,0);
+
             DriveTrain.driveTelemetry(telemetry);
             Intake.intakeTelemetry(telemetry);
-//            Shooter.shooterTelemetry(telemetry);
+            telemetry.addData("New P: ", P);
+            telemetry.addData("New I: ", I);
+            Shooter.shooterTelemetry(telemetry);
 //            Wobble.wobbleTelemetry(telemetry);
 
 //            telemetry.addData("wobble:", Wobble.wobbleMotor.getCurrentPosition());
@@ -168,4 +187,4 @@ public class StarterTeleop extends LinearOpMode {
             v = !v;
         }
     }
-}
+};

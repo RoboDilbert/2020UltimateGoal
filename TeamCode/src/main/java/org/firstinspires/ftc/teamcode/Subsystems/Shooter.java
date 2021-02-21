@@ -31,9 +31,9 @@ public class Shooter {
 
         //PIDFCoefficients pidOrig = shooter.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        NEW_P = 200;
-        NEW_I = 0.001;
-        NEW_D = 0.001;
+        NEW_P = 50;
+        NEW_I = 1;
+        NEW_D = 2;
         NEW_F = 0;
 
         updateShooterConstants(NEW_P, NEW_I, NEW_D, NEW_F);
@@ -73,6 +73,8 @@ public class Shooter {
 //                mainShooter.getOldP(), mainShooter.getOldI(), mainShooter.getOldD());
 //        telemetry.addData("P,I,D (modified)", "%.04f, %.04f, %.04f",
 //                mainShooter.getNewP(), mainShooter.getNewI(), mainShooter.getNewD());
+        telemetry.addData("Real P: ", NEW_P);
+        telemetry.addData("Real I: ", NEW_I);
         telemetry.addData("Shooty velo", shooter.getVelocity());
         telemetry.addLine();
     }
@@ -87,13 +89,13 @@ public class Shooter {
             angleAdjust.setPosition(0.7);
         }
         else if(position.equals("WHITE_LINE")){
-            angleAdjust.setPosition(0.43);
+            angleAdjust.setPosition(0.46); //White line = .49
         }
         else if(position.equals("RINGS")){
-            angleAdjust.setPosition(0.4);//0.5
+            angleAdjust.setPosition(0.45);
         }
         else if (position.equals("SHOOTING")){
-            angleAdjust.setPosition(0.5);
+            angleAdjust.setPosition(0.49); //white line = .53
         }
     }
 
