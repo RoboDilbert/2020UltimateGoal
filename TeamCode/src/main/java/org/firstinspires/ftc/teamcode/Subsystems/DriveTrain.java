@@ -104,7 +104,7 @@ public class DriveTrain {
         double speed = Math.sqrt(2) * Math.hypot(x, y);
         double command = Math.atan2(y, -x) + Math.PI/2;
         double rotation = 0;
-        double startingHeading = 0;
+        double startingHeading = angles.firstAngle;
         double currentError = 0;
         double adjustedXHeading = 0;
         double adjustedYHeading = 0;
@@ -368,7 +368,19 @@ public class DriveTrain {
 
     public static void driveToLine(double power, String color){
         if(color.equals("RED")){
-            while(floorColorSensor.red() < 1000 /*&& floorColorSensor.blue() < 400*/){//240, 82
+            while(floorColorSensor.red() < 1000){//240, 82
+                leftFrontMotor.setPower(power);
+                rightFrontMotor.setPower(power);
+                leftBackMotor.setPower(power);
+                rightBackMotor.setPower(power);
+            }
+            leftFrontMotor.setPower(0);
+            rightFrontMotor.setPower(0);
+            leftBackMotor.setPower(0);
+            rightBackMotor.setPower(0);
+        }
+        else if(color.equals("BLUE")){
+            while(floorColorSensor.blue() < 1000){//480, 680
                 leftFrontMotor.setPower(power);
                 rightFrontMotor.setPower(power);
                 leftBackMotor.setPower(power);
@@ -433,11 +445,11 @@ public class DriveTrain {
 //        telemetry.addData("DriveTrainError", driveTrainError);
 //        telemetry.addData("DriveTrainPower", driveTrainPower);
 //        telemetry.addLine();
-//        telemetry.addLine();
-//                    telemetry.addLine()
-//                    .addData("Red", "%.3f", (double) floorColorSensor.red())
-//                    .addData("Blue", "%.3f", (double) floorColorSensor.blue())
-//                    .addData("Alpha", "%.3f", (double) floorColorSensor.alpha());
+        telemetry.addLine();
+                    telemetry.addLine()
+                    .addData("Red", "%.3f", (double) floorColorSensor.red())
+                    .addData("Blue", "%.3f", (double) floorColorSensor.blue())
+                    .addData("Alpha", "%.3f", (double) floorColorSensor.alpha());
 //        telemetry.addLine();
 //        telemetry.addData("range1", String.format("%.3f cm", Constants.Distance1.getAverage() + Constants.cal1));
 //        telemetry.addData("range2", String.format("%.3f cm",Constants.Distance2.getAverage() + Constants.cal2));

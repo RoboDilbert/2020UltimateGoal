@@ -23,6 +23,9 @@ public class Shooter {
     private static double NEW_I;
     private static double NEW_D;
     private static double NEW_F;
+
+    public static final double SHOOTER_POWER = 0.525; //previous .575 w/o flywheel weight
+
     //private static PIDFCoefficients pidOrig;
     //private static PIDFCoefficients pidModified;
 
@@ -89,13 +92,16 @@ public class Shooter {
             angleAdjust.setPosition(0.7);
         }
         else if(position.equals("WHITE_LINE")){
-            angleAdjust.setPosition(0.46); //White line = .49
+            angleAdjust.setPosition(0.49); //White line = .49
         }
         else if(position.equals("RINGS")){
-            angleAdjust.setPosition(0.45);
+            angleAdjust.setPosition(0.48);
         }
         else if (position.equals("SHOOTING")){
             angleAdjust.setPosition(0.49); //white line = .53
+        }
+        else if(position.equals("RINGS_ADJUST")) {
+            angleAdjust.setPosition(.56);
         }
     }
 

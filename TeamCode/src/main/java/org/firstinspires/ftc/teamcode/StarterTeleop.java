@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -13,7 +12,6 @@ import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Wobble;
 import org.firstinspires.ftc.teamcode.Util.*;
-
 
 @TeleOp(name= "TeleOop", group= "TeleOp")
 //@Disabled
@@ -27,10 +25,11 @@ public class StarterTeleop extends LinearOpMode {
 
     private long mLastClickTime;
 
+    private boolean wobbleFlag = false;
+
+    private boolean intakeFlag = false;
     FtcDashboard dashboard = FtcDashboard.getInstance();
     Telemetry dashboardTelemetry = dashboard.getTelemetry();
-
-
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -72,24 +71,39 @@ public class StarterTeleop extends LinearOpMode {
 //            if(gamepad1.x){
 //                gyroVariation = angles.firstAngle;
 //            }
-            if (gamepad1.x) {
-                intake = !intake;
-//                onClick(intake);
+
+            if (gamepad1.x && !intakeFlag) {
+                intakeFlag = true;
+                Intake.intakeChangeState("FORWARD");
+            }
+            else if (gamepad1.b && !intakeFlag){
+                intakeFlag = true;
+                Intake.intakeChangeState("REVERSE");
+            }
+            else if((!gamepad1.x && intakeFlag) || (!gamepad1.b && intakeFlag)){
+                intakeFlag = false;
             }
 
-            if (intake) {
-                Intake.intake();
-            } else {
-                Intake.stop();
-            }
+            Intake.intakeUpdatePosition();
 
-            if (gamepad1.b) {
-                Intake.setBackwards();
-            }
+//            if (gamepad1.x) {
+//                intake = !intake;
+////                onClick(intake);
+//            }
+//
+//            if (intake) {
+//                Intake.intake();
+//            } else {
+//                Intake.stop();
+//            }
+//
+//            if (gamepad1.b) {
+//                Intake.setBackwards();
+//            }
 
             if (gamepad1.a) {
                 Shooter.setPosition("WHITE_LINE");
-                Shooter.shoot(Constants.SHOOTER_POWER);
+                Shooter.shoot(Shooter.SHOOTER_POWER);
             }
             if (Shooter.shooter.getPower() == 0) {
                 Shooter.setPosition("INDEX");
@@ -101,41 +115,30 @@ public class StarterTeleop extends LinearOpMode {
             }
             //In front of rings
             if (gamepad1.dpad_left) {
-                Shooter.setPosition("WHITE_LINE");
+                Shooter.setPosition("RINGS");
                 Intake.releaseAllRings();
             }
 
-//            if (gamepad2.x) {
-//                Wobble.close();
-//                //wobble grabber close position
+//            if(gamepad2.a){
+//                P = P + 2;
 //            }
-//            if (gamepad2.b) {
-//                Wobble.open();
-//                //wobble grabber open position
+//            if(gamepad2.y){
+//                P = P - 2;
 //            }
-
-            if(gamepad2.a){
-                P = P + 2;
-            }
-            if(gamepad2.y){
-                P = P - 2;
-            }
             if (gamepad1.y) {
                 Shooter.shoot(0);
             }
 
             //Lifter
-            if (gamepad2.right_bumper) {
-                Wobble.lift(420);
+            if (gamepad2.right_bumper && !wobbleFlag) {
+                wobbleFlag = true;
+                Wobble.wobbleChangeState();
             }
-            else{
-                Wobble.unlift(-100);
+            else if(!gamepad2.right_bumper && wobbleFlag){
+                wobbleFlag = false;
             }
 
-            if(gamepad2.left_bumper){
-                Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                Wobble.wobbleMotor.setPower(0);
-            }
+            Wobble.wobbleUpdatePosition();
 
             if (gamepad1.dpad_right) {
                 Shooter.setPosition("WHITE_LINE");
@@ -143,7 +146,12 @@ public class StarterTeleop extends LinearOpMode {
             } else {
                 Intake.defaultPos();
             }
-
+            if (gamepad2.x) {
+                Wobble.close();
+            }
+            if (gamepad2.b) {
+                Wobble.open();
+            }
 
 
             if (gamepad1.dpad_down) {
@@ -159,7 +167,7 @@ public class StarterTeleop extends LinearOpMode {
             telemetry.addData("New P: ", P);
             telemetry.addData("New I: ", I);
             Shooter.shooterTelemetry(telemetry);
-//            Wobble.wobbleTelemetry(telemetry);
+            Wobble.wobbleTelemetry(telemetry);
 
 //            telemetry.addData("wobble:", Wobble.wobbleMotor.getCurrentPosition());
 //            telemetry.addData("wobble mode:", Wobble.wobbleMotor.getMode());

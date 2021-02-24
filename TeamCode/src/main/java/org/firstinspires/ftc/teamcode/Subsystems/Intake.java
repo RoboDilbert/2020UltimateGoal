@@ -27,6 +27,14 @@ public class Intake {
     private static final double VIBRATOR_CLOSED = 0.4;
     private static final double VIBRATOR_OPEN = 0.55;
 
+    private static INTAKE_STATE currentState = INTAKE_STATE.OFF;
+
+    private enum INTAKE_STATE{
+        INTAKE,
+        OFF,
+        BACKWARDS;
+    }
+
     //Constructor
     public Intake() {}
 
@@ -57,12 +65,12 @@ public class Intake {
     }
     //Release All
     public static void releaseAll() throws InterruptedException {
-        vibrator.setPosition(VIBRATOR_OPEN);
-        Thread.sleep(150);
-        vibrator.setPosition(VIBRATOR_CLOSED);
-        Thread.sleep(100);
-        Shooter.setPosition("SHOOTING");
-        //Thread.sleep(100);
+//        vibrator.setPosition(VIBRATOR_OPEN);
+//        Thread.sleep(150);
+//        vibrator.setPosition(VIBRATOR_CLOSED);
+//        Thread.sleep(100);
+//        Shooter.setPosition("SHOOTING");
+//        //Thread.sleep(100);
         for(int i = 0; i < 8; i++) {
             vibrator.setPosition(VIBRATOR_OPEN);
             Thread.sleep(150);
@@ -74,11 +82,18 @@ public class Intake {
     }
 
     public static void releaseAllRings() throws InterruptedException {
+        Thread.sleep(250);
+        vibrator.setPosition(VIBRATOR_OPEN);
+        Thread.sleep(150);
+        vibrator.setPosition(VIBRATOR_CLOSED);
+        Thread.sleep(100);
+        Shooter.setPosition("RINGS_ADJUST");
+        //Thread.sleep(100);
         for(int i = 0; i < 5; i++) {
             vibrator.setPosition(VIBRATOR_OPEN);
             Thread.sleep(150);
             vibrator.setPosition(VIBRATOR_CLOSED);
-            Thread.sleep(500);
+            Thread.sleep(100);
         }
         Shooter.setPosition("WHITE_LINE");
         rings.clear();
@@ -191,5 +206,32 @@ public class Intake {
     }
     public static void defaultPos(){
         vibrator.setPosition(0.55);
+    }
+
+    public static void intakeChangeState(String direction){
+        if(currentState == INTAKE_STATE.OFF && direction.equals("FORWARD")){
+            currentState = INTAKE_STATE.INTAKE;
+        }
+        else if (currentState == INTAKE_STATE.INTAKE){
+            currentState = INTAKE_STATE.OFF;
+        }
+        else if(currentState == INTAKE_STATE.OFF && direction.equals("REVERSE")){
+            currentState = INTAKE_STATE.BACKWARDS;
+        }
+        else if(currentState == INTAKE_STATE.BACKWARDS){
+            currentState = INTAKE_STATE.OFF;
+        }
+    }
+
+    public static void intakeUpdatePosition() throws InterruptedException{
+        if(currentState == INTAKE_STATE.OFF){
+            stop();
+        }
+        else if (currentState == INTAKE_STATE.INTAKE){
+            intake();
+        }
+        else if(currentState == INTAKE_STATE.BACKWARDS){
+            setBackwards();
+        }
     }
 }
