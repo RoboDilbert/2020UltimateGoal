@@ -57,8 +57,6 @@ import java.util.Locale;
 @Autonomous(name= "BlueComplete", group= "Autonomous")
 public class BlueComplete extends LinearOpMode{
 
-    public Shooter autoShooter;
-    public Intake autoIntake;
     public Rolling Distance1 = new Rolling(20);
     public String label;
 
@@ -79,6 +77,8 @@ public class BlueComplete extends LinearOpMode{
         Shooter.initShooter(hardwareMap);
         Intake.initIntake(hardwareMap);
         Wobble.initWobble(hardwareMap);
+
+        Shooter.updateShooterConstants(50, 1, 2,0);
 
         initVuforia();
         initTfod(hardwareMap);
@@ -236,6 +236,7 @@ public class BlueComplete extends LinearOpMode{
             //Drive Forward to ring
             Shooter.shoot(Shooter.SHOOTER_POWER);
             Shooter.setPosition("RINGS");
+            sleep(500);
             DriveTrain.cartesianDriveTimer(0, -0.3, 60);
 
             //Shoot our shot
@@ -268,20 +269,22 @@ public class BlueComplete extends LinearOpMode{
             sleep(100);
 
             //Strafe over to wall
-            DriveTrain.cartesianDriveDistance(0.7, 0, "LEFT", telemetry);
+            DriveTrain.cartesianDriveDistance(0.8, 0, "LEFT", telemetry);
             sleep(200);
 
             //drive to front wall
             //DriveTrain.cartesianDriveDistance(0, -0.4, "FRONT", telemetry);
-            DriveTrain.cartesianDriveTimer(0, -0.3, 100);
+            DriveTrain.cartesianDriveTimer(0, -0.5, 45);
             sleep(100);
 
             //Drop wobb
             Wobble.drop();
 
             //backup along wall with timer
-            DriveTrain.cartesianDriveTimer(0, 0.6, 60);
+            DriveTrain.cartesianDriveTimer(0, 0.6, 35);
             sleep(100);
+
+            DriveTrain.cartesianDriveDistance(0, .36, "BACK", telemetry);
         }
 
         //Drive forward to wobble
@@ -303,6 +306,9 @@ public class BlueComplete extends LinearOpMode{
         sleep(1500);
         Wobble.wobbleMotor.setPower(-0.1);
 
+        DriveTrain.cartesianDriveTimer(0.8, 0, 15);
+        sleep(100);
+
         if(label.equals("ZERO")){
             //DriveTrain.DriveAndTwist(0.1, 0.3, 0.3, 20, telemetry);
           //  DriveTrain.cartesianDriveDistance(0.3, 0, "RIGHT", telemetry);
@@ -319,8 +325,8 @@ public class BlueComplete extends LinearOpMode{
             sleep(500);
 
             int turnTimer = 300;
-            while (Math.abs(DriveTrain.angles.firstAngle - (-3.092333)) > (Math.PI / 60) && turnTimer > 0){
-                DriveTrain.autoAlignAuto(-3.092333);
+            while (Math.abs(DriveTrain.angles.firstAngle - (-3.14)) > (Math.PI / 60) && turnTimer > 0){
+                DriveTrain.autoAlignAuto(-3.14); //-3.092333
                 turnTimer--;
             }
             DriveTrain.rightFrontMotor.setPower(0);
@@ -329,26 +335,26 @@ public class BlueComplete extends LinearOpMode{
             DriveTrain.leftBackMotor.setPower(0);
             sleep(100);
 
-            DriveTrain.cartesianDriveTimer(0, -0.60, 50);
+            DriveTrain.cartesianDriveTimer(0, -0.60, 40); // -.3, 100
             sleep(500);
 
             //Lower Arm
-            Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
-            sleep(1500);
+//            Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
+//            sleep(1500);
 
             //Open claw
             Wobble.open();
             sleep(500);
 
             //Back UP
-            DriveTrain.cartesianDriveTimer(0, 0.4, 20);
+            DriveTrain.cartesianDriveTimer(0, 0.4, 40);
             sleep(100);
 
             //Raise Claw
             Wobble.raiseArm(-50);
             sleep(1500);
 
-            DriveTrain.driveToLine(0.4,"WHITE");
+//            DriveTrain.driveToLine(0.4,"WHITE");
 //            sleep(100);
 //            DriveTrain.cartesianDriveTimer(0,-0.7, 20);
 //            sleep(100);
