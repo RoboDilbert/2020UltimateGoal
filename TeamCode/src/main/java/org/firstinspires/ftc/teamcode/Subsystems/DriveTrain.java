@@ -40,7 +40,7 @@ public class DriveTrain {
     //2m distance sensors
     public static DistanceSensor frontDistanceSensor; //Expansion hub, I2C Bus 2;
     public static DistanceSensor backDistanceSensor; //Control hub, I2C Bus 2
-    public static DistanceSensor leftDistanceSensor; //Control hub, I2C Bus 0;
+    public static DistanceSensor leftDistanceSensor; //Control hub, I2C Bus 3;
     public static DistanceSensor rightDistanceSensor;//Control hub, I2C Bus 1
 
     //Constructor
@@ -56,7 +56,7 @@ public class DriveTrain {
 
         floorColorSensor = Constants.HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "floorColorSensor");
 
-        frontDistanceSensor = Constants.HwMap.get(DistanceSensor.class, "driveDistanceSensor");
+        frontDistanceSensor = Constants.HwMap.get(DistanceSensor.class, "frontDistanceSensor");
         backDistanceSensor = Constants.HwMap.get(DistanceSensor.class, "backDistanceSensor");
         leftDistanceSensor = Constants.HwMap.get(DistanceSensor.class, "leftDistanceSensor");
         rightDistanceSensor = Constants.HwMap.get(DistanceSensor.class, "rightDistanceSensor");
@@ -218,7 +218,7 @@ public class DriveTrain {
             if(side.equals("LEFT")){
                 currentDistance = leftDistanceSensor.getDistance(DistanceUnit.CM);//leftDistanceSensor
                 telemetry.addData("Left Distance Sensor", leftDistanceSensor.getDistance(DistanceUnit.CM));
-                exitValue = 25;
+                exitValue = 30;
             }
             else if (side.equals("RIGHT")){
                 currentDistance = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
@@ -392,7 +392,7 @@ public class DriveTrain {
             rightBackMotor.setPower(0);
         }
         else if(color.equals("WHITE")) {
-            while(floorColorSensor.alpha() < 950){//480, 680
+            while(floorColorSensor.alpha() < 1500){//480, 680
                 leftFrontMotor.setPower(power);
                 rightFrontMotor.setPower(power);
                 leftBackMotor.setPower(power);
