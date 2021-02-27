@@ -76,9 +76,10 @@ public class Shooter {
 //                mainShooter.getOldP(), mainShooter.getOldI(), mainShooter.getOldD());
 //        telemetry.addData("P,I,D (modified)", "%.04f, %.04f, %.04f",
 //                mainShooter.getNewP(), mainShooter.getNewI(), mainShooter.getNewD());
-        telemetry.addData("Real P: ", NEW_P);
-        telemetry.addData("Real I: ", NEW_I);
-        telemetry.addData("Shooty velo", shooter.getVelocity());
+//        telemetry.addData("Real P: ", NEW_P);
+//        telemetry.addData("Real I: ", NEW_I);
+//        telemetry.addData("Shooty velo", shooter.getVelocity());
+        telemetry.addData("Shooter angle", angleAdjust.getPosition());
         telemetry.addLine();
     }
 
@@ -92,16 +93,16 @@ public class Shooter {
             angleAdjust.setPosition(0.7);
         }
         else if(position.equals("WHITE_LINE")){
-            angleAdjust.setPosition(0.49); //White line = .49
+            angleAdjust.setPosition(0.42); //White line = .49
         }
         else if(position.equals("RINGS")){
-            angleAdjust.setPosition(0.64); //.48
+            angleAdjust.setPosition(0.63); //.48
         }
-        else if (position.equals("SHOOTING")){
-            angleAdjust.setPosition(0.49); //white line = .53
-        }
+//        else if (position.equals("SHOOTING")){
+//            angleAdjust.setPosition(0.49); //white line = .53
+//        }
         else if(position.equals("RINGS_ADJUST")) {
-            angleAdjust.setPosition(.7); //.56
+            angleAdjust.setPosition(.73); //.56
         }
     }
 

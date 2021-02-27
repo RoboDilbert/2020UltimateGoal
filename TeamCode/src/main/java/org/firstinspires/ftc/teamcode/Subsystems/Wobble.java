@@ -27,8 +27,10 @@ public class Wobble {
     private static final double GRABBER_CLOSED = 1.0;
 
     private static final double WOBBLE_ONE_OPEN = 0.1;
+    private static final double WOBBLE_ONE_MINI = 0.28;
     private static final double WOBBLE_ONE_CLOSED = 0.38;
     private static final double WOBBLE_TWO_OPEN = 0.66;
+    private static final double WOBBLE_TWO_MINI = 0.61;
     private static final double WOBBLE_TWO_CLOSED = 0.38;
 
     private static final double WOBBLE_MOTOR_ERROR = 0.1;
@@ -69,6 +71,11 @@ public class Wobble {
         wobble1.setPosition(WOBBLE_ONE_OPEN);
         wobble2.setPosition(WOBBLE_TWO_OPEN);
     }
+
+    public static void openSmall(){
+        wobble1.setPosition(WOBBLE_ONE_MINI);
+        wobble2.setPosition(WOBBLE_TWO_MINI);
+    }
     public static void close(){
         wobble1.setPosition(WOBBLE_ONE_CLOSED);
         wobble2.setPosition(WOBBLE_TWO_CLOSED);
@@ -86,7 +93,7 @@ public class Wobble {
         wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         if(Math.abs(lifterTP - Wobble.wobbleMotor.getCurrentPosition()) > (-lifterTP * WOBBLE_MOTOR_ERROR)) {
-            wobbleMotor.setPower(.3);
+            wobbleMotor.setPower(.4);
         }
         if (Math.abs(lifterTP - Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * WOBBLE_MOTOR_ERROR)) {
             Wobble.wobbleMotor.setPower(-0.1);
@@ -101,7 +108,7 @@ public class Wobble {
         //if(Math.abs(lifterTP - Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * .1)) {
             Wobble.wobbleMotor.setTargetPosition(lifterTP);
             Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            Wobble.wobbleMotor.setPower(-.30);
+            Wobble.wobbleMotor.setPower(-.4);
         //}
         if (Math.abs(Wobble.wobbleMotor.getCurrentPosition()) < Math.abs(lifterTP * WOBBLE_MOTOR_ERROR)) {
             Wobble.wobbleMotor.setPower(0);

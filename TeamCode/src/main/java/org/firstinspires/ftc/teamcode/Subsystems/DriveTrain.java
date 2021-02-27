@@ -122,7 +122,7 @@ public class DriveTrain {
                 rotation = 0.40;
             }
             else{
-                if(Math.abs(currentError) > (Math.PI / 60)){
+                if(Math.abs(currentError) > (Math.PI / 180)){
                     rotation = Math.abs(currentError / 0.6);
                 }
                 else{
@@ -233,7 +233,7 @@ public class DriveTrain {
             else if(side.equals("BACK")){
                 currentDistance = backDistanceSensor.getDistance(DistanceUnit.CM);
                 telemetry.addData("Back Distance Sensor", backDistanceSensor.getDistance(DistanceUnit.CM));
-                exitValue = 37;
+                exitValue = 27;
             }
             else if (side.equals("FOUR_SECOND")){
                 currentDistance = backDistanceSensor.getDistance(DistanceUnit.CM);
@@ -252,7 +252,7 @@ public class DriveTrain {
                 rotation = 0.40;
             }
             else{
-                if(Math.abs(currentError) > (Math.PI / 60)){
+                if(Math.abs(currentError) > (Math.PI / 180)){
                     rotation = Math.abs(currentError / 0.6);
                 }
                 else{
