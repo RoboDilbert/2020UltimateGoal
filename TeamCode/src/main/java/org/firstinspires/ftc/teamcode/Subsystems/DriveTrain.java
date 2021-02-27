@@ -233,7 +233,7 @@ public class DriveTrain {
             else if(side.equals("BACK")){
                 currentDistance = backDistanceSensor.getDistance(DistanceUnit.CM);
                 telemetry.addData("Back Distance Sensor", backDistanceSensor.getDistance(DistanceUnit.CM));
-                exitValue = 40;
+                exitValue = 37;
             }
             else if (side.equals("FOUR_SECOND")){
                 currentDistance = backDistanceSensor.getDistance(DistanceUnit.CM);
@@ -350,10 +350,10 @@ public class DriveTrain {
             driveTrainPower = 0.5;
         }
         else{
-            if(Math.abs(driveTrainError) < (Math.PI / 60)){
+            if(Math.abs(driveTrainError) < (Math.PI / 180)){//60
                 driveTrainPower = 0;
             }
-            else if(Math.abs(driveTrainError) > (Math.PI / 60)) {
+            else if(Math.abs(driveTrainError) > (Math.PI / 180)) {//60
                 driveTrainPower = Math.abs(driveTrainError / (Math.PI / 2)) + 0.1;
             }
         }
@@ -368,7 +368,7 @@ public class DriveTrain {
 
     public static void driveToLine(double power, String color){
         if(color.equals("RED")){
-            while(floorColorSensor.red() < 1000){//240, 82
+            while(floorColorSensor.red() < 2500){//240, 82
                 leftFrontMotor.setPower(power);
                 rightFrontMotor.setPower(power);
                 leftBackMotor.setPower(power);
@@ -380,7 +380,7 @@ public class DriveTrain {
             rightBackMotor.setPower(0);
         }
         else if(color.equals("BLUE")){
-            while(floorColorSensor.blue() < 1000){//480, 680
+            while(floorColorSensor.blue() < 2100){//480, 680
                 leftFrontMotor.setPower(power);
                 rightFrontMotor.setPower(power);
                 leftBackMotor.setPower(power);
@@ -392,7 +392,7 @@ public class DriveTrain {
             rightBackMotor.setPower(0);
         }
         else if(color.equals("WHITE")) {
-            while(floorColorSensor.alpha() < 1500){//480, 680
+            while(floorColorSensor.alpha() < 3200){//480, 680
                 leftFrontMotor.setPower(power);
                 rightFrontMotor.setPower(power);
                 leftBackMotor.setPower(power);

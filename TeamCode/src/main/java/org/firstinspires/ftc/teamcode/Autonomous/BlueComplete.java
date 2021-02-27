@@ -131,7 +131,7 @@ public class BlueComplete extends LinearOpMode{
             Shooter.shoot(Shooter.SHOOTER_POWER);
 
             //Drive forward to white line
-            DriveTrain.driveToLine(.25,"WHITE");
+            DriveTrain.driveToLine(.3,"WHITE");
             sleep(100);
 
             //Shoot
@@ -139,7 +139,7 @@ public class BlueComplete extends LinearOpMode{
             DriveTrain.cartesianDriveTimer(-0.7, 0, 10);
             sleep(100);
 
-            DriveTrain.cartesianDriveTimer(0, 0.3, 25);
+            DriveTrain.cartesianDriveTimer(0, 0.3, 30);
             sleep(100);
 
             Intake.releaseAll();
@@ -160,7 +160,7 @@ public class BlueComplete extends LinearOpMode{
             Wobble.drop();
 
             //Backup along wall with timer
-            DriveTrain.cartesianDriveTimer(0, 0.6, 25);
+            DriveTrain.cartesianDriveTimer(0, 0.6, 15);
             sleep(100);
         }
 
@@ -170,8 +170,8 @@ public class BlueComplete extends LinearOpMode{
             //Drive Forward to ring
             Shooter.shoot(Shooter.SHOOTER_POWER);
             Shooter.setPosition("RINGS");
-            sleep(500);
-            DriveTrain.cartesianDriveTimer(0, -0.3, 60);
+            //sleep(500);
+            DriveTrain.cartesianDriveTimer(0, -0.4, 40);
 
             //Shoot our shot
             Intake.releaseAllRings();
@@ -180,43 +180,56 @@ public class BlueComplete extends LinearOpMode{
             Intake.intake();
 
             //Drive forward to white line
-            DriveTrain.driveToLine(.25,"WHITE");
-            sleep(100);
+            DriveTrain.cartesianDriveTimer(0, -0.4, 30);
+            //sleep(100);
+
+            DriveTrain.driveToLine(.3,"WHITE");
+            //sleep(100);
+
 
             //Shoot
             Shooter.setPosition("WHITE_LINE");
             DriveTrain.cartesianDriveTimer(-0.7, 0, 10);
             sleep(100);
 
-            DriveTrain.cartesianDriveTimer(0, 0.3, 25);
-            sleep(100);
+            DriveTrain.cartesianDriveTimer(0, 0.4, 25);
+            //sleep(100);
 
             Intake.releaseAll();
             Intake.defaultPos();
             Shooter.shoot(0);
             Shooter.setPosition("INDEX");
-            sleep(100);
+            //sleep(100);
+
+            //Turn off intake
+            Intake.stop();
 
             //Drive Forward to blue Line
-            DriveTrain.driveToLine(.25,"WHITE");
-            sleep(100);
+//            DriveTrain.driveToLine(.25,"WHITE");
+//            sleep(100);
 
-            DriveTrain.cartesianDriveTimer(0, -0.3, 20);
+            DriveTrain.cartesianDriveTimer(0, -0.4, 30);
+            //sleep(100);
+
+            DriveTrain.cartesianDriveTimer(0.8, 0, 15);
             sleep(100);
 
             DriveTrain.driveToLine(0.3,"BLUE");
-            sleep(100);
+            //sleep(100);
+
+            DriveTrain.cartesianDriveTimer(0, -0.3, 10);
+            //sleep(100);
 
             //Drop wobb
             Wobble.drop();
 
             //Strafe over to wall
             DriveTrain.cartesianDriveDistance(0.8, 0, "LEFT", telemetry);
-            sleep(200);
+            sleep(100); //200
 
             //Backup along wall with timer
             DriveTrain.cartesianDriveTimer(0, 0.6, 25);
-            sleep(100);
+            //sleep(100);
         }
 
         else if(label.equals("Quad")) {
@@ -273,45 +286,83 @@ public class BlueComplete extends LinearOpMode{
             sleep(100);
         }
 
-        //ALL autonomouses... pick up second wobble
-        //Drive forward to wobble
-        DriveTrain.cartesianDriveDistance(0, .36, "BACK", telemetry);
+        if(label == null || label.equals("ZERO")){
+            DriveTrain.cartesianDriveDistance(0, .36, "BACK", telemetry);
 
-        DriveTrain.cartesianDriveTimer(0, -.4, 6);
-        sleep(100);
+            DriveTrain.cartesianDriveTimer(0, .4, 8);
+            //sleep(100);
 
-        //Open Claw
-        Wobble.open();
+            //Open Claw
+            Wobble.open();
 
-        //Lower Arm
-        Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
-        sleep(1500);
+            //Lower Arm
+            Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
+            sleep(1500);
 
-        //Close Claw
-        Wobble.close();
-        sleep(300);
+            //Close Claw
+            Wobble.close();
+            sleep(300);
 
-        //Raise Claw
-        Wobble.raiseArm(Wobble.WOBBLE_UP_TICKS);
-        sleep(1500);
-        Wobble.wobbleMotor.setPower(-0.1);
+            //Raise Claw
+            Wobble.raiseArm(Wobble.WOBBLE_UP_TICKS);
+            sleep(1500);
+            Wobble.wobbleMotor.setPower(-0.1);
 
-        DriveTrain.cartesianDriveTimer(0.8, 0, 15);
-        sleep(100);
+            DriveTrain.cartesianDriveTimer(-0.8, 0, 30);
+            sleep(100);
+        }
+        else {
+            //ALL autonomouses... pick up second wobble
+            //Drive forward to wobble
+            DriveTrain.cartesianDriveDistance(0, .36, "BACK", telemetry);
+
+            DriveTrain.cartesianDriveTimer(0, -.4, 10);
+            //sleep(100);
+
+            //Open Claw
+            Wobble.open();
+
+            //Lower Arm
+            Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
+            sleep(1500);
+
+            //Close Claw
+            Wobble.close();
+            sleep(300);
+
+            //Raise Claw
+            Wobble.raiseArm(Wobble.WOBBLE_UP_TICKS);
+            sleep(1500);
+            Wobble.wobbleMotor.setPower(-0.1);
+
+            DriveTrain.cartesianDriveTimer(-0.8, 0, 15);
+            sleep(100);
+        }
 
         if(label.equals("ZERO")){
             //Strafe towards wall
-            DriveTrain.cartesianDriveDistance(0.3, 0, "LEFT", telemetry);
-            sleep(100);
+//            DriveTrain.cartesianDriveDistance(0.3, 0, "LEFT", telemetry);
+//            sleep(100);
 
             //Drive to white line
-            DriveTrain.driveToLine(.25,"BLUE");
+            DriveTrain.driveToLine(.3,"WHITE");
             sleep(500);
 
             //Turn 180 degrees
-            int turnTimer = 300;
-            while (Math.abs(DriveTrain.angles.firstAngle - (-3.14)) > (Math.PI / 60) && turnTimer > 0){
-                DriveTrain.autoAlignAuto(-3.14); //-3.092333
+//            int turnTimer = 300;
+//            while (Math.abs(DriveTrain.angles.firstAngle - (-3.14)) > (Math.PI / 60) && turnTimer > 0){
+//                DriveTrain.autoAlignAuto(-3.14); //-3.092333
+//                turnTimer--;
+//            }
+//            DriveTrain.rightFrontMotor.setPower(0);
+//            DriveTrain.rightBackMotor.setPower(0);
+//            DriveTrain.leftFrontMotor.setPower(0);
+//            DriveTrain.leftBackMotor.setPower(0);
+//            sleep(100);
+            //Turn 180 degrees
+            int turnTimer = 400;
+            while (Math.abs(DriveTrain.angles.firstAngle - (-Math.PI / 1.7)) > (Math.PI / 180) && turnTimer > 0){
+                DriveTrain.autoAlignAuto(-Math.PI / 1.7); //-3.092333
                 turnTimer--;
             }
             DriveTrain.rightFrontMotor.setPower(0);
@@ -320,42 +371,62 @@ public class BlueComplete extends LinearOpMode{
             DriveTrain.leftBackMotor.setPower(0);
             sleep(100);
 
-            //Lower arm
+//            DriveTrain.cartesianDriveTimer(0, -.4, 15);
+
             Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
-            sleep(500);
+            sleep(1000);
 
             //Open claw
             Wobble.open();
             sleep(250);
 
+            //Back UP
+            DriveTrain.cartesianDriveTimer(-0.4, 0, 14);
+            //sleep(100);
+
             //Raise Claw
             Wobble.raiseArm(-50);
             sleep(1500);
-
-            DriveTrain.cartesianDriveTimer(-0.8, 0, 30);
-            sleep(100);
-
-            DriveTrain.cartesianDriveTimer(0, -.4, 40);
-            sleep(100);
+            //Lower arm
+//            Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
+//            sleep(500);
+//
+//            //Open claw
+//            Wobble.open();
+//            sleep(250);
+//
+//            //Raise Claw
+//            Wobble.raiseArm(-50);
+//            sleep(1500);
+//
+//            DriveTrain.cartesianDriveTimer(-0.8, 0, 30);
+//            sleep(100);
+//
+//            DriveTrain.cartesianDriveTimer(0, -.4, 40);
+//            sleep(100);
         }
 
         else if(label.equals("Single")){
             //Strafe towards wall
-            DriveTrain.cartesianDriveDistance(0.3, 0, "LEFT", telemetry);
-            sleep(100);
+//            DriveTrain.cartesianDriveDistance(0.3, 0, "LEFT", telemetry);
+//            sleep(100);
 
             //Drive to white line
-            DriveTrain.driveToLine(.25,"WHITE");
-            sleep(500);
+
+            DriveTrain.cartesianDriveTimer(0, -.6, 20);
+            //sleep(100);
+
+            DriveTrain.driveToLine(.3,"WHITE");
+            //sleep(500);
 
             //Strafe towards drop off zone
-            DriveTrain.cartesianDriveTimer(-.8, 0, 40); // -.3, 100
-            sleep(500);
+            DriveTrain.cartesianDriveTimer(-.8, 0, 30); // -.3, 100
+            //sleep(500);
 
             //Turn 180 degrees
             int turnTimer = 400;
-            while (Math.abs(DriveTrain.angles.firstAngle - (-3.14)) > (Math.PI / 90) && turnTimer > 0){
-                DriveTrain.autoAlignAuto(-3.14); //-3.092333
+            while (Math.abs(DriveTrain.angles.firstAngle - (-Math.PI)) > (Math.PI / 180) && turnTimer > 0){
+                DriveTrain.autoAlignAuto(-Math.PI); //-3.092333
                 turnTimer--;
             }
             DriveTrain.rightFrontMotor.setPower(0);
@@ -365,24 +436,25 @@ public class BlueComplete extends LinearOpMode{
             sleep(100);
 
             //Drive to drop off zone
-            DriveTrain.cartesianDriveTimer(0, -0.60, 20); // -.3, 100
-            sleep(500);
+            DriveTrain.cartesianDriveTimer(0, -0.60, 7); // -.3, 100
+            //sleep(500);
 
             //Open claw
             Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
-            sleep(500);
+            sleep(1000);
 
             //Open claw
             Wobble.open();
             sleep(250);
 
+            //Back UP
+            DriveTrain.cartesianDriveTimer(0, 0.4, 14);
+            //sleep(100);
+
             //Raise Claw
             Wobble.raiseArm(-50);
             sleep(1500);
 
-            //Back UP
-            DriveTrain.cartesianDriveTimer(0, 0.4, 18);
-            sleep(100);
         }
 
         else if(label.equals("Quad")){
