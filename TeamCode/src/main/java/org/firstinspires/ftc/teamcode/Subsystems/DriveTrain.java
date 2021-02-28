@@ -201,7 +201,7 @@ public class DriveTrain {
         rightBackMotor.setPower(0);
     }
 
-    public static void cartesianDriveDistance(double x, double y, String side, Telemetry telemetry) throws InterruptedException {
+    public static void cartesianDriveDistance(double x, double y, String side, Telemetry telemetry, String greatOrLess) throws InterruptedException {
         double speed = Math.sqrt(2) * Math.hypot(x, y);
         double command = Math.atan2(y, -x) + Math.PI/2;
         double rotation = 0;
@@ -210,78 +210,137 @@ public class DriveTrain {
         double adjustedXHeading = 0;
         double adjustedYHeading = 0;
 
-        double currentDistance = Double.MAX_VALUE;
-        double exitValue = Double.MIN_VALUE;
+        double currentDistance;
+        double exitValue;
+        if(greatOrLess.equals("GREATER")) {
+            currentDistance = Double.MAX_VALUE;
+            exitValue = Double.MIN_VALUE;
+            while (currentDistance > exitValue) {
 
-        while(currentDistance > exitValue) {
-
-            if(side.equals("LEFT")){
-                currentDistance = leftDistanceSensor.getDistance(DistanceUnit.CM);//leftDistanceSensor
-                telemetry.addData("Left Distance Sensor", leftDistanceSensor.getDistance(DistanceUnit.CM));
-                exitValue = 30;
-            }
-            else if (side.equals("RIGHT")){
-                currentDistance = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
-                telemetry.addData("Right Distance Sensor", rightDistanceSensor.getDistance(DistanceUnit.CM));
-                exitValue = 20;
-            }
-            else if (side.equals("FRONT")){
-                currentDistance = frontDistanceSensor.getDistance(DistanceUnit.CM);
-                telemetry.addData("Front Distance Sensor", frontDistanceSensor.getDistance(DistanceUnit.CM));
-                exitValue = 30;
-            }
-            else if(side.equals("BACK")){
-                currentDistance = backDistanceSensor.getDistance(DistanceUnit.CM);
-                telemetry.addData("Back Distance Sensor", backDistanceSensor.getDistance(DistanceUnit.CM));
-                exitValue = 27;
-            }
-            else if (side.equals("FOUR_SECOND")){
-                currentDistance = backDistanceSensor.getDistance(DistanceUnit.CM);
-                telemetry.addData("Back Distance Sensor", backDistanceSensor.getDistance(DistanceUnit.CM));
-                exitValue = 25;
-            }
-
-            angles = DriveTrain.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-
-            adjustedXHeading = Math.cos(command + angles.firstAngle + Math.PI / 4);
-            adjustedYHeading = Math.sin(command + angles.firstAngle + Math.PI / 4);
-
-            currentError = angles.firstAngle - startingHeading;
-
-            if(Math.abs(currentError) > (Math.PI / 12)){
-                rotation = 0.40;
-            }
-            else{
-                if(Math.abs(currentError) > (Math.PI / 180)){
-                    rotation = Math.abs(currentError / 0.6);
+                if (side.equals("LEFT")) {
+                    currentDistance = leftDistanceSensor.getDistance(DistanceUnit.CM);//leftDistanceSensor
+                    telemetry.addData("Left Distance Sensor", leftDistanceSensor.getDistance(DistanceUnit.CM));
+                    exitValue = 30;
+                } else if (side.equals("RIGHT")) {
+                    currentDistance = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
+                    telemetry.addData("Right Distance Sensor", rightDistanceSensor.getDistance(DistanceUnit.CM));
+                    exitValue = 58;
+                } else if (side.equals("FRONT")) {
+                    currentDistance = frontDistanceSensor.getDistance(DistanceUnit.CM);
+                    telemetry.addData("Front Distance Sensor", frontDistanceSensor.getDistance(DistanceUnit.CM));
+                    exitValue = 30;
+                } else if (side.equals("BACK")) {
+                    currentDistance = backDistanceSensor.getDistance(DistanceUnit.CM);
+                    telemetry.addData("Back Distance Sensor", backDistanceSensor.getDistance(DistanceUnit.CM));
+                    exitValue = 27;
+                } else if (side.equals("FOUR_SECOND")) {
+                    currentDistance = backDistanceSensor.getDistance(DistanceUnit.CM);
+                    telemetry.addData("Back Distance Sensor", backDistanceSensor.getDistance(DistanceUnit.CM));
+                    exitValue = 25;
                 }
-                else{
-                    rotation = 0;
+
+                angles = DriveTrain.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+
+                adjustedXHeading = Math.cos(command + angles.firstAngle + Math.PI / 4);
+                adjustedYHeading = Math.sin(command + angles.firstAngle + Math.PI / 4);
+
+                currentError = angles.firstAngle - startingHeading;
+
+                if (Math.abs(currentError) > (Math.PI / 12)) {
+                    rotation = 0.40;
+                } else {
+                    if (Math.abs(currentError) > (Math.PI / 180)) {
+                        rotation = Math.abs(currentError / 0.6);
+                    } else {
+                        rotation = 0;
+                    }
                 }
-            }
 
-            if(currentError < 0){
-                rotation = rotation * -1;
-            }
+                if (currentError < 0) {
+                    rotation = rotation * -1;
+                }
 
-            leftFrontMotor.setPower((speed * adjustedYHeading + rotation) * Constants.TELEOP_LIMITER);
-            rightFrontMotor.setPower((speed * adjustedXHeading - rotation) * Constants.TELEOP_LIMITER);
-            leftBackMotor.setPower((speed * adjustedXHeading + rotation) * Constants.TELEOP_LIMITER);
-            rightBackMotor.setPower((speed * adjustedYHeading - rotation) * Constants.TELEOP_LIMITER);
+                leftFrontMotor.setPower((speed * adjustedYHeading + rotation) * Constants.TELEOP_LIMITER);
+                rightFrontMotor.setPower((speed * adjustedXHeading - rotation) * Constants.TELEOP_LIMITER);
+                leftBackMotor.setPower((speed * adjustedXHeading + rotation) * Constants.TELEOP_LIMITER);
+                rightBackMotor.setPower((speed * adjustedYHeading - rotation) * Constants.TELEOP_LIMITER);
 
-            if(side.equals("LEFT")){
-                currentDistance = leftDistanceSensor.getDistance(DistanceUnit.CM);//leftDistanceSensor
+                if (side.equals("LEFT")) {
+                    currentDistance = leftDistanceSensor.getDistance(DistanceUnit.CM);//leftDistanceSensor
+                } else if (side.equals("RIGHT")) {
+                    currentDistance = rightDistanceSensor.getDistance(DistanceUnit.CM);//rightDistanceSensor
+                } else if (side.equals("FRONT")) {
+                    currentDistance = frontDistanceSensor.getDistance(DistanceUnit.CM);
+                } else if (side.equals("BACK") || side.equals("FOUR_SECOND")) {
+                    currentDistance = backDistanceSensor.getDistance(DistanceUnit.CM);
+                }
+                telemetry.update();
             }
-            else if (side.equals("RIGHT")){
-                currentDistance = rightDistanceSensor.getDistance(DistanceUnit.CM);//rightDistanceSensor
+        }
+        else if(greatOrLess.equals("LESS")){
+            currentDistance = Double.MIN_VALUE;
+            exitValue = Double.MAX_VALUE;
+            while (currentDistance < exitValue) {
+
+                if (side.equals("LEFT")) {
+                    currentDistance = leftDistanceSensor.getDistance(DistanceUnit.CM);//leftDistanceSensor
+                    telemetry.addData("Left Distance Sensor", leftDistanceSensor.getDistance(DistanceUnit.CM));
+                    exitValue = 30;
+                } else if (side.equals("RIGHT")) {
+                    currentDistance = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
+                    telemetry.addData("Right Distance Sensor", rightDistanceSensor.getDistance(DistanceUnit.CM));
+                    exitValue = 50;
+                } else if (side.equals("FRONT")) {
+                    currentDistance = frontDistanceSensor.getDistance(DistanceUnit.CM);
+                    telemetry.addData("Front Distance Sensor", frontDistanceSensor.getDistance(DistanceUnit.CM));
+                    exitValue = 30;
+                } else if (side.equals("BACK")) {
+                    currentDistance = backDistanceSensor.getDistance(DistanceUnit.CM);
+                    telemetry.addData("Back Distance Sensor", backDistanceSensor.getDistance(DistanceUnit.CM));
+                    exitValue = 27;
+                } else if (side.equals("FOUR_SECOND")) {
+                    currentDistance = backDistanceSensor.getDistance(DistanceUnit.CM);
+                    telemetry.addData("Back Distance Sensor", backDistanceSensor.getDistance(DistanceUnit.CM));
+                    exitValue = 25;
+                }
+
+                angles = DriveTrain.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+
+                adjustedXHeading = Math.cos(command + angles.firstAngle + Math.PI / 4);
+                adjustedYHeading = Math.sin(command + angles.firstAngle + Math.PI / 4);
+
+                currentError = angles.firstAngle - startingHeading;
+
+                if (Math.abs(currentError) > (Math.PI / 12)) {
+                    rotation = 0.40;
+                } else {
+                    if (Math.abs(currentError) > (Math.PI / 180)) {
+                        rotation = Math.abs(currentError / 0.6);
+                    } else {
+                        rotation = 0;
+                    }
+                }
+
+                if (currentError < 0) {
+                    rotation = rotation * -1;
+                }
+
+                leftFrontMotor.setPower((speed * adjustedYHeading + rotation) * Constants.TELEOP_LIMITER);
+                rightFrontMotor.setPower((speed * adjustedXHeading - rotation) * Constants.TELEOP_LIMITER);
+                leftBackMotor.setPower((speed * adjustedXHeading + rotation) * Constants.TELEOP_LIMITER);
+                rightBackMotor.setPower((speed * adjustedYHeading - rotation) * Constants.TELEOP_LIMITER);
+
+                if (side.equals("LEFT")) {
+                    currentDistance = leftDistanceSensor.getDistance(DistanceUnit.CM);//leftDistanceSensor
+                } else if (side.equals("RIGHT")) {
+                    currentDistance = rightDistanceSensor.getDistance(DistanceUnit.CM);//rightDistanceSensor
+                } else if (side.equals("FRONT")) {
+                    currentDistance = frontDistanceSensor.getDistance(DistanceUnit.CM);
+                } else if (side.equals("BACK") || side.equals("FOUR_SECOND")) {
+                    currentDistance = backDistanceSensor.getDistance(DistanceUnit.CM);
+                }
+                telemetry.update();
             }
-            else if(side.equals("FRONT")){
-                currentDistance = frontDistanceSensor.getDistance(DistanceUnit.CM);
-            }
-            else if(side.equals("BACK") || side.equals("FOUR_SECOND")){
-                currentDistance = backDistanceSensor.getDistance(DistanceUnit.CM);
-            }
-            telemetry.update();
         }
 
         leftFrontMotor.setPower(0);
@@ -350,10 +409,10 @@ public class DriveTrain {
             driveTrainPower = 0.5;
         }
         else{
-            if(Math.abs(driveTrainError) < (Math.PI / 180)){//60
+            if(Math.abs(driveTrainError) < (Math.PI / 90)){//60
                 driveTrainPower = 0;
             }
-            else if(Math.abs(driveTrainError) > (Math.PI / 180)) {//60
+            else if(Math.abs(driveTrainError) > (Math.PI / 90)) {//60
                 driveTrainPower = Math.abs(driveTrainError / (Math.PI / 2)) + 0.1;
             }
         }
@@ -368,7 +427,7 @@ public class DriveTrain {
 
     public static void driveToLine(double power, String color){
         if(color.equals("RED")){
-            while(floorColorSensor.red() < 2500){//240, 82
+            while(floorColorSensor.red() < 1800){//240, 82
                 leftFrontMotor.setPower(power);
                 rightFrontMotor.setPower(power);
                 leftBackMotor.setPower(power);
@@ -455,7 +514,7 @@ public class DriveTrain {
 //        telemetry.addData("range2", String.format("%.3f cm",Constants.Distance2.getAverage() + Constants.cal2));
 //        telemetry.addLine();
         telemetry.addData("Front", String.format("%.3f cm", frontDistanceSensor.getDistance(DistanceUnit.CM)));
-        telemetry.addData("leftWallDistance", leftDistanceSensor.getDistance(DistanceUnit.CM));
+        telemetry.addData("rightWallDistance", rightDistanceSensor.getDistance(DistanceUnit.CM));
         telemetry.addData("BaccDistanceSensor", backDistanceSensor.getDistance(DistanceUnit.CM));
         telemetry.addLine();
     }

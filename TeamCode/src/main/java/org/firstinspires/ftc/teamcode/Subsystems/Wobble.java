@@ -74,7 +74,7 @@ public class Wobble {
 
     public static void openSmall(){
         wobble1.setPosition(WOBBLE_ONE_MINI);
-        wobble2.setPosition(WOBBLE_TWO_MINI);
+        //wobble2.setPosition(WOBBLE_TWO_MINI);
     }
     public static void close(){
         wobble1.setPosition(WOBBLE_ONE_CLOSED);
