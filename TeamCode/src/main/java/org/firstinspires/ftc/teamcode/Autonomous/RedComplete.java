@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
@@ -125,7 +126,7 @@ public class RedComplete extends LinearOpMode {
             Wobble.drop();
 
 //            DriveTrain.cartesianDriveTimer(.8, 0, 30);
-            DriveTrain.cartesianDriveDistance(0.8, 0, "RIGHT", telemetry,"LESS");
+            DriveTrain.cartesianDriveDistance(0.8, .15, "RIGHT", telemetry,"LESS");
 
 
             //Backup along wall with timer
@@ -178,7 +179,9 @@ public class RedComplete extends LinearOpMode {
 //            DriveTrain.driveToLine(.25,"WHITE");
 //            sleep(100);
 
-            DriveTrain.cartesianDriveTimer(0, -0.4, 40);
+            DriveTrain.driveToLine(.3, "WHITE");
+
+            DriveTrain.cartesianDriveTimer(0, -0.3, 8);
             //sleep(100);
 
 //            DriveTrain.cartesianDriveTimer(-0.8, 0, 10);
@@ -187,7 +190,7 @@ public class RedComplete extends LinearOpMode {
             DriveTrain.driveToLine(0.3,"RED");
             //sleep(100);
 
-            DriveTrain.cartesianDriveTimer(0, -0.3, 7);
+            DriveTrain.cartesianDriveTimer(0, -0.3, 9);
             //sleep(100);
 
             //Drop wobb
@@ -198,24 +201,42 @@ public class RedComplete extends LinearOpMode {
 //            sleep(100); //200
 
             //Backup along wall with timer
-            DriveTrain.cartesianDriveTimer(0, 0.6, 25);
+            DriveTrain.cartesianDriveTimer(0, 0.6, 30);
             //sleep(100);
         }
 
         else if(label.equals("Quad")) {
             //------------4------------
             //Drive Forward to ring
+//            Shooter.shoot(Shooter.SHOOTER_POWER);
+//            Shooter.setPosition("RINGS");
+//            //sleep(500);
+//            DriveTrain.cartesianDriveTimer(0, -0.4, 40);
+//
+//            //Shoot our shot
+//            Intake.releaseAllRings();
+//            Intake.defaultPos();
+            //Drive Forward to ring
             Shooter.shoot(Shooter.SHOOTER_POWER);
             Shooter.setPosition("RINGS");
             //sleep(500);
             DriveTrain.cartesianDriveTimer(0, -0.4, 40);
+            sleep(100);
+
+//            DriveTrain.cartesianDriveTimer(-0.73, -0.1, 14);
+//            DriveTrain.cartesianDriveTimer(0, -0.4, 10);
 
             //Shoot our shot
             Intake.releaseAllRings();
             Intake.defaultPos();
 
+
             //Turn on intake
             Intake.intake();
+
+            DriveTrain.cartesianDriveTimer(0, -0.4, 30);
+            Intake.releaseAll();
+            Intake.defaultPos();
 
             //Drive forward to white line
             DriveTrain.driveToLine(.3,"WHITE");
@@ -223,10 +244,10 @@ public class RedComplete extends LinearOpMode {
 
             //Shoot
             Shooter.setPosition("WHITE_LINE");
-            DriveTrain.cartesianDriveTimer(0.7, 0, 10);
+            DriveTrain.cartesianDriveTimer(-0.7, 0, 5);
             sleep(100);
 
-            DriveTrain.cartesianDriveTimer(0, 0.38, 35);
+            DriveTrain.cartesianDriveTimer(0, 0.38, 25);
             //sleep(100);
 
             Intake.releaseAll();
@@ -240,10 +261,12 @@ public class RedComplete extends LinearOpMode {
             //sleep(100);
 
             //Strafe over to wall
-            DriveTrain.cartesianDriveDistance(-0.6, -0.32, "RIGHT", telemetry,"GREATER");
+            DriveTrain.cartesianDriveTimer(-0.7, -0.3, 45);
             //sleep(200);
 
-            DriveTrain.cartesianDriveTimer(0, -0.3, 20);
+            DriveTrain.cartesianDriveTimer(0, -0.8, 8);
+
+//            DriveTrain.cartesianDriveDistance(0, -.3, "FRONT", telemetry, "GREATER");
 //
 //            //drive to front wall
 //            DriveTrain.cartesianDriveTimer(0, -0.5, 45);
@@ -252,8 +275,12 @@ public class RedComplete extends LinearOpMode {
             //Drop wobb
             Wobble.drop();
 
+            DriveTrain.cartesianDriveTimer(0.7, 0.2, 10);
+            DriveTrain.cartesianDriveDistance(0.6, .25, "RIGHT", telemetry,"LESS");
+            sleep(100);
+
             //Backup along wall with timer
-            DriveTrain.cartesianDriveTimer(0, 0.6, 35);
+            DriveTrain.cartesianDriveTimer(0, 0.8, 25);
             //sleep(100);
         }
 
@@ -312,6 +339,8 @@ public class RedComplete extends LinearOpMode {
             Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
             sleep(800);
 
+            DriveTrain.cartesianDriveTimer(0, 0.3, 15);
+
             DriveTrain.cartesianDriveDistance(0, .3, "BACK", telemetry,"GREATER");
 
             //Close Claw
@@ -365,7 +394,7 @@ public class RedComplete extends LinearOpMode {
             sleep(1000);
 
             //Open claw
-            Wobble.open();
+            Wobble.openSmall();
             sleep(250);
 
 
@@ -425,7 +454,7 @@ public class RedComplete extends LinearOpMode {
             sleep(100);
 
             //Drive to drop off zone
-            DriveTrain.cartesianDriveTimer(0, -0.60, 6); // -.3, 100
+            DriveTrain.cartesianDriveTimer(0, -0.60, 8); // -.3, 100
             //sleep(500);
 
             //Open claw
@@ -433,12 +462,12 @@ public class RedComplete extends LinearOpMode {
             sleep(1000);
 
             //Open claw
-            Wobble.open();
+            Wobble.openSmall();
             sleep(300);
 
             //DriveTrain.driveToLine(-.3,"WHITE");
             //Raise Claw
-            DriveTrain.cartesianDriveTimer(0.5, .2, 30);
+            DriveTrain.cartesianDriveTimer(0.5, .2, 16);
 
             Wobble.raiseArm(-50);
             sleep(800);
@@ -477,17 +506,24 @@ public class RedComplete extends LinearOpMode {
             //Drive to drop off zone
             DriveTrain.cartesianDriveTimer(-0.6, -0.4, 30); // -.3, 100
 
-            DriveTrain.cartesianDriveTimer(0.6, -0.35, 15);
+            //DriveTrain.cartesianDriveTimer(0.6, -0.35, 15);
             //sleep(500);
 
-            DriveTrain.cartesianDriveTimer(0, -0.2, 15);
+            //DriveTrain.cartesianDriveTimer(0, -0.2, 15);
+
+            Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
+            sleep(1000);
 
             //Open claw
-            Wobble.open();
-            sleep(500);
+            Wobble.openSmall();
+            sleep(300);
+
+            //Open claw
+//            Wobble.open();
+//            sleep(500);
 
             //Back UP
-            DriveTrain.cartesianDriveTimer(-0.5, 0.6, 35);
+            DriveTrain.cartesianDriveTimer(-0.5, 0.6, 18);
             //sleep(100);
 
             //Raise Claw
