@@ -100,7 +100,7 @@ public class RedComplete extends LinearOpMode {
 
             //Shoot
             Shooter.setPosition("WHITE_LINE");
-            DriveTrain.cartesianDriveTimer(-0.7, 0, 20);
+            DriveTrain.cartesianDriveTimer(0.7, 0, 10);
             sleep(100);
 
             DriveTrain.cartesianDriveTimer(0, 0.3, 30);
@@ -116,9 +116,10 @@ public class RedComplete extends LinearOpMode {
 //            DriveTrain.cartesianDriveTimer(0, -0.3, 1);
 //            sleep(100);
 
-            //Strafe over to wall
-            DriveTrain.cartesianDriveDistance(-0.8, 0, "RIGHT", telemetry,"GREATER");
-            sleep(100);
+//            //Strafe over to wall
+//            DriveTrain.cartesianDriveDistance(-0.8, 0, "RIGHT", telemetry,"GREATER");
+//            sleep(100);
+            DriveTrain.cartesianDriveTimer(-0.7, 0, 60);
 
             DriveTrain.cartesianDriveTimer(0, -0.4, 12);
 
@@ -126,11 +127,11 @@ public class RedComplete extends LinearOpMode {
             Wobble.drop();
 
 //            DriveTrain.cartesianDriveTimer(.8, 0, 30);
-            DriveTrain.cartesianDriveDistance(0.8, .15, "RIGHT", telemetry,"LESS");
-
+            //DriveTrain.cartesianDriveDistance(0.8, .08, "RIGHT_ZERO", telemetry,"LESS");
+            DriveTrain.cartesianDriveTimer(.8, .16, 25);
 
             //Backup along wall with timer
-            DriveTrain.cartesianDriveTimer(0, 0.6, 15);
+            DriveTrain.cartesianDriveTimer(0, 0.5, 5);
             sleep(100);
         }
 
@@ -142,7 +143,7 @@ public class RedComplete extends LinearOpMode {
             Shooter.setPosition("WHITE_LINE");
             //sleep(500);
             DriveTrain.cartesianDriveTimer(0, -0.4, 50);
-            DriveTrain.cartesianDriveTimer(-0.73, 0, 17);
+            //DriveTrain.cartesianDriveTimer(-0.73, 0, 17);
             DriveTrain.cartesianDriveTimer(0, -0.4, 25);
 
             //Shoot our shot
@@ -200,8 +201,10 @@ public class RedComplete extends LinearOpMode {
 //            DriveTrain.cartesianDriveDistance(-0.6, 0.32, "RIGHT", telemetry,"GREATER");
 //            sleep(100); //200
 
+            DriveTrain.cartesianDriveDistance(-0.8, .15, "RIGHT_ZERO", telemetry,"GREATER");
+
             //Backup along wall with timer
-            DriveTrain.cartesianDriveTimer(0, 0.6, 30);
+            DriveTrain.cartesianDriveTimer(0, 0.6, 25);
             //sleep(100);
         }
 
@@ -264,7 +267,7 @@ public class RedComplete extends LinearOpMode {
             DriveTrain.cartesianDriveTimer(-0.7, -0.3, 45);
             //sleep(200);
 
-            DriveTrain.cartesianDriveTimer(0, -0.8, 8);
+            DriveTrain.cartesianDriveTimer(0, -0.8, 12);
 
 //            DriveTrain.cartesianDriveDistance(0, -.3, "FRONT", telemetry, "GREATER");
 //
@@ -308,13 +311,16 @@ public class RedComplete extends LinearOpMode {
 //
 //            DriveTrain.cartesianDriveTimer(-0.8, 0, 30);
 //            sleep(100);
+            DriveTrain.cartesianDriveDistance(0, .36, "BACK", telemetry,"GREATER");
+            sleep(1000);
+
             Wobble.open();
 
             //Lower Arm
             Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
-            sleep(800);
+            sleep(1200);
 
-            DriveTrain.cartesianDriveDistance(0, .36, "BACK", telemetry,"GREATER");
+            DriveTrain.cartesianDriveTimer(0, 0.4, 10);
 
             //Close Claw
             Wobble.close();
@@ -422,6 +428,8 @@ public class RedComplete extends LinearOpMode {
 //
 //            DriveTrain.cartesianDriveTimer(0, -.4, 40);
 //            sleep(100);
+            Wobble.drop();
+            sleep(200);
         }
 
         else if(label.equals("Single")){

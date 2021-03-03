@@ -232,11 +232,15 @@ public class DriveTrain {
                 } else if (side.equals("BACK")) {
                     currentDistance = backDistanceSensor.getDistance(DistanceUnit.CM);
                     telemetry.addData("Back Distance Sensor", backDistanceSensor.getDistance(DistanceUnit.CM));
-                    exitValue = 28;
-                } else if (side.equals("FOUR_SECOND")) {
+                    exitValue = 45;
+                } else if (side.equals("BACK_SECOND")) {
                     currentDistance = backDistanceSensor.getDistance(DistanceUnit.CM);
                     telemetry.addData("Back Distance Sensor", backDistanceSensor.getDistance(DistanceUnit.CM));
-                    exitValue = 25;
+                    exitValue = 28;
+                } else if (side.equals("RIGHT_ZERO")) {
+                    currentDistance = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
+                    telemetry.addData("Right Distance Sensor", rightDistanceSensor.getDistance(DistanceUnit.CM));
+                    exitValue = 50;
                 }
 
                 angles = DriveTrain.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
@@ -277,6 +281,8 @@ public class DriveTrain {
                     currentDistance = frontDistanceSensor.getDistance(DistanceUnit.CM);
                 } else if (side.equals("BACK") || side.equals("FOUR_SECOND")) {
                     currentDistance = backDistanceSensor.getDistance(DistanceUnit.CM);
+                } else if (side.equals("RIGHT_ZERO")) {
+                    currentDistance = rightDistanceSensor.getDistance(DistanceUnit.CM);
                 }
                 telemetry.update();
             }
@@ -293,7 +299,7 @@ public class DriveTrain {
                 } else if (side.equals("RIGHT")) {
                     currentDistance = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
                     telemetry.addData("Right Distance Sensor", rightDistanceSensor.getDistance(DistanceUnit.CM));
-                    exitValue = 52;
+                    exitValue = 50;
                 } else if (side.equals("FRONT")) {
                     currentDistance = frontDistanceSensor.getDistance(DistanceUnit.CM);
                     telemetry.addData("Front Distance Sensor", frontDistanceSensor.getDistance(DistanceUnit.CM));
@@ -306,6 +312,10 @@ public class DriveTrain {
                     currentDistance = backDistanceSensor.getDistance(DistanceUnit.CM);
                     telemetry.addData("Back Distance Sensor", backDistanceSensor.getDistance(DistanceUnit.CM));
                     exitValue = 25;
+                }else if (side.equals("RIGHT_ZERO")) {
+                    currentDistance = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
+                    telemetry.addData("Right Distance Sensor", rightDistanceSensor.getDistance(DistanceUnit.CM));
+                    exitValue = 46;
                 }
 
                 angles = DriveTrain.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
@@ -342,6 +352,8 @@ public class DriveTrain {
                     currentDistance = frontDistanceSensor.getDistance(DistanceUnit.CM);
                 } else if (side.equals("BACK") || side.equals("FOUR_SECOND")) {
                     currentDistance = backDistanceSensor.getDistance(DistanceUnit.CM);
+                } else if (side.equals("RIGHT_ZERO")) {
+                    currentDistance = rightDistanceSensor.getDistance(DistanceUnit.CM);
                 }
                 telemetry.update();
             }
@@ -389,14 +401,14 @@ public class DriveTrain {
     public static void autoAlign(){
         driveTrainError = angles.firstAngle - 0;
         if(Math.abs(driveTrainError) > (Math.PI / 6)){
-            driveTrainPower = 1;
+            driveTrainPower = .65;
         }
         else{
-            if(Math.abs(driveTrainError) < (Math.PI / 60)){
+            if(Math.abs(driveTrainError) < (Math.PI / 90)){
                 driveTrainPower = 0;
             }
-            else if(Math.abs(driveTrainError) > (Math.PI / 60)) {
-                driveTrainPower = Math.abs(driveTrainError / (Math.PI / 5.2)) + 0.1;
+            else if(Math.abs(driveTrainError) > (Math.PI / 90)) {
+                driveTrainPower = Math.abs(driveTrainError / (Math.PI / 3.0)) + 0.13; //  (Math.PI / 5.2)) + 0.1
             }
         }
         if(driveTrainError > 0){
