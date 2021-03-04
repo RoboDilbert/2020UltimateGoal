@@ -105,18 +105,28 @@ public class StarterTeleop extends LinearOpMode {
                 Shooter.setPosition("WHITE_LINE");
                 Shooter.shoot(Shooter.SHOOTER_POWER);
             }
-            if (Shooter.shooter.getPower() == 0) {
+            else if (Shooter.shooter.getPower() == 0) {
                 Shooter.setPosition("INDEX");
             }
-
-            //White Line
-            if (gamepad1.dpad_up) {
-                Shooter.setPosition("WHITE_LINE");
+            else if (gamepad1.y) {
+                Shooter.shoot(0);
             }
+
+            //Intake Heights
+//            if (gamepad1.dpad_up) {
+//                Shooter.setPosition("WHITE_LINE");
+//            }
             //In front of rings
-            if (gamepad1.dpad_left) {
+            if (gamepad1.left_bumper) {
                 Shooter.setPosition("RINGS");
                 Intake.releaseAllRings();
+            }
+
+            if (gamepad1.right_bumper) {
+                Shooter.setPosition("WHITE_LINE");
+                Intake.releaseAll();
+            } else {
+                Intake.defaultPos();
             }
 
 //            if(gamepad2.a){
@@ -125,9 +135,6 @@ public class StarterTeleop extends LinearOpMode {
 //            if(gamepad2.y){
 //                P = P - 2;
 //            }
-            if (gamepad1.y) {
-                Shooter.shoot(0);
-            }
 
             //Lifter
             if (gamepad2.right_bumper && !wobbleFlag) {
@@ -140,12 +147,6 @@ public class StarterTeleop extends LinearOpMode {
 
             Wobble.wobbleUpdatePosition();
 
-            if (gamepad1.dpad_right) {
-                Shooter.setPosition("WHITE_LINE");
-                Intake.releaseAll();
-            } else {
-                Intake.defaultPos();
-            }
             if (gamepad2.x) {
                 Wobble.close();
             }

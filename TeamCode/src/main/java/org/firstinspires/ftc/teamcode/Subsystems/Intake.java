@@ -142,23 +142,23 @@ public class Intake {
         }
         else {
             ringCountFlag = true;
-            spit();
+//            spit();
         }
     }
     public static void intake() throws InterruptedException {
-        if (indexSensor.getDistance(DistanceUnit.CM) < ringDistance) {
-            index();
-        }
-        else if (ringCountFlag) {
-            rings.add(true);
-            ringCountFlag = false;
-        }
+//        if (indexSensor.getDistance(DistanceUnit.CM) < ringDistance) {
+//            index();
+//        }
+//        else if (ringCountFlag) {
+//            rings.add(true);
+//            ringCountFlag = false;
+//        }
         frontIntakeMotor.setPower(0.95);
         rearIntakeMotor.setPower(0.95);
 
-        if(isFull()){
-            Shooter.shoot(0);
-        }
+//        if(isFull()){
+//            Shooter.shoot(0);
+//        }
     }
 
     public static void intakeTwo(){

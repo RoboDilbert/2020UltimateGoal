@@ -220,7 +220,7 @@ public class DriveTrain {
                 if (side.equals("LEFT")) {
                     currentDistance = leftDistanceSensor.getDistance(DistanceUnit.CM);//leftDistanceSensor
                     telemetry.addData("Left Distance Sensor", leftDistanceSensor.getDistance(DistanceUnit.CM));
-                    exitValue = 30;
+                    exitValue = 29;
                 } else if (side.equals("RIGHT")) {
                     currentDistance = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
                     telemetry.addData("Right Distance Sensor", rightDistanceSensor.getDistance(DistanceUnit.CM));
@@ -232,7 +232,7 @@ public class DriveTrain {
                 } else if (side.equals("BACK")) {
                     currentDistance = backDistanceSensor.getDistance(DistanceUnit.CM);
                     telemetry.addData("Back Distance Sensor", backDistanceSensor.getDistance(DistanceUnit.CM));
-                    exitValue = 45;
+                    exitValue = 30;//28
                 } else if (side.equals("BACK_SECOND")) {
                     currentDistance = backDistanceSensor.getDistance(DistanceUnit.CM);
                     telemetry.addData("Back Distance Sensor", backDistanceSensor.getDistance(DistanceUnit.CM));
@@ -240,7 +240,7 @@ public class DriveTrain {
                 } else if (side.equals("RIGHT_ZERO")) {
                     currentDistance = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
                     telemetry.addData("Right Distance Sensor", rightDistanceSensor.getDistance(DistanceUnit.CM));
-                    exitValue = 50;
+                    exitValue = 58;
                 }
 
                 angles = DriveTrain.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
@@ -269,10 +269,6 @@ public class DriveTrain {
                 leftBackMotor.setPower((speed * adjustedXHeading + rotation) * Constants.TELEOP_LIMITER);
                 rightBackMotor.setPower((speed * adjustedYHeading - rotation) * Constants.TELEOP_LIMITER);
 
-                if (side.equals("BACK") && backDistanceSensor.getDistance(DistanceUnit.CM) > 150){
-                    break;
-                }
-
                 if (side.equals("LEFT")) {
                     currentDistance = leftDistanceSensor.getDistance(DistanceUnit.CM);//leftDistanceSensor
                 } else if (side.equals("RIGHT")) {
@@ -284,6 +280,7 @@ public class DriveTrain {
                 } else if (side.equals("RIGHT_ZERO")) {
                     currentDistance = rightDistanceSensor.getDistance(DistanceUnit.CM);
                 }
+                telemetry.addData("Back Distance: ", backDistanceSensor.getDistance(DistanceUnit.CM));
                 telemetry.update();
             }
         }
@@ -299,7 +296,7 @@ public class DriveTrain {
                 } else if (side.equals("RIGHT")) {
                     currentDistance = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
                     telemetry.addData("Right Distance Sensor", rightDistanceSensor.getDistance(DistanceUnit.CM));
-                    exitValue = 50;
+                    exitValue = 47;
                 } else if (side.equals("FRONT")) {
                     currentDistance = frontDistanceSensor.getDistance(DistanceUnit.CM);
                     telemetry.addData("Front Distance Sensor", frontDistanceSensor.getDistance(DistanceUnit.CM));
@@ -443,7 +440,7 @@ public class DriveTrain {
 
     public static void driveToLine(double power, String color) throws InterruptedException {
         if(color.equals("RED")){
-            while(floorColorSensor.red() < 1800){//240, 82
+            while(floorColorSensor.red() < 1600){//240, 82
                 leftFrontMotor.setPower(power);
                 rightFrontMotor.setPower(power);
                 leftBackMotor.setPower(power);
@@ -467,7 +464,7 @@ public class DriveTrain {
             rightBackMotor.setPower(0);
         }
         else if(color.equals("WHITE")) {
-            while(floorColorSensor.alpha() < 3200){//480, 680
+            while(floorColorSensor.alpha() < 3000){//480, 680
                 leftFrontMotor.setPower(power);
                 rightFrontMotor.setPower(power);
                 leftBackMotor.setPower(power);
