@@ -33,6 +33,7 @@ public class DriveTrain {
     public static BNO055IMU imu; //Control hub, I2C Bus 0
     public static Orientation angles;
     public static Acceleration gravity;
+    private static float gyroVariation = 0;
 
     public static double driveTrainError = 0;
     public static double driveTrainPower = 0;
@@ -628,5 +629,9 @@ public class DriveTrain {
     }
     static String formatDegrees(double degrees) {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.RADIANS.normalize(degrees));
+    }
+    public static void resetGyro(){
+        angles = DriveTrain.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+        //gyroVariation = angles.firstAngle;
     }
 }

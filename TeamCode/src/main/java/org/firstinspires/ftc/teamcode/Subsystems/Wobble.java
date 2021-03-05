@@ -20,7 +20,6 @@ public class Wobble {
     private static Servo wobble1;//Control hub, port 3
     private static Servo wobble2;//Control hub, port 4
 
-
     private static Servo grabber; //Control hub, port 1
 
     private static final double GRABBER_OPEN = 0.7;
@@ -57,7 +56,6 @@ public class Wobble {
 
         wobble1 = Constants.HwMap.servo.get("wobble1");
         wobble2 = Constants.HwMap.servo.get("wobble2");
-
 
         grabber = Constants.HwMap.servo.get("grabber");
 

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -17,8 +18,6 @@ import org.firstinspires.ftc.teamcode.Util.*;
 //@Disabled
 public class StarterTeleop extends LinearOpMode {
 
-    public float gyroVariation = 0;
-
     public boolean intake = false;
 
     private static final long MIN_DELAY_MS = 500;
@@ -26,6 +25,7 @@ public class StarterTeleop extends LinearOpMode {
     private long mLastClickTime;
 
     private boolean wobbleFlag = false;
+    private boolean resetFlag = false;
 
     private boolean intakeFlag = false;
     FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -68,9 +68,9 @@ public class StarterTeleop extends LinearOpMode {
                 DriveTrain.cartesianDrive(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
             }
 
-//            if(gamepad1.x){
-//                gyroVariation = angles.firstAngle;
-//            }
+            if(gamepad1.dpad_up){
+               DriveTrain.resetGyro();
+            }
 
             if (gamepad1.x && !intakeFlag) {
                 intakeFlag = true;
@@ -152,6 +152,16 @@ public class StarterTeleop extends LinearOpMode {
             }
             if (gamepad2.b) {
                 Wobble.open();
+            }
+
+            if(gamepad2.dpad_down){
+                Wobble.wobbleMotor.setPower(-0.2);
+                resetFlag = true;
+            }
+            else if (resetFlag){
+                Wobble.wobbleMotor.setPower(0);
+                Wobble.wobbleMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                resetFlag = false;
             }
 
 
