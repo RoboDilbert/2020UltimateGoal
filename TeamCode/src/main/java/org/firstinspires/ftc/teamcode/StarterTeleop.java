@@ -155,12 +155,14 @@ public class StarterTeleop extends LinearOpMode {
             }
 
             if(gamepad2.dpad_down){
+                Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 Wobble.wobbleMotor.setPower(-0.2);
                 resetFlag = true;
             }
             else if (resetFlag){
                 Wobble.wobbleMotor.setPower(0);
                 Wobble.wobbleMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 resetFlag = false;
             }
 
