@@ -505,6 +505,36 @@ public class DriveTrain {
         }
     }
 
+    public static void gyroTurn(double finalAngle, int timer){
+        int turnTimer = timer;
+        while (Math.abs(DriveTrain.angles.firstAngle - (finalAngle)) > (Math.PI / 60) && turnTimer > 0){
+            driveTrainError = angles.firstAngle - finalAngle;
+            if(Math.abs(driveTrainError) > (Math.PI / 6)){
+                driveTrainPower = 0.5;
+            }
+            else{
+                if(Math.abs(driveTrainError) < (Math.PI / 60)){//60
+                    driveTrainPower = 0;
+                }
+                else if(Math.abs(driveTrainError) > (Math.PI / 60)) {//60
+                    driveTrainPower = Math.abs(driveTrainError / (Math.PI / 2)) + 0.1;
+                }
+            }
+            driveTrainError = angles.firstAngle - finalAngle;
+            if(driveTrainError > 0){
+                cartesianDrive(0, 0, driveTrainPower);
+            }
+            else if(driveTrainError < 0){
+                cartesianDrive(0, 0, -driveTrainPower);
+            }
+            turnTimer--;
+        }
+        DriveTrain.rightFrontMotor.setPower(0);
+        DriveTrain.rightBackMotor.setPower(0);
+        DriveTrain.leftFrontMotor.setPower(0);
+        DriveTrain.leftBackMotor.setPower(0);
+    }
+
     public static void driveTelemetry(Telemetry telemetry){
 //        telemetry.addData("left front encoder", leftFrontMotor.getCurrentPosition());
 //        telemetry.addData("left back encoder", leftBackMotor.getCurrentPosition());

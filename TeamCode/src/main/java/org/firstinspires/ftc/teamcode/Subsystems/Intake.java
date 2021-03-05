@@ -78,6 +78,7 @@ public class Intake {
             Thread.sleep(100);
         }
         Shooter.setPosition("WHITE_LINE");
+        vibrator.setPosition(0.55);
         rings.clear();
     }
 
