@@ -145,8 +145,6 @@ public class StarterTeleop extends LinearOpMode {
                 wobbleFlag = false;
             }
 
-            Wobble.wobbleUpdatePosition();
-
             if (gamepad2.x) {
                 Wobble.close();
             }
@@ -164,6 +162,9 @@ public class StarterTeleop extends LinearOpMode {
                 Wobble.wobbleMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 Wobble.wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 resetFlag = false;
+            }
+            else{
+                Wobble.wobbleUpdatePosition();
             }
 
 
