@@ -465,7 +465,7 @@ public class DriveTrain {
             rightBackMotor.setPower(0);
         }
         else if(color.equals("WHITE")) {
-            while(floorColorSensor.alpha() < 3000){//480, 680
+            while(floorColorSensor.alpha() < 3500){//480, 680
                 leftFrontMotor.setPower(power);
                 rightFrontMotor.setPower(power);
                 leftBackMotor.setPower(power);

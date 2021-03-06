@@ -91,9 +91,9 @@ public class RedCorner extends LinearOpMode {
             Shooter.shoot(Shooter.SHOOTER_POWER);
 
             //Strafe to wall
-            DriveTrain.cartesianDriveTimer(-.85, 0, 30);
+            DriveTrain.cartesianDriveTimer(-.9, 0, 40);
             //Drive forward to blue line and drop wobble
-            DriveTrain.cartesianDriveTimer(0, -0.6, 30);
+            DriveTrain.cartesianDriveTimer(0, -0.6, 42);
             DriveTrain.cartesianDriveTimer(0, 0.7, 3);
             DriveTrain.driveToLine(.25, "RED");
 
@@ -101,17 +101,18 @@ public class RedCorner extends LinearOpMode {
 
             Wobble.drop();
             //Rotate a little bit to shoot
-            DriveTrain.cartesianDriveTimer(0, .4, 10);
-
-            DriveTrain.cartesianDriveTimer(0.8, 0, 12);
-
-            DriveTrain.gyroTurn(Math.PI/8.5, 130);
+//            DriveTrain.cartesianDriveTimer(0, .4, 10);
+//
+//            DriveTrain.cartesianDriveTimer(0.8, 0, 12);
+//
+//            DriveTrain.gyroTurn(Math.PI/8.5, 130);
+            DriveTrain.cartesianDriveTimer(.85, 0.1, 35);
             //Shoot
             Intake.releaseAll();
 
             Shooter.shoot(0);
             //Park
-            DriveTrain.cartesianDriveTimer(.9, -.08, 50);
+            DriveTrain.cartesianDriveTimer(.9, -.22, 35);
         }
 
         else if(label.equals("Single")) {
@@ -131,7 +132,7 @@ public class RedCorner extends LinearOpMode {
             Intake.releaseAll();
             Intake.intake();
 
-            DriveTrain.cartesianDriveTimer(.85, 0, 10);
+            DriveTrain.cartesianDriveTimer(.85, 0, 16);
 
 
             DriveTrain.cartesianDriveTimer(0, 0.5, 32);
@@ -143,7 +144,7 @@ public class RedCorner extends LinearOpMode {
 
             Shooter.shoot(0);
             //Park
-            DriveTrain.cartesianDriveTimer(0, -.55, 35);
+            DriveTrain.cartesianDriveTimer(0, -.55, 40);
 
             Wobble.drop();
 
@@ -170,22 +171,26 @@ public class RedCorner extends LinearOpMode {
 
 
             DriveTrain.driveToLine(-.2, "WHITE");
+            DriveTrain.cartesianDriveTimer(0, 0.3, 5);
 
-            DriveTrain.cartesianDriveTimer(.85, 0, 30);
-            DriveTrain.cartesianDriveTimer(0, 0.6, 7);
+            DriveTrain.cartesianDriveTimer(.85, 0, 35);
+            //DriveTrain.cartesianDriveTimer(0, 0.6, 4);
             //Shoot
             Intake.releaseAll();
             Intake.intake();
 
-            DriveTrain.cartesianDriveTimer(.85, 0, 18);
+            //DriveTrain.cartesianDriveTimer(.85, 0, 8);
 
-            DriveTrain.cartesianDriveTimer(0, 0.3, 50);
+            DriveTrain.cartesianDriveTimer(0, 0.3, 15);
+            DriveTrain.cartesianDriveTimer(0, 0.25, 55);
+            DriveTrain.cartesianDriveTimer(0, -0.7, 2);
             sleep(200);
 
             Intake.releaseAll();
             sleep(200);
 
-            DriveTrain.cartesianDriveTimer(0, 0.3, 45);
+            DriveTrain.cartesianDriveTimer(0, -0.7, 2);
+            DriveTrain.cartesianDriveTimer(0, 0.25, 45);
             DriveTrain.cartesianDriveTimer(0, -0.5, 35);
             sleep(200);
 
