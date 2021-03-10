@@ -537,10 +537,10 @@ public class DriveTrain {
     }
 
     public static void driveTelemetry(Telemetry telemetry){
-//        telemetry.addData("left front encoder", leftFrontMotor.getCurrentPosition());
-//        telemetry.addData("left back encoder", leftBackMotor.getCurrentPosition());
-//        telemetry.addData("right front encoder", rightFrontMotor.getCurrentPosition());
-//        telemetry.addData("right back encoder", rightBackMotor.getCurrentPosition());
+        telemetry.addData("left front encoder", leftFrontMotor.getCurrentPosition());
+        telemetry.addData("left back encoder", leftBackMotor.getCurrentPosition());
+        telemetry.addData("right front encoder", rightFrontMotor.getCurrentPosition());
+        telemetry.addData("right back encoder", rightBackMotor.getCurrentPosition());
 //        telemetry.addLine();
 //        telemetry.addData("left front power", leftFrontMotor.getPower());
 //        telemetry.addData("left back power", leftBackMotor.getPower());

@@ -25,6 +25,7 @@ public class Shooter {
     private static double NEW_F;
 
     public static final double SHOOTER_POWER = 0.525; //previous .575 w/o flywheel weight
+    public static final double POWER_SHOT_POWER = .45;
 
     //private static PIDFCoefficients pidOrig;
     //private static PIDFCoefficients pidModified;
@@ -103,6 +104,9 @@ public class Shooter {
 //        }
         else if(position.equals("RINGS_ADJUST")) {
             angleAdjust.setPosition(.7); //.5
+        }
+        else if(position.equals("POWER_SHOT")){
+            angleAdjust.setPosition(.35); //First: .4
         }
     }
 

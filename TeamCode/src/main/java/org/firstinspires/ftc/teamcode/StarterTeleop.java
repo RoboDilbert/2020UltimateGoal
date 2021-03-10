@@ -63,6 +63,10 @@ public class StarterTeleop extends LinearOpMode {
                 DriveTrain.setRunMode("RUN_WITHOUT_ENCODER");
                 DriveTrain.autoAlign();
             }
+            else if(gamepad1.left_trigger > .2){
+                DriveTrain.setRunMode("RUN_USING_ENCODER");
+                DriveTrain.cartesianDrive(-gamepad1.left_stick_x, gamepad1.left_stick_y, (gamepad1.right_stick_x / 3));
+            }
             else {
                 DriveTrain.setRunMode("RUN_USING_ENCODER");
                 DriveTrain.cartesianDrive(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
@@ -112,6 +116,10 @@ public class StarterTeleop extends LinearOpMode {
                 Shooter.shoot(0);
             }
 
+            if(gamepad2.a){
+                Shooter.shoot(Shooter.POWER_SHOT_POWER);
+            }
+
             //Intake Heights
 //            if (gamepad1.dpad_up) {
 //                Shooter.setPosition("WHITE_LINE");
@@ -120,13 +128,19 @@ public class StarterTeleop extends LinearOpMode {
             if (gamepad1.left_bumper) {
                 Shooter.setPosition("RINGS");
                 Intake.releaseAllRings();
-            }
-
-            if (gamepad1.right_bumper) {
+            }else if (gamepad1.right_bumper) {
                 Shooter.setPosition("WHITE_LINE");
                 Intake.releaseAll();
-            } else {
+            }else if(gamepad1.dpad_right){
+                Shooter.setPosition("POWER_SHOT");
+                Intake.releaseOne();
+            }
+            else {
                 Intake.defaultPos();
+            }
+
+            if(gamepad1.dpad_left){
+                Shooter.setPosition("POWER_SHOT");
             }
 
 //            if(gamepad2.a){
