@@ -27,10 +27,10 @@ public class Wobble {
 
     private static final double WOBBLE_ONE_OPEN = 0.1;
     private static final double WOBBLE_ONE_MINI = 0.28;
-    private static final double WOBBLE_ONE_CLOSED = 0.38;
+    private static final double WOBBLE_ONE_CLOSED = 0.4; //.38
     private static final double WOBBLE_TWO_OPEN = 0.66;
     private static final double WOBBLE_TWO_MINI = 0.61;
-    private static final double WOBBLE_TWO_CLOSED = 0.38;
+    private static final double WOBBLE_TWO_CLOSED = 0.32; //.38
 
     private static final double WOBBLE_MOTOR_ERROR = 0.1;
 

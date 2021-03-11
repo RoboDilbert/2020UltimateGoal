@@ -439,7 +439,12 @@ public class DriveTrain {
         }
     }
 
-    public static void driveToLine(double power, String color) throws InterruptedException {
+    public static void driveToLine(double power, String color, Telemetry telemetry) throws InterruptedException {
+        double minBlue = Double.MAX_VALUE;
+        double maxBlue = Double.MIN_VALUE;
+
+        double minWhite = Double.MAX_VALUE;
+        double maxWhite = Double.MIN_VALUE;
         if(color.equals("RED")){
             while(floorColorSensor.red() < 1600){//240, 82
                 leftFrontMotor.setPower(power);
@@ -454,6 +459,16 @@ public class DriveTrain {
         }
         else if(color.equals("BLUE")){
             while(floorColorSensor.blue() < 2100){//480, 680
+                if(DriveTrain.floorColorSensor.blue() > maxBlue){
+                    maxBlue = DriveTrain.floorColorSensor.blue();
+                }
+
+                if (DriveTrain.floorColorSensor.blue() < minBlue){
+                    minBlue = DriveTrain.floorColorSensor.blue();
+                }
+                telemetry.addData("Max Blue: ", maxBlue);
+                telemetry.addData("Min Blue: ", minBlue);
+                telemetry.update();
                 leftFrontMotor.setPower(power);
                 rightFrontMotor.setPower(power);
                 leftBackMotor.setPower(power);
@@ -466,11 +481,21 @@ public class DriveTrain {
         }
         else if(color.equals("WHITE")) {
             while(floorColorSensor.alpha() < 3500){//480, 680
+                if(DriveTrain.floorColorSensor.alpha() > maxWhite){
+                    maxWhite = DriveTrain.floorColorSensor.alpha();
+                }
+
+                if (DriveTrain.floorColorSensor.alpha() < minWhite){
+                    minWhite = DriveTrain.floorColorSensor.alpha();
+                }
                 leftFrontMotor.setPower(power);
                 rightFrontMotor.setPower(power);
                 leftBackMotor.setPower(power);
                 rightBackMotor.setPower(power);
 //                Intake.releaseAll();
+                telemetry.addData("Max White: ", maxWhite);
+                telemetry.addData("Min White: ", minWhite);
+                telemetry.update();
             }
             leftFrontMotor.setPower(0);
             rightFrontMotor.setPower(0);
@@ -562,6 +587,20 @@ public class DriveTrain {
         telemetry.addData("rightWallDistance", rightDistanceSensor.getDistance(DistanceUnit.CM));
         telemetry.addData("BaccDistanceSensor", backDistanceSensor.getDistance(DistanceUnit.CM));
         telemetry.addLine();
+    }
+
+    public static void SUMO_MODE(){
+
+            DriveTrain.leftFrontMotor.setTargetPosition(0);
+            DriveTrain.leftBackMotor.setTargetPosition(0);
+            DriveTrain.rightFrontMotor.setTargetPosition(0);
+            DriveTrain.rightBackMotor.setTargetPosition(0);
+            DriveTrain.setRunMode("RUN_TO_POSITION");
+            DriveTrain.leftFrontMotor.setPower(0.8);
+            DriveTrain.leftBackMotor.setPower(0.8);
+            DriveTrain.rightFrontMotor.setPower(0.8);
+            DriveTrain.rightBackMotor.setPower(0.8);
+
     }
 
     public static void composeTelemetry (Telemetry telemetry) {

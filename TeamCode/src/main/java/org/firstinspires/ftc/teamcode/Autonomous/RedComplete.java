@@ -95,7 +95,7 @@ public class RedComplete extends LinearOpMode {
             Shooter.shoot(Shooter.SHOOTER_POWER);
 
             //Drive forward to white line
-            DriveTrain.driveToLine(.3,"WHITE");
+            DriveTrain.driveToLine(.3,"WHITE", telemetry);
             sleep(100);
 
             //Shoot
@@ -155,7 +155,7 @@ public class RedComplete extends LinearOpMode {
             //Drive forward to white line
             DriveTrain.cartesianDriveTimer(0, -0.4, 10);
 
-            DriveTrain.driveToLine(.3,"WHITE");
+            DriveTrain.driveToLine(.3,"WHITE", telemetry);
             //sleep(100);
 
 
@@ -180,7 +180,7 @@ public class RedComplete extends LinearOpMode {
 //            DriveTrain.driveToLine(.25,"WHITE");
 //            sleep(100);
 
-            DriveTrain.driveToLine(.3, "WHITE");
+            DriveTrain.driveToLine(.3, "WHITE", telemetry);
 
             DriveTrain.cartesianDriveTimer(0, -0.3, 8);
             //sleep(100);
@@ -188,7 +188,7 @@ public class RedComplete extends LinearOpMode {
 //            DriveTrain.cartesianDriveTimer(-0.8, 0, 10);
 //            sleep(100);
 
-            DriveTrain.driveToLine(0.3,"RED");
+            DriveTrain.driveToLine(0.3,"RED", telemetry);
             //sleep(100);
 
             DriveTrain.cartesianDriveTimer(0, -0.3, 9);
@@ -242,7 +242,7 @@ public class RedComplete extends LinearOpMode {
             Intake.defaultPos();
 
             //Drive forward to white line
-            DriveTrain.driveToLine(.3,"WHITE");
+            DriveTrain.driveToLine(.3,"WHITE", telemetry);
             sleep(100);
 
             //Shoot
@@ -260,7 +260,7 @@ public class RedComplete extends LinearOpMode {
             Shooter.setPosition("INDEX");
 
             //Drive to white line again
-            DriveTrain.driveToLine(.3,"WHITE");
+            DriveTrain.driveToLine(.3,"WHITE", telemetry);
             //sleep(100);
 
             //Strafe over to wall
@@ -367,7 +367,7 @@ public class RedComplete extends LinearOpMode {
 //            sleep(100);
 
             //Drive to white line
-            DriveTrain.driveToLine(.3,"WHITE");
+            DriveTrain.driveToLine(.3,"WHITE", telemetry);
             sleep(500);
 
             //Turn 180 degrees
@@ -441,7 +441,7 @@ public class RedComplete extends LinearOpMode {
             DriveTrain.cartesianDriveTimer(.7, -.3, 40);
             //sleep(100);
 
-            DriveTrain.driveToLine(.3,"WHITE");
+            DriveTrain.driveToLine(.3,"WHITE", telemetry);
             //sleep(500);
 
 //            //Strafe towards drop off zone
@@ -495,7 +495,7 @@ public class RedComplete extends LinearOpMode {
             DriveTrain.cartesianDriveTimer(-0.6, -0.4, 15);
 
             //Drive to white line
-            DriveTrain.driveToLine(.3,"WHITE");
+            DriveTrain.driveToLine(.3,"WHITE", telemetry);
             //sleep(500);
 
             //Turn 180 degrees

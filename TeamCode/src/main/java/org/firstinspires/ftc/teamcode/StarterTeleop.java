@@ -31,6 +31,12 @@ public class StarterTeleop extends LinearOpMode {
     FtcDashboard dashboard = FtcDashboard.getInstance();
     Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
+    private double minBlue = Double.MAX_VALUE;
+    private double maxBlue = Double.MIN_VALUE;
+
+    private double minWhite = Double.MAX_VALUE;
+    private double maxWhite = Double.MIN_VALUE;
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -116,9 +122,9 @@ public class StarterTeleop extends LinearOpMode {
                 Shooter.shoot(0);
             }
 
-            if(gamepad2.a){
-                Shooter.shoot(Shooter.POWER_SHOT_POWER);
-            }
+//            if(gamepad2.a){
+//                Shooter.shoot(Shooter.POWER_SHOT_POWER);
+//            }
 
             //Intake Heights
 //            if (gamepad1.dpad_up) {
@@ -196,6 +202,27 @@ public class StarterTeleop extends LinearOpMode {
             telemetry.addData("New I: ", I);
             Shooter.shooterTelemetry(telemetry);
             Wobble.wobbleTelemetry(telemetry);
+
+            if(DriveTrain.floorColorSensor.blue() > maxBlue){
+                maxBlue = DriveTrain.floorColorSensor.blue();
+            }
+
+            if (DriveTrain.floorColorSensor.blue() < minBlue){
+                minBlue = DriveTrain.floorColorSensor.blue();
+            }
+
+            if(DriveTrain.floorColorSensor.alpha() > maxWhite){
+                maxWhite = DriveTrain.floorColorSensor.alpha();
+            }
+
+            if (DriveTrain.floorColorSensor.alpha() < minWhite){
+                minWhite = DriveTrain.floorColorSensor.alpha();
+            }
+
+            telemetry.addData("Max Blue: ", maxBlue);
+            telemetry.addData("Min Blue: ", minBlue);
+            telemetry.addData("Max White: ", maxWhite);
+            telemetry.addData("Min White: ", minWhite);
 
 //            telemetry.addData("wobble:", Wobble.wobbleMotor.getCurrentPosition());
 //            telemetry.addData("wobble mode:", Wobble.wobbleMotor.getMode());
