@@ -117,13 +117,14 @@ public class Intake {
 
     //Spit one ring
     public static void spit() throws InterruptedException {
-        Shooter.mainShooter.shoot(.4);
-        Thread.sleep(250);
+        Shooter.mainShooter.shoot(.2);
+        Thread.sleep(500);
         vibrator.setPosition(VIBRATOR_OPEN);
         Thread.sleep(100);
         vibrator.setPosition(VIBRATOR_CLOSED);
         Thread.sleep(200);
-        rings.remove(rings.lastIndexOf(true));
+        Shooter.mainShooter.shoot(Shooter.SHOOTER_POWER);
+//        rings.remove(rings.lastIndexOf(true));
     }
 
     //Check to see if there are 3 rings

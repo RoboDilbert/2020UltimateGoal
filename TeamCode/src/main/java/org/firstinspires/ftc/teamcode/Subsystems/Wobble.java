@@ -131,6 +131,7 @@ public class Wobble {
 
     public static void wobbleUpdatePosition(){
         if(currentState == WOBBLE_STATE.INIT){
+            wobbleMotor.setTargetPosition(wobbleMotor.getCurrentPosition());
             wobbleMotor.setPower(0);
             close();
         }

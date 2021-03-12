@@ -221,7 +221,7 @@ public class DriveTrain {
                 if (side.equals("LEFT")) {
                     currentDistance = leftDistanceSensor.getDistance(DistanceUnit.CM);//leftDistanceSensor
                     telemetry.addData("Left Distance Sensor", leftDistanceSensor.getDistance(DistanceUnit.CM));
-                    exitValue = 29;
+                    exitValue = 68;
                 } else if (side.equals("RIGHT")) {
                     currentDistance = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
                     telemetry.addData("Right Distance Sensor", rightDistanceSensor.getDistance(DistanceUnit.CM));
@@ -297,7 +297,7 @@ public class DriveTrain {
                 } else if (side.equals("RIGHT")) {
                     currentDistance = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
                     telemetry.addData("Right Distance Sensor", rightDistanceSensor.getDistance(DistanceUnit.CM));
-                    exitValue = 47;
+                    exitValue = 63;
                 } else if (side.equals("FRONT")) {
                     currentDistance = frontDistanceSensor.getDistance(DistanceUnit.CM);
                     telemetry.addData("Front Distance Sensor", frontDistanceSensor.getDistance(DistanceUnit.CM));

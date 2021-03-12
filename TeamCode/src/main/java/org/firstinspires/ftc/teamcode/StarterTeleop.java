@@ -52,6 +52,9 @@ public class StarterTeleop extends LinearOpMode {
 
         DriveTrain.composeTelemetry(telemetry);
         waitForStart();
+        Wobble.drop();
+        sleep(200);
+        Wobble.grab();
 
         double P = 40;
         double I = 2;
@@ -185,6 +188,10 @@ public class StarterTeleop extends LinearOpMode {
             }
             else{
                 Wobble.wobbleUpdatePosition();
+            }
+
+            if(gamepad2.y){
+                Intake.spit();
             }
 
 

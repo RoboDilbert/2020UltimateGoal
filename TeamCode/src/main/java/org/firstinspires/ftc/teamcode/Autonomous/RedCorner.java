@@ -113,9 +113,11 @@ public class RedCorner extends LinearOpMode {
             Shooter.shoot(0);
 //            DriveTrain.cartesianDriveTimer(-.85, 0, 24);
 
+            //DriveTrain.cartesianDriveTimer(.85, 0.1, 10);
+
             //Park
-            DriveTrain.driveToLine(.25, "WHITE", telemetry);
-            //DriveTrain.cartesianDriveTimer(.9, -.26, 35);
+            //DriveTrain.driveToLine(.25, "WHITE", telemetry);
+            DriveTrain.cartesianDriveTimer(.9, -.24, 40);
         }
 
         else if(label.equals("Single")) {
@@ -130,7 +132,7 @@ public class RedCorner extends LinearOpMode {
             DriveTrain.cartesianDriveTimer(0, 0.7, 3);
             DriveTrain.driveToLine(.2, "RED", telemetry);
 
-            DriveTrain.cartesianDriveTimer(.85, 0, 19);
+            DriveTrain.cartesianDriveTimer(.85, 0, 25);
             //Shoot
             Intake.releaseAll();
             Intake.intake();
@@ -151,11 +153,11 @@ public class RedCorner extends LinearOpMode {
 
             Wobble.drop();
 
-            DriveTrain.driveToLine(-.25, "WHITE", telemetry);
-            DriveTrain.cartesianDriveTimer(0, -.4, 20);
+            //DriveTrain.driveToLine(-.25, "WHITE", telemetry);
+            //DriveTrain.cartesianDriveTimer(0, -.4, 20);
 
 
-            //DriveTrain.cartesianDriveTimer(.85, 0.2, 35);
+            DriveTrain.cartesianDriveTimer(.85, 0.2, 35);
         }
 
         else if(label.equals("Quad")) {
@@ -164,7 +166,7 @@ public class RedCorner extends LinearOpMode {
 
             //Strafe to wall
             //Drive forward to blue line and drop wobble
-            DriveTrain.cartesianDriveTimer(0, -0.6, 70);
+            DriveTrain.cartesianDriveTimer(0, -0.5, 85);
             DriveTrain.cartesianDriveTimer(0, 0.7, 2);
 
             DriveTrain.driveToLine(.2, "RED", telemetry);
@@ -180,25 +182,33 @@ public class RedCorner extends LinearOpMode {
             DriveTrain.driveToLine(-.2, "WHITE", telemetry);
             DriveTrain.cartesianDriveTimer(0, 0.3, 5);
 
-            DriveTrain.cartesianDriveTimer(.85, 0, 25);
+            DriveTrain.cartesianDriveTimer(.85, 0, 27);
             //DriveTrain.cartesianDriveTimer(0, 0.6, 4);
             //Shoot
             Intake.releaseAll();
             Intake.intake();
 
-            //DriveTrain.cartesianDriveTimer(.85, 0, 8);
+            DriveTrain.cartesianDriveDistance(0.85,0,"RIGHT", telemetry, "LESS");
+//            DriveTrain.cartesianDriveTimer(.85, 0, 14);
 
-            DriveTrain.cartesianDriveTimer(0, 0.3, 15);
-            DriveTrain.cartesianDriveTimer(0, 0.25, 55);
+//            DriveTrain.cartesianDriveTimer(0, 0.3, 15);
+//            DriveTrain.cartesianDriveTimer(0, 0.25, 55);
+//            DriveTrain.cartesianDriveTimer(0, -0.7, 2);
+            DriveTrain.cartesianDriveTimer(0, 0.3, 45);
             DriveTrain.cartesianDriveTimer(0, -0.7, 2);
+            DriveTrain.cartesianDriveTimer(0, 0.3, 20);
             sleep(200);
 
             Intake.releaseAll();
             sleep(200);
 
+//            DriveTrain.cartesianDriveTimer(0, -0.7, 2);
+//            DriveTrain.cartesianDriveTimer(0, 0.25, 45);
+//            DriveTrain.cartesianDriveTimer(0, -0.5, 36);
+            DriveTrain.cartesianDriveTimer(0, 0.3, 35);
             DriveTrain.cartesianDriveTimer(0, -0.7, 2);
-            DriveTrain.cartesianDriveTimer(0, 0.25, 45);
-            DriveTrain.cartesianDriveTimer(0, -0.5, 35);
+            DriveTrain.cartesianDriveTimer(0, 0.3, 10);
+            DriveTrain.cartesianDriveTimer(0, -0.5, 38);
             sleep(200);
 
             Intake.releaseAll();
@@ -206,13 +216,13 @@ public class RedCorner extends LinearOpMode {
 
             Shooter.shoot(0);
 
-            DriveTrain.driveToLine(.25, "WHITE", telemetry);
+            //DriveTrain.driveToLine(.25, "WHITE", telemetry);
             //Park
 //            DriveTrain.cartesianDriveTimer(0.65, -0.5, 50);
 //
 //            Wobble.drop();
 
-//            DriveTrain.cartesianDriveTimer(.85, 0, 37);
+            DriveTrain.cartesianDriveTimer(.85, -.25, 40);
         }
 
         DriveTrain.setRunMode("STOP_AND_RESET_ENCODER");
