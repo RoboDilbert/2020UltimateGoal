@@ -27,7 +27,9 @@ public class StarterTeleop extends LinearOpMode {
     private boolean wobbleFlag = false;
     private boolean resetFlag = false;
 
-    private boolean intakeFlag = false;
+    private boolean intakeFlagFoward = false;
+    private boolean intakeFlagReverse = false;
+
     FtcDashboard dashboard = FtcDashboard.getInstance();
     Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
@@ -85,16 +87,19 @@ public class StarterTeleop extends LinearOpMode {
                DriveTrain.resetGyro();
             }
 
-            if (gamepad1.x && !intakeFlag) {
-                intakeFlag = true;
+            if (gamepad1.x && !intakeFlagFoward) {
+                intakeFlagFoward = true;
                 Intake.intakeChangeState("FORWARD");
             }
-            else if (gamepad1.b && !intakeFlag){
-                intakeFlag = true;
+            else if (gamepad1.b && !intakeFlagReverse){
+                intakeFlagReverse = true;
                 Intake.intakeChangeState("REVERSE");
             }
-            else if((!gamepad1.x && intakeFlag) || (!gamepad1.b && intakeFlag)){
-                intakeFlag = false;
+
+            if(intakeFlagFoward && !gamepad1.x){
+                intakeFlagFoward = false;
+            } else if(intakeFlagReverse && !gamepad1.b){
+                intakeFlagReverse = false;
             }
 
             Intake.intakeUpdatePosition();
@@ -142,15 +147,16 @@ public class StarterTeleop extends LinearOpMode {
                 Intake.releaseAll();
             }else if(gamepad1.dpad_right){
                 Shooter.setPosition("POWER_SHOT");
-                Intake.releaseOne();
+                sleep(200);
+                Intake.shootOneNoClear();
             }
             else {
                 Intake.defaultPos();
             }
 
-            if(gamepad1.dpad_left){
-                Shooter.setPosition("POWER_SHOT");
-            }
+//            if(gamepad1.dpad_left){
+//                Shooter.setPosition("POWER_SHOT");
+//            }
 
 //            if(gamepad2.a){
 //                P = P + 2;

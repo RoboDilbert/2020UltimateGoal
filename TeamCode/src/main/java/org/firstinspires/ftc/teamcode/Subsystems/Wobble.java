@@ -25,17 +25,17 @@ public class Wobble {
     private static final double GRABBER_OPEN = 0.7;
     private static final double GRABBER_CLOSED = 1.0;
 
-    private static final double WOBBLE_ONE_OPEN = 0.1;
+    private static final double WOBBLE_ONE_OPEN = 0.16;
     private static final double WOBBLE_ONE_MINI = 0.28;
-    private static final double WOBBLE_ONE_CLOSED = 0.4; //.38
-    private static final double WOBBLE_TWO_OPEN = 0.66;
+    private static final double WOBBLE_ONE_CLOSED = 0.44; //.38
+    private static final double WOBBLE_TWO_OPEN = 0.72;
     private static final double WOBBLE_TWO_MINI = 0.61;
-    private static final double WOBBLE_TWO_CLOSED = 0.32; //.38
+    private static final double WOBBLE_TWO_CLOSED = 0.38; //.38
 
     private static final double WOBBLE_MOTOR_ERROR = 0.1;
 
     public static final int WOBBLE_UP_TICKS = -320;
-    public static final int WOBBLE_DOWN_TICKS = -1155;
+    public static final int WOBBLE_DOWN_TICKS = -1100;
     public static final int WOBBLE_INIT_TICKS = 0;
     public static final int WOBBLE_DROP_TICKS = -500;
     private static WOBBLE_STATE currentState = WOBBLE_STATE.INIT;

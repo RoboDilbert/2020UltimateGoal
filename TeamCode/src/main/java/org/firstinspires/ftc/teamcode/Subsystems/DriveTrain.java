@@ -91,6 +91,26 @@ public class DriveTrain {
         double command = Math.atan2(y, -x) + Math.PI/2;
         double rotation = z;
 
+        if(z > 0) {
+            if (z < 0.01) {
+                rotation = 0;
+            } else if (z > 0.9) {
+                rotation = z * z;
+            } else {
+                rotation = (z * z) + 0.013;
+            }
+        }
+        if(z < 0) {
+            if (z > -0.01) {
+                rotation = 0;
+            } else if (z < -0.9) {
+                rotation = -(z * z);
+            }
+            else{
+                rotation = (-(z*z)) - 0.013;
+            }
+        }
+
         angles = DriveTrain.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
         double adjustedXHeading = Math.cos(command + angles.firstAngle + Math.PI/4);
         double adjustedYHeading = Math.sin(command + angles.firstAngle + Math.PI/4);
@@ -446,7 +466,7 @@ public class DriveTrain {
         double minWhite = Double.MAX_VALUE;
         double maxWhite = Double.MIN_VALUE;
         if(color.equals("RED")){
-            while(floorColorSensor.red() < 1600){//240, 82
+            while(floorColorSensor.red() < 1450){ //1600
                 leftFrontMotor.setPower(power);
                 rightFrontMotor.setPower(power);
                 leftBackMotor.setPower(power);
@@ -458,7 +478,7 @@ public class DriveTrain {
             rightBackMotor.setPower(0);
         }
         else if(color.equals("BLUE")){
-            while(floorColorSensor.blue() < 2100){//480, 680
+            while(floorColorSensor.blue() < 1900){//2100
                 if(DriveTrain.floorColorSensor.blue() > maxBlue){
                     maxBlue = DriveTrain.floorColorSensor.blue();
                 }
