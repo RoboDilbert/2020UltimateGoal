@@ -201,7 +201,7 @@ public class Intake {
         }
     }
     public static void shootOneNoClear() throws InterruptedException{
-        vibrator.setPosition(0.65);
+        vibrator.setPosition(VIBRATOR_OPEN);
         Thread.sleep(100);
         vibrator.setPosition(VIBRATOR_CLOSED);
         Thread.sleep(100);

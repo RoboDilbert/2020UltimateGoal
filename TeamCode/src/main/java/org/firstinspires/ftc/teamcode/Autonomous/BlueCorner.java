@@ -106,21 +106,19 @@ public class BlueCorner extends LinearOpMode{
             Wobble.drop();
             sleep(100);
             DriveTrain.cartesianDriveTimer(0, .3, 12);
-//            //Rotate a little bit to shoot
-//            DriveTrain.cartesianDriveTimer(0, .4, 5);
-//
-//            DriveTrain.gyroTurn(-Math.PI/6, 130);
-//            //Shoot
-//            Intake.releaseAll();
-            DriveTrain.cartesianDriveTimer(-.75, 0, 30);
+
+            DriveTrain.cartesianDriveTimer(-.85, 0, 32);
             //Shoot
             Intake.releaseAll();
 //            Intake.intake();
 
             Shooter.shoot(0);
             //Park
-            DriveTrain.cartesianDriveTimer(-.75, -.2, 27);
+            //DriveTrain.cartesianDriveTimer(-.75, -.2, 27);
+            DriveTrain.driveToLine(.3, "WHITE", telemetry);
 
+
+            DriveTrain.cartesianDriveTimer(-.85, 0, 20);
             //Close wobble claw
             Wobble.close();
         }
@@ -138,7 +136,7 @@ public class BlueCorner extends LinearOpMode{
 
             DriveTrain.driveToLine(.2, "BLUE", telemetry);
 
-            DriveTrain.cartesianDriveTimer(-.75, 0, 36);
+            DriveTrain.cartesianDriveTimer(-.85, 0, 32);
             //Shoot
             sleep(200);
             Intake.releaseAll();
@@ -146,8 +144,8 @@ public class BlueCorner extends LinearOpMode{
 
             DriveTrain.cartesianDriveTimer(.8, 0, 14);
             sleep(100);
-            DriveTrain.cartesianDriveTimer(0, 0.5, 32);
-            DriveTrain.cartesianDriveTimer(0, -0.5, 26);//22
+            DriveTrain.cartesianDriveTimer(0, 0.5, 22);
+            DriveTrain.cartesianDriveTimer(0, -0.5, 20);//22
             sleep(200);
 
             DriveTrain.cartesianDriveTimer(-.8, 0, 15);
@@ -157,8 +155,10 @@ public class BlueCorner extends LinearOpMode{
 
             Shooter.shoot(0);
             //Park
-            DriveTrain.cartesianDriveTimer(0, -.4, 44);
+            //DriveTrain.cartesianDriveTimer(0, -.4, 44);
+            DriveTrain.driveToLine(.2, "WHITE", telemetry);
 
+            DriveTrain.cartesianDriveTimer(0, -.5, 20);
             Wobble.drop();
 
             DriveTrain.cartesianDriveTimer(-.85, 0.24, 25);
@@ -173,7 +173,7 @@ public class BlueCorner extends LinearOpMode{
             //Strafe to wall
             //DriveTrain.cartesianDriveTimer(.85, 0, 15);
             //Drive forward to blue line and drop wobble
-            DriveTrain.cartesianDriveTimer(0, -0.5, 80);
+            DriveTrain.cartesianDriveTimer(0, -0.5, 85);
             //DriveTrain.cartesianDriveTimer(0, 0.7, 2);
 
             DriveTrain.driveToLine(.2, "BLUE", telemetry);
@@ -186,7 +186,7 @@ public class BlueCorner extends LinearOpMode{
 
             DriveTrain.driveToLine(-.2, "WHITE", telemetry);
 
-            DriveTrain.cartesianDriveTimer(-.85, 0, 31);//29
+            DriveTrain.cartesianDriveTimer(-.85, 0, 32);//29
             //Shoot
             Intake.releaseAll();
             Intake.intake();
@@ -195,18 +195,18 @@ public class BlueCorner extends LinearOpMode{
 
 //            DriveTrain.cartesianDriveTimer(.85, 0, 12);
 
-            DriveTrain.cartesianDriveTimer(0, 0.3, 35);
+            DriveTrain.cartesianDriveTimer(0, 0.3, 38);
             //DriveTrain.cartesianDriveTimer(0, -0.7, 2);
             //DriveTrain.cartesianDriveTimer(0, 0.3, 20);
 
             sleep(300);
 
-            DriveTrain.cartesianDriveTimer(-0.7, 0, 10);
+            DriveTrain.cartesianDriveTimer(-0.85, 0, 14);
 
             Intake.releaseAll();
             sleep(200);
 
-            DriveTrain.cartesianDriveTimer(0.7, 0, 10);
+            DriveTrain.cartesianDriveTimer(0.85, 0, 14);
             sleep(300);
 
 //            DriveTrain.cartesianDriveTimer(0, 0.3, 12);
@@ -219,11 +219,11 @@ public class BlueCorner extends LinearOpMode{
             DriveTrain.cartesianDriveTimer(0, 0.3, 25);
             DriveTrain.cartesianDriveTimer(0, -0.7, 2);
             DriveTrain.cartesianDriveTimer(0, 0.3, 15);
-            DriveTrain.cartesianDriveTimer(0, -0.5, 30);
+            DriveTrain.cartesianDriveTimer(0, -0.5, 35);
 
             sleep(300);
 
-            DriveTrain.cartesianDriveTimer(-0.7, 0, 10);
+            //DriveTrain.cartesianDriveTimer(-0.85, 0, 10);
             sleep(200);
 
             Intake.releaseAll();
@@ -232,10 +232,7 @@ public class BlueCorner extends LinearOpMode{
             Shooter.shoot(0);
 
             DriveTrain.driveToLine(.3, "WHITE", telemetry);
-            //Park
-//            DriveTrain.cartesianDriveTimer(0.65, -0.5, 50);
-//
-//            Wobble.drop();
+
 
             DriveTrain.cartesianDriveTimer(-.85, 0, 25);
         }

@@ -145,13 +145,14 @@ public class StarterTeleop extends LinearOpMode {
             }else if (gamepad1.right_bumper) {
                 Shooter.setPosition("WHITE_LINE");
                 Intake.releaseAll();
-            }else if(gamepad1.dpad_right){
+            } else {
+                Intake.defaultPos();
+            }
+
+            if(gamepad1.dpad_right){
                 Shooter.setPosition("POWER_SHOT");
                 sleep(200);
                 Intake.shootOneNoClear();
-            }
-            else {
-                Intake.defaultPos();
             }
 
 //            if(gamepad1.dpad_left){

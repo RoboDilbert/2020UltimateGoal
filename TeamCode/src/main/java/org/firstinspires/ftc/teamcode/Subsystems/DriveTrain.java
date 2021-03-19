@@ -241,7 +241,7 @@ public class DriveTrain {
                 if (side.equals("LEFT")) {
                     currentDistance = leftDistanceSensor.getDistance(DistanceUnit.CM);//leftDistanceSensor
                     telemetry.addData("Left Distance Sensor", leftDistanceSensor.getDistance(DistanceUnit.CM));
-                    exitValue = 68;
+                    exitValue = 70;
                 } else if (side.equals("RIGHT")) {
                     currentDistance = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
                     telemetry.addData("Right Distance Sensor", rightDistanceSensor.getDistance(DistanceUnit.CM));
