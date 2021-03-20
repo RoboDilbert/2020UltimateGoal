@@ -195,8 +195,8 @@ public class BlueCorner extends LinearOpMode{
 
 //            DriveTrain.cartesianDriveTimer(.85, 0, 12);
 
-            DriveTrain.cartesianDriveTimer(0, 0.3, 38);
-            //DriveTrain.cartesianDriveTimer(0, -0.7, 2);
+            DriveTrain.cartesianDriveTimer(0, 0.3, 44);
+            DriveTrain.cartesianDriveTimer(0, -0.7, 8);
             //DriveTrain.cartesianDriveTimer(0, 0.3, 20);
 
             sleep(300);
@@ -217,9 +217,11 @@ public class BlueCorner extends LinearOpMode{
 //            sleep(400);
             DriveTrain.cartesianDriveTimer(0, -0.7, 2);
             DriveTrain.cartesianDriveTimer(0, 0.3, 25);
-            DriveTrain.cartesianDriveTimer(0, -0.7, 2);
-            DriveTrain.cartesianDriveTimer(0, 0.3, 15);
-            DriveTrain.cartesianDriveTimer(0, -0.5, 35);
+            DriveTrain.cartesianDriveTimer(0, -0.7, 3);
+            DriveTrain.cartesianDriveTimer(0, 0.3, 25);
+            DriveTrain.cartesianDriveTimer(0, -0.7, 3);
+            DriveTrain.cartesianDriveTimer(0, 0.3, 35);
+            DriveTrain.cartesianDriveTimer(0, -0.5, 30);
 
             sleep(300);
 
@@ -234,7 +236,7 @@ public class BlueCorner extends LinearOpMode{
             DriveTrain.driveToLine(.3, "WHITE", telemetry);
 
 
-            DriveTrain.cartesianDriveTimer(-.85, 0, 25);
+            DriveTrain.cartesianDriveTimer(-.85, 0, 27);
         }
 
         DriveTrain.setRunMode("STOP_AND_RESET_ENCODER");

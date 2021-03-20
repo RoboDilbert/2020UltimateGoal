@@ -184,7 +184,7 @@ public class RedCorner extends LinearOpMode {
 
             //Strafe to wall
             //Drive forward to blue line and drop wobble
-            DriveTrain.cartesianDriveTimer(0, -0.5, 80);
+            DriveTrain.cartesianDriveTimer(0, -0.5, 85);
             //DriveTrain.cartesianDriveTimer(0, 0.7, 2);
 
             DriveTrain.driveToLine(.2, "RED", telemetry);
@@ -208,7 +208,7 @@ public class RedCorner extends LinearOpMode {
 
             //sleep(1500);
 
-            DriveTrain.cartesianDriveDistance(0.75,0,"RIGHT", telemetry, "LESS");
+            DriveTrain.cartesianDriveDistance(0.8,0,"RIGHT", telemetry, "LESS");
 //            DriveTrain.cartesianDriveTimer(.85, 0, 14);
 
 //            DriveTrain.cartesianDriveTimer(0, 0.3, 15);
@@ -227,7 +227,7 @@ public class RedCorner extends LinearOpMode {
 //            DriveTrain.cartesianDriveTimer(0, -0.5, 36);
             DriveTrain.cartesianDriveTimer(0, 0.3, 30);
             DriveTrain.cartesianDriveTimer(0, -0.7, 2);
-            DriveTrain.cartesianDriveTimer(0, 0.3, 10);
+            DriveTrain.cartesianDriveTimer(0, 0.3, 20);
             DriveTrain.cartesianDriveTimer(0, -0.5, 38);
             sleep(200);
 
@@ -246,7 +246,7 @@ public class RedCorner extends LinearOpMode {
             DriveTrain.driveToLine(.2, "WHITE", telemetry);
 
 
-            DriveTrain.cartesianDriveTimer(.85, 0, 20);
+            DriveTrain.cartesianDriveTimer(.85, 0, 30);
         }
 
         DriveTrain.setRunMode("STOP_AND_RESET_ENCODER");
