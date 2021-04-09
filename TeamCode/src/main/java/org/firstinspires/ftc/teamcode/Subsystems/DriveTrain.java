@@ -28,6 +28,10 @@ public class DriveTrain {
     public static DcMotor rightFrontMotor; //Expansion hub, port 3
     public static DcMotor rightBackMotor; //Expansion hub, port 2
 
+    public static DcMotor verticalLeft;
+    public static DcMotor verticalRight;
+    public static DcMotor horizontal;
+
     public static ColorSensor floorColorSensor; //Expansion hub, I2C Bus 3
 
     public static BNO055IMU imu; //Control hub, I2C Bus 0
@@ -241,7 +245,7 @@ public class DriveTrain {
                 if (side.equals("LEFT")) {
                     currentDistance = leftDistanceSensor.getDistance(DistanceUnit.CM);//leftDistanceSensor
                     telemetry.addData("Left Distance Sensor", leftDistanceSensor.getDistance(DistanceUnit.CM));
-                    exitValue = 70;
+                    exitValue = 73;
                 } else if (side.equals("RIGHT")) {
                     currentDistance = rightDistanceSensor.getDistance(DistanceUnit.CM);// rightDistanceSensor
                     telemetry.addData("Right Distance Sensor", rightDistanceSensor.getDistance(DistanceUnit.CM));
@@ -466,7 +470,7 @@ public class DriveTrain {
         double minWhite = Double.MAX_VALUE;
         double maxWhite = Double.MIN_VALUE;
         if(color.equals("RED")){
-            while(floorColorSensor.red() < 1450){ //1600
+            while(floorColorSensor.red() < 1350){ //1600
                 leftFrontMotor.setPower(power);
                 rightFrontMotor.setPower(power);
                 leftBackMotor.setPower(power);
@@ -478,7 +482,7 @@ public class DriveTrain {
             rightBackMotor.setPower(0);
         }
         else if(color.equals("BLUE")){
-            while(floorColorSensor.blue() < 1900){//2100
+            while(floorColorSensor.blue() < 1600){//2100
                 if(DriveTrain.floorColorSensor.blue() > maxBlue){
                     maxBlue = DriveTrain.floorColorSensor.blue();
                 }

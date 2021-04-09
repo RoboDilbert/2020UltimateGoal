@@ -16,8 +16,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Wobble;
 
 
-@Autonomous(name= "BlueCorner", group= "Autonomous")
-public class BlueCorner extends LinearOpMode{
+@Autonomous(name= "BlueEdge", group= "Autonomous")
+public class BlueEdge extends LinearOpMode{
     public String label;
 
     private static MasterVision vision;
@@ -105,22 +105,17 @@ public class BlueCorner extends LinearOpMode{
 
             Wobble.drop();
             sleep(100);
-            DriveTrain.cartesianDriveTimer(0, .3, 12);
 
-            DriveTrain.cartesianDriveTimer(-.85, 0, 30);
-            //Shoot
+            DriveTrain.gyroTurn(Math.PI/8.5, 130);
+
             Intake.releaseAll();
-//            Intake.intake();
 
-            Shooter.shoot(0);
-            //Park
-            //DriveTrain.cartesianDriveTimer(-.75, -.2, 27);
-            DriveTrain.driveToLine(.3, "WHITE", telemetry);
+            DriveTrain.gyroTurn(Math.PI, 100);
 
+            DriveTrain.cartesianDriveTimer(.8, 0, 20);
 
-            DriveTrain.cartesianDriveTimer(-.85, 0, 18);
-            //Close wobble claw
-            Wobble.close();
+            DriveTrain.cartesianDriveTimer(0, -.3, 10);
+
         }
 
         else if(label.equals("Single")) {
@@ -136,109 +131,72 @@ public class BlueCorner extends LinearOpMode{
 
             DriveTrain.driveToLine(.2, "BLUE", telemetry);
 
-            DriveTrain.cartesianDriveTimer(-.85, 0, 25);
+            DriveTrain.gyroTurn(Math.PI/8.5, 130);
+
             //Shoot
             sleep(200);
             Intake.releaseAll();
             Intake.intake();
 
-           // DriveTrain.cartesianDriveTimer(.8, 0, 14);
-            DriveTrain.cartesianDriveDistance(0.7,0,"LEFT", telemetry, "GREATER");
+            DriveTrain.gyroTurn(Math.PI, 100);
+
+            DriveTrain.cartesianDriveTimer(.8, 0, 20);
+
+            // DriveTrain.cartesianDriveTimer(.8, 0, 14);
+            DriveTrain.gyroTurn(Math.PI/2, 100);
+
 
             sleep(100);
-            DriveTrain.cartesianDriveTimer(0, 0.5, 28);
-            DriveTrain.cartesianDriveTimer(0, -0.5, 18);//22
-            sleep(200);
+            DriveTrain.cartesianDriveTimer(0, -0.5, 10);
 
-            DriveTrain.cartesianDriveTimer(-.8, 0, 15);
 
-            Intake.releaseAll();
-            Intake.stop();
-
-            Shooter.shoot(0);
-            //Park
-            //DriveTrain.cartesianDriveTimer(0, -.4, 44);
-            DriveTrain.driveToLine(.2, "WHITE", telemetry);
-
-            DriveTrain.cartesianDriveTimer(0, -.5, 18);
             Wobble.drop();
 
-            DriveTrain.cartesianDriveTimer(-.7, 0.28, 30);
+            DriveTrain.cartesianDriveTimer(0, .5, 20);
+
+
+            DriveTrain.cartesianDriveTimer(-.8, 0, 18);
 
             Wobble.close();
         }
 
         else if(label.equals("Quad")) {
+            //Spin up flywheel
             Shooter.setPosition("WHITE_LINE");
+            sleep(100);
             Shooter.shoot(Shooter.SHOOTER_POWER);
 
-            //Strafe to wall
-            //DriveTrain.cartesianDriveTimer(.85, 0, 15);
+            //DriveTrain.cartesianDriveTimer(-.85, 0, 30);
             //Drive forward to blue line and drop wobble
-            DriveTrain.cartesianDriveTimer(0, -0.5, 85);
-            //DriveTrain.cartesianDriveTimer(0, 0.7, 2);
+            DriveTrain.cartesianDriveTimer(0, -0.5, 42);
+            //DriveTrain.cartesianDriveTimer(0, 0.7, 3);
 
+            //Strafe to wall
+            //DriveTrain.cartesianDriveTimer(.85, 0, 25);
+            //Drive forward to blue line and drop wobble
             DriveTrain.driveToLine(.2, "BLUE", telemetry);
+
+            DriveTrain.cartesianDriveTimer(0, -.3, 8);
+
+            sleep(100);
+
+            DriveTrain.gyroTurn(Math.PI/8.5, 130);
+
+            Intake.releaseAll();
+
+            DriveTrain.gyroTurn(Math.PI, 100);
+
+            DriveTrain.cartesianDriveTimer(.8, 0, 20);
+
+            DriveTrain.cartesianDriveTimer(0, -.5, 40);
+
+            sleep(100);
 
             Wobble.drop();
 
-            DriveTrain.cartesianDriveTimer(0, 0.5, 25);
-            //DriveTrain.cartesianDriveTimer(0, -0.7, 2);
+            sleep(100);
 
-
-            DriveTrain.driveToLine(-.2, "WHITE", telemetry);
-
-            DriveTrain.cartesianDriveTimer(-.85, 0, 28);//29
-            //Shoot
-            Intake.releaseAll();
-            Intake.intake();
-
-            DriveTrain.cartesianDriveDistance(0.7,0,"LEFT", telemetry, "GREATER");
-
-//            DriveTrain.cartesianDriveTimer(.85, 0, 12);
-
-            DriveTrain.cartesianDriveTimer(0, 0.3, 44);
-            DriveTrain.cartesianDriveTimer(0, -0.7, 8);
-            //DriveTrain.cartesianDriveTimer(0, 0.3, 20);
-
-            sleep(300);
-
-            DriveTrain.cartesianDriveTimer(-0.85, 0, 14);
-
-            Intake.releaseAll();
-            sleep(200);
-
-            DriveTrain.cartesianDriveTimer(0.85, 0, 14);
-            sleep(300);
-
-//            DriveTrain.cartesianDriveTimer(0, 0.3, 12);
-//            sleep(400);
-//            DriveTrain.cartesianDriveTimer(0, 0.3, 12);
-//            sleep(400);
-//            DriveTrain.cartesianDriveTimer(0, 0.3, 12);
-//            sleep(400);
-            DriveTrain.cartesianDriveTimer(0, -0.7, 2);
-            DriveTrain.cartesianDriveTimer(0, 0.3, 25);
-            DriveTrain.cartesianDriveTimer(0, -0.7, 3);
-            DriveTrain.cartesianDriveTimer(0, 0.3, 25);
-            DriveTrain.cartesianDriveTimer(0, -0.7, 3);
-            DriveTrain.cartesianDriveTimer(0, 0.3, 35);
-            DriveTrain.cartesianDriveTimer(0, -0.5, 30);
-
-            sleep(300);
-
-            //DriveTrain.cartesianDriveTimer(-0.85, 0, 10);
-            sleep(200);
-
-            Intake.releaseAll();
-            Intake.stop();
-
-            Shooter.shoot(0);
-
-            DriveTrain.driveToLine(.3, "WHITE", telemetry);
-
-
-            DriveTrain.cartesianDriveTimer(-.85, 0, 27);
+            DriveTrain.cartesianDriveTimer(0, -.5, 40);
         }
 
         DriveTrain.setRunMode("STOP_AND_RESET_ENCODER");

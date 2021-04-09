@@ -102,7 +102,7 @@ public class RedCorner extends LinearOpMode {
             //DriveTrain.cartesianDriveTimer(0, 0.7, 3);
             DriveTrain.driveToLine(.2, "RED", telemetry);
 
-            DriveTrain.cartesianDriveTimer(0, -.3, 6);
+            DriveTrain.cartesianDriveTimer(0, -.3, 8);
 
             Wobble.drop();
             //Rotate a little bit to shoot
@@ -113,7 +113,7 @@ public class RedCorner extends LinearOpMode {
 //            DriveTrain.gyroTurn(Math.PI/8.5, 130);
             DriveTrain.cartesianDriveTimer(0, .3, 12);
 
-            DriveTrain.cartesianDriveTimer(.85, 0, 30);
+            DriveTrain.cartesianDriveTimer(.85, 0, 25);
             //Shoot
             Intake.releaseAll();
 
@@ -126,7 +126,7 @@ public class RedCorner extends LinearOpMode {
 
             //Park
             //DriveTrain.driveToLine(.25, "WHITE", telemetry);
-            DriveTrain.cartesianDriveTimer(.9, -.2, 30);
+            DriveTrain.cartesianDriveTimer(.9, -.2, 20);
         }
 
         else if(label.equals("Single")) {
@@ -141,7 +141,11 @@ public class RedCorner extends LinearOpMode {
             //DriveTrain.cartesianDriveTimer(0, 0.7, 3);
             DriveTrain.driveToLine(.2, "RED", telemetry);
 
-            DriveTrain.cartesianDriveTimer(.85, 0, 24);
+            DriveTrain.cartesianDriveTimer(0, .3, 8);
+
+            sleep(200);
+
+            DriveTrain.cartesianDriveTimer(.85, 0, 19);
             //Shoot
             Intake.releaseAll();
             Intake.intake();
@@ -149,9 +153,10 @@ public class RedCorner extends LinearOpMode {
 //            DriveTrain.cartesianDriveTimer(.85, 0, 16);
             //DriveTrain.cartesianDriveTimer(.8, 0, 14);
 
+            DriveTrain.cartesianDriveDistance(0.7,0,"RIGHT", telemetry, "LESS");
 
-            DriveTrain.cartesianDriveTimer(0, 0.5, 22);
-            DriveTrain.cartesianDriveTimer(0, -0.5, 20);
+            DriveTrain.cartesianDriveTimer(0, 0.5, 28);
+            DriveTrain.cartesianDriveTimer(0, -0.5, 18);
             sleep(200);
 
             Intake.releaseAll();
@@ -163,7 +168,7 @@ public class RedCorner extends LinearOpMode {
 
             DriveTrain.driveToLine(.2, "WHITE", telemetry);
 
-            DriveTrain.cartesianDriveTimer(0, -.5, 20);
+            DriveTrain.cartesianDriveTimer(0, -.5, 18);
 
             Wobble.drop();
 
@@ -200,7 +205,7 @@ public class RedCorner extends LinearOpMode {
             DriveTrain.driveToLine(-.2, "WHITE", telemetry);
             DriveTrain.cartesianDriveTimer(0, 0.3, 5);
 
-            DriveTrain.cartesianDriveTimer(.85, 0, 27);
+            DriveTrain.cartesianDriveTimer(.85, 0, 25);
             //DriveTrain.cartesianDriveTimer(0, 0.6, 4);
             //Shoot
             Intake.releaseAll();
@@ -208,7 +213,7 @@ public class RedCorner extends LinearOpMode {
 
             //sleep(1500);
 
-            DriveTrain.cartesianDriveDistance(0.8,0,"RIGHT", telemetry, "LESS");
+            DriveTrain.cartesianDriveDistance(0.7,0,"RIGHT", telemetry, "LESS");
 //            DriveTrain.cartesianDriveTimer(.85, 0, 14);
 
 //            DriveTrain.cartesianDriveTimer(0, 0.3, 15);
@@ -246,7 +251,7 @@ public class RedCorner extends LinearOpMode {
             DriveTrain.driveToLine(.2, "WHITE", telemetry);
 
 
-            DriveTrain.cartesianDriveTimer(.85, 0, 30);
+            DriveTrain.cartesianDriveTimer(.85, 0, 36);
         }
 
         DriveTrain.setRunMode("STOP_AND_RESET_ENCODER");
