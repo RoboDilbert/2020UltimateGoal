@@ -125,6 +125,9 @@ public class DriveTrain {
         DriveTrain.rightBackMotor.setPower((speed * adjustedYHeading - rotation) * Constants.TELEOP_LIMITER);
     }
 
+    public static void cartesianDriveDropWheelEncoders(int leftEncoderCount, int rightEncoderCount, int horizontalEncoderCount){
+    }
+
     public static void cartesianDriveTimer(double x, double y, int timerLength) throws InterruptedException {
         double speed = Math.sqrt(2) * Math.hypot(x, y);
         double command = Math.atan2(y, -x) + Math.PI/2;
