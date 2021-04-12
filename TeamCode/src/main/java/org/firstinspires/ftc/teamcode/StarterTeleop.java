@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Wobble;
-import org.firstinspires.ftc.teamcode.Util.*;
+import org.firstinspires.ftc.teamcode.UtilOG.*;
 
 @TeleOp(name= "TeleOop", group= "TeleOp")
 //@Disabled
@@ -50,7 +50,7 @@ public class StarterTeleop extends LinearOpMode {
         Intake.intakeRunMode("RUN_WITHOUT_ENCODER");
 
         DriveTrain.setRunMode("STOP_AND_RESET_ENCODER");
-        DriveTrain.setRunMode("RUN_USING_ENCODER");
+        DriveTrain.setRunMode("RUN_WITHOUT_ENCODER");
 
         DriveTrain.composeTelemetry(telemetry);
         waitForStart();
@@ -75,11 +75,11 @@ public class StarterTeleop extends LinearOpMode {
                 DriveTrain.autoAlign();
             }
             else if(gamepad1.left_trigger > .2){
-                DriveTrain.setRunMode("RUN_USING_ENCODER");
+                DriveTrain.setRunMode("RUN_WITHOUT_ENCODER");
                 DriveTrain.cartesianDrive(-gamepad1.left_stick_x, gamepad1.left_stick_y, (gamepad1.right_stick_x / 3));
             }
             else {
-                DriveTrain.setRunMode("RUN_USING_ENCODER");
+                DriveTrain.setRunMode("RUN_WITHOUT_ENCODER");
                 DriveTrain.cartesianDrive(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
             }
 

@@ -5,13 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-import org.firstinspires.ftc.teamcode.Util.Constants;
-
-import java.io.CharArrayWriter;
-import java.security.PrivateKey;
+import org.firstinspires.ftc.teamcode.UtilOG.Constants;
 
 public class Wobble {
 
