@@ -66,6 +66,10 @@ public class DriveTrain {
         leftDistanceSensor = Constants.HwMap.get(DistanceSensor.class, "leftDistanceSensor");
         rightDistanceSensor = Constants.HwMap.get(DistanceSensor.class, "rightDistanceSensor");
 
+        verticalLeft = Constants.HwMap.dcMotor.get("rightBackMotor");
+        verticalRight = Constants.HwMap.dcMotor.get("leftFrontMotor");
+        horizontal = Constants.HwMap.dcMotor.get("rightFrontMotor");
+
         imu = Constants.HwMap.get(BNO055IMU.class, "imu");
 
         leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -77,6 +81,24 @@ public class DriveTrain {
         leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        verticalLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        verticalRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        horizontal.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        verticalLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        verticalRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        horizontal.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         BNO055IMU.Parameters parameters1 = new BNO055IMU.Parameters();
         parameters1.angleUnit = BNO055IMU.AngleUnit.RADIANS;
@@ -126,6 +148,7 @@ public class DriveTrain {
     }
 
     public static void cartesianDriveDropWheelEncoders(int leftEncoderCount, int rightEncoderCount, int horizontalEncoderCount){
+
     }
 
     public static void cartesianDriveTimer(double x, double y, int timerLength) throws InterruptedException {
