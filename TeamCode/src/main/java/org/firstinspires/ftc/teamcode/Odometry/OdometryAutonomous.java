@@ -66,30 +66,31 @@ public class OdometryAutonomous extends LinearOpMode {
 
         waitForStart();
 
-        goToPosition(0 * COUNTS_PER_INCH, 25 * COUNTS_PER_INCH, .75, 0, 1000);
-        left_front.setPower(0);
-        left_back.setPower(0);
-        right_front.setPower(0);
-        right_back.setPower(0);
-        sleep(1000);
-        goToPosition(25 * COUNTS_PER_INCH, 25 * COUNTS_PER_INCH, .75, 0, 1000);
-        left_front.setPower(0);
-        left_back.setPower(0);
-        right_front.setPower(0);
-        right_back.setPower(0);
-        sleep(1000);
-        goToPosition(25 * COUNTS_PER_INCH, 0 * COUNTS_PER_INCH, .75, 0, 1000);
-        left_front.setPower(0);
-        left_back.setPower(0);
-        right_front.setPower(0);
-        right_back.setPower(0);
-        sleep(1000);
-        goToPosition(0 * COUNTS_PER_INCH, 0 * COUNTS_PER_INCH, .75, 0, 1000);
-        left_front.setPower(0);
-        left_back.setPower(0);
-        right_front.setPower(0);
-        right_back.setPower(0);
-        sleep(1000);
+        goToPosition(0 * COUNTS_PER_INCH, 25 * COUNTS_PER_INCH, .6, 0, 1000);
+//        left_front.setPower(0);
+//        left_back.setPower(0);
+//        right_front.setPower(0);
+//        right_back.setPower(0);
+//        sleep(1000);
+        goToPosition(25 * COUNTS_PER_INCH, 25 * COUNTS_PER_INCH, .7, 0, 1000);
+//        left_front.setPower(0);
+//        left_back.setPower(0);
+//        right_front.setPower(0);
+//        right_back.setPower(0);
+//        sleep(1000);
+        goToPosition(25 * COUNTS_PER_INCH, 0 * COUNTS_PER_INCH, .6, 0, 1000);
+//        left_front.setPower(0);
+//        left_back.setPower(0);
+//        right_front.setPower(0);
+//        right_back.setPower(0);
+//        sleep(1000);
+        goToPosition(0 * COUNTS_PER_INCH, 0 * COUNTS_PER_INCH, .7, 0, 1000);
+//        left_front.setPower(0);
+//        left_back.setPower(0);
+//        right_front.setPower(0);
+//        right_back.setPower(0);
+//        sleep(1000);
+        goToPosition(25 * COUNTS_PER_INCH, 25 * COUNTS_PER_INCH, .7, 0, 1000);
 
         Shooter.shoot(.5);
         sleep(2000);
@@ -101,7 +102,14 @@ public class OdometryAutonomous extends LinearOpMode {
 
         double distance = Math.hypot(distanceToXTarget, distanceToYTarget);
 
-        double targetDistance = Math.hypot(targetXPos, targetYPos);
+        telemetry.addData("Distance To X", distanceToXTarget);
+        telemetry.addData("Distance To Y", distanceToYTarget);
+        telemetry.addData("Hypotenuse Distance", distance);
+        telemetry.update();
+
+//        sleep(2000);
+
+        double initialDistance = Math.hypot(distanceToXTarget, distanceToYTarget);
 
         while(opModeIsActive() && (distance > allowedError || (Math.toRadians(desiredOrientation - globalPositionUpdate.returnOrientation()) > (Math.PI)/180))){
             distanceToXTarget = targetXPos - globalPositionUpdate.returnXCoordinate();
@@ -109,7 +117,7 @@ public class OdometryAutonomous extends LinearOpMode {
             distance = Math.hypot(distanceToXTarget, distanceToYTarget);
 
             double robotMovementAngle = Math.toDegrees(Math.atan2(distanceToXTarget, distanceToYTarget));
-            double PercentOfTarget = (distance/targetDistance);
+            double PercentOfTarget = (distance/initialDistance);
 
             double robotMovementXComponent = calculateX(robotMovementAngle, power);
             double robotMovementYComponent = calculateY(robotMovementAngle, power);
@@ -122,7 +130,7 @@ public class OdometryAutonomous extends LinearOpMode {
             }
             else{
                 if(Math.abs(pivot) > (Math.PI / 180)){
-                    pivotPower = Math.abs(pivot / 0.6);
+                    pivotPower = Math.abs(pivot / 0.6) + 0.13;
                 }
                 else{
                     pivotPower = 0;
@@ -134,45 +142,97 @@ public class OdometryAutonomous extends LinearOpMode {
             }
 
             double feedForward = 0.1;
-            if((targetXPos == previousTargetX && distanceToYTarget == getPreviousTargetY) ||  pivot > (Math.PI)/180){
+            double xMultiplier = 1.7;
+
+
+            if((targetXPos == previousTargetX && distanceToYTarget == getPreviousTargetY) ||  pivot > (Math.PI)/6){
                 left_front.setPower(pivotPower);
                 right_front.setPower(-pivotPower);
                 left_back.setPower(pivotPower);
                 right_back.setPower(-pivotPower);
             }
-            else if(distanceToXTarget < 0 || distanceToYTarget < 0 || pivot > (Math.PI)/180){
-                left_front.setPower((robotMovementYComponent * (distance/targetDistance) + (2 * robotMovementXComponent)) - feedForward + pivotPower);
-                right_front.setPower((robotMovementYComponent * (distance/targetDistance) - (2 * robotMovementXComponent)) - feedForward - pivotPower);
-                left_back.setPower((robotMovementYComponent * (distance/targetDistance) - (2 * robotMovementXComponent)) - feedForward + pivotPower);
-                right_back.setPower((robotMovementYComponent * (distance/targetDistance) + (2 * robotMovementXComponent)) - feedForward - pivotPower);
-            }
+//            else if(distanceToXTarget < 0 || distanceToYTarget < 0 || pivot > (Math.PI)/180){
+//                left_front.setPower((robotMovementYComponent * (distance/targetDistance) + (xMultiplier * robotMovementXComponent)) + pivotPower);
+//                right_front.setPower((robotMovementYComponent * (distance/targetDistance) - (xMultiplier * robotMovementXComponent)) - pivotPower);
+//                left_back.setPower((robotMovementYComponent * (distance/targetDistance) - (xMultiplier * robotMovementXComponent))  + pivotPower);
+//                right_back.setPower((robotMovementYComponent * (distance/targetDistance) + (xMultiplier * robotMovementXComponent)) - pivotPower);
+//            }
             else{
-                left_front.setPower((robotMovementYComponent * (distance/targetDistance) + (2 * robotMovementXComponent)) + feedForward + pivotPower);
-                right_front.setPower((robotMovementYComponent * (distance/targetDistance) - (2 * robotMovementXComponent)) + feedForward - pivotPower);
-                left_back.setPower((robotMovementYComponent * (distance/targetDistance) - (2 * robotMovementXComponent)) + feedForward + pivotPower);
-                right_back.setPower((robotMovementYComponent * (distance/targetDistance) + (2 * robotMovementXComponent)) + feedForward - pivotPower);
+                left_front.setPower((robotMovementYComponent * (distance/initialDistance)+ (xMultiplier * robotMovementXComponent)) + pivotPower); //+ feedForward
+                right_front.setPower((robotMovementYComponent * (distance/initialDistance) - (xMultiplier * robotMovementXComponent)) - pivotPower);// + feedForward
+                left_back.setPower((robotMovementYComponent  * (distance/initialDistance)- (xMultiplier * robotMovementXComponent)) + pivotPower); //+ feedForward
+                right_back.setPower((robotMovementYComponent * (distance/initialDistance)+ (xMultiplier * robotMovementXComponent)) - pivotPower); //+ feedForward
             }
+            //+ pivotPower
+            //- pivotPower
+            //+ pivotPower
+            //- pivotPower
 
+            //* (distance/initialDistance)
+            // * (distance/initialDistance)
+            //* (distance/initialDistance)
+            //* (distance/initialDistance)
 
             telemetry.addData("Vertical Left Position", -verticalLeft.getCurrentPosition());
             telemetry.addData("Vertical Right Position", verticalRight.getCurrentPosition());
 
+            telemetry.addData("Current Angle:", globalPositionUpdate.returnOrientation());
+
             telemetry.addLine();
 
-            telemetry.addData("Command Left Position", robotMovementXComponent);
-            telemetry.addData("Command Right Position", robotMovementYComponent);
+            telemetry.addData("Command Horiz Position", robotMovementXComponent);
+            telemetry.addData("Command Vert Position", robotMovementYComponent);
 
             telemetry.addLine();
 
             telemetry.addData("Distance To X", distanceToXTarget);
             telemetry.addData("Distance To Y", distanceToYTarget);
             telemetry.addData("Hypotenuse Distance", distance);
+
+            telemetry.addLine();
+
+            telemetry.addData("Target:", initialDistance);
+            telemetry.addData("Distance:", distance);
+            telemetry.addData("yeet", distance/initialDistance);
+
+            telemetry.addData("Left Front Power:", left_front.getPower());
+            telemetry.addData("Left Back Power:", left_back.getPower());
+            telemetry.addData("Right Front Power:", right_front.getPower());
+            telemetry.addData("Right Back Power:", right_back.getPower());
+
+            telemetry.addData("Left Front Commanded Power:", ((robotMovementYComponent * (distance/initialDistance) + (xMultiplier * robotMovementXComponent)) + pivotPower));
+            telemetry.addData("Left Back Commanded Power:", ((robotMovementYComponent * (distance/initialDistance) - (xMultiplier * robotMovementXComponent)) + pivotPower));
+            telemetry.addData("Right Front Commanded Power:", ((robotMovementYComponent * (distance/initialDistance) - (xMultiplier * robotMovementXComponent)) + pivotPower));
+            telemetry.addData("Right Back Commanded Power:", ((robotMovementYComponent * (distance/initialDistance) + (xMultiplier * robotMovementXComponent)) + pivotPower));
+
             telemetry.update();
 
 
         }
         previousTargetX = targetXPos;
         getPreviousTargetY= targetYPos;
+//        if(desiredOrientation - globalPositionUpdate.returnOrientation() < desiredOrientation){
+//            while(desiredOrientation - globalPositionUpdate.returnOrientation() < desiredOrientation || desiredOrientation - globalPositionUpdate.returnOrientation() > desiredOrientation)
+//            double pivot = Math.toRadians(desiredOrientation - globalPositionUpdate.returnOrientation());
+//
+//            double pivotPower;
+//
+//            if(Math.abs(pivot) > (Math.PI / 12)){
+//                pivotPower = 0.40;
+//            }
+//            else{
+//                if(Math.abs(pivot) > (Math.PI / 180)){
+//                    pivotPower = Math.abs(pivot / 0.6);
+//                }
+//                else{
+//                    pivotPower = 0;
+//                }
+//            }
+//
+//            if(pivot < 0){
+//                pivotPower = pivotPower * -1;
+//            }
+//        }
     }
 
 //    private void initDriveHardwareMap(String rfName, String rbName, String lfName, String lbName, String vlEncoderName, String vrEncoderName, String hEncoderName){
