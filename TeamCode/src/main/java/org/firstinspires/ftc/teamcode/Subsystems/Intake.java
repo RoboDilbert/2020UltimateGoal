@@ -23,7 +23,7 @@ public class Intake {
     private static Servo vibrator; //Control hub, port 0
 
     private static final double VIBRATOR_CLOSED = 0.4;
-    private static final double VIBRATOR_OPEN = 0.55;
+    private static final double VIBRATOR_OPEN = 0.58;
 
     private static INTAKE_STATE currentState = INTAKE_STATE.OFF;
 
@@ -63,12 +63,6 @@ public class Intake {
     }
     //Release All
     public static void releaseAll() throws InterruptedException {
-//        vibrator.setPosition(VIBRATOR_OPEN);
-//        Thread.sleep(150);
-//        vibrator.setPosition(VIBRATOR_CLOSED);
-//        Thread.sleep(100);
-//        Shooter.setPosition("SHOOTING");
-//        //Thread.sleep(100);
         for(int i = 0; i < 8; i++) {
             vibrator.setPosition(VIBRATOR_OPEN);
             Thread.sleep(150);
@@ -76,7 +70,7 @@ public class Intake {
             Thread.sleep(100);
         }
         Shooter.setPosition("WHITE_LINE");
-        vibrator.setPosition(0.55);
+        vibrator.setPosition(VIBRATOR_OPEN);
         rings.clear();
     }
 
@@ -170,7 +164,8 @@ public class Intake {
         //telemetry.addData("Vibrator:", vibrator.getPosition());
 //        telemetry.addLine();
 //        telemetry.addData("indexSensor", String.format("%.3f cm", Intake.indexSensor.getDistance(DistanceUnit.CM)));
-        telemetry.addData("rings: ", rings);
+        //telemetry.addData("rings: ", rings);
+        telemetry.addData("Vibrator Pos:", vibrator.getPosition());
 //        telemetry.addData("Ring Flag: ", ringCountFlag);
 //        telemetry.addData("Intake Array Size:", rings.lastIndexOf(true));
 //        telemetry.addLine();
@@ -205,7 +200,7 @@ public class Intake {
         Thread.sleep(100);
     }
     public static void defaultPos(){
-        vibrator.setPosition(0.55);
+        vibrator.setPosition(VIBRATOR_OPEN);
     }
 
     public static void intakeChangeState(String direction){

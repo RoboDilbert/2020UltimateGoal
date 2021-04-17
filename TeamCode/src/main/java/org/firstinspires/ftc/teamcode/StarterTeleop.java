@@ -204,8 +204,6 @@ public class StarterTeleop extends LinearOpMode {
 
             if (gamepad1.dpad_down) {
                 Intake.shootOneNoClear();
-            } else {
-                Intake.defaultPos();
             }
 
             Shooter.updateShooterConstants(P, I, D,0);
@@ -233,10 +231,11 @@ public class StarterTeleop extends LinearOpMode {
                 minWhite = DriveTrain.floorColorSensor.alpha();
             }
 
-            telemetry.addData("Max Blue: ", maxBlue);
-            telemetry.addData("Min Blue: ", minBlue);
-            telemetry.addData("Max White: ", maxWhite);
-            telemetry.addData("Min White: ", minWhite);
+//            telemetry.addData("Max Blue: ", maxBlue);
+//            telemetry.addData("Min Blue: ", minBlue);
+//            telemetry.addData("Max White: ", maxWhite);
+//            telemetry.addData("Min White: ", minWhite);
+
 
 //            telemetry.addData("wobble:", Wobble.wobbleMotor.getCurrentPosition());
 //            telemetry.addData("wobble mode:", Wobble.wobbleMotor.getMode());

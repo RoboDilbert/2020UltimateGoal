@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+import org.firstinspires.ftc.teamcode.Autonomous.OdometryBlueCorner;
 
 import java.io.File;
 
@@ -18,7 +19,7 @@ public class OdometryGlobalCoordinatePosition implements Runnable{
     private boolean isRunning = true;
 
     //Position variables used for storage and calculations
-    double verticalRightEncoderWheelPosition = 0, verticalLeftEncoderWheelPosition = 0, normalEncoderWheelPosition = 0,  changeInRobotOrientation = 0;
+    public static double verticalRightEncoderWheelPosition = 0, verticalLeftEncoderWheelPosition = 0, normalEncoderWheelPosition = 0,  changeInRobotOrientation = 0;
     private double robotGlobalXCoordinatePosition = 0, robotGlobalYCoordinatePosition = 0, robotOrientationRadians = 0;
     private double previousVerticalRightEncoderWheelPosition = 0, previousVerticalLeftEncoderWheelPosition = 0, prevNormalEncoderWheelPosition = 0;
 
@@ -29,6 +30,7 @@ public class OdometryGlobalCoordinatePosition implements Runnable{
     //Sleep time interval (milliseconds) for the position update thread
     private int sleepTime;
 
+    public static boolean changeEncoderFlag = false;
     //Files to access the algorithm constants
     private File wheelBaseSeparationFile = AppUtil.getInstance().getSettingsFile("wheelBaseSeparation.txt");
     private File horizontalTickOffsetFile = AppUtil.getInstance().getSettingsFile("horizontalTickOffset.txt");
@@ -54,6 +56,11 @@ public class OdometryGlobalCoordinatePosition implements Runnable{
         this.horizontalEncoderTickPerDegreeOffset = Double.parseDouble(ReadWriteFile.readFile(horizontalTickOffsetFile).trim());
 
     }
+    public static void setEncoderPosition(double heldLeftPosition, double heldRightPosition){
+        verticalLeftEncoderWheelPosition = heldLeftPosition;
+        verticalRightEncoderWheelPosition = heldRightPosition;
+        changeEncoderFlag = true;
+    }
 
     /**
      * Updates the global (x, y, theta) coordinate position of the robot using the odometry encoders
@@ -63,8 +70,16 @@ public class OdometryGlobalCoordinatePosition implements Runnable{
         verticalLeftEncoderWheelPosition = (verticalEncoderLeft.getCurrentPosition() * verticalLeftEncoderPositionMultiplier);
         verticalRightEncoderWheelPosition = (verticalEncoderRight.getCurrentPosition() * verticalRightEncoderPositionMultiplier);
 
-        double leftChange = verticalLeftEncoderWheelPosition - previousVerticalLeftEncoderWheelPosition;
-        double rightChange = verticalRightEncoderWheelPosition - previousVerticalRightEncoderWheelPosition;
+        double leftChange;
+        double rightChange;
+
+        if(changeEncoderFlag){
+            verticalLeftEncoderWheelPosition = OdometryBlueCorner.heldLeftEncoderCount * verticalLeftEncoderPositionMultiplier;
+            verticalRightEncoderWheelPosition = OdometryBlueCorner.heldRightEncoderCount * verticalRightEncoderPositionMultiplier;
+        }
+
+        leftChange = verticalLeftEncoderWheelPosition - previousVerticalLeftEncoderWheelPosition;
+        rightChange = verticalRightEncoderWheelPosition - previousVerticalRightEncoderWheelPosition;
 
         //Calculate Angle
         changeInRobotOrientation = (leftChange - rightChange) / (robotEncoderWheelDistance);

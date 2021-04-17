@@ -67,30 +67,21 @@ public class OdometryAutonomous extends LinearOpMode {
         waitForStart();
 
         goToPosition(0 * COUNTS_PER_INCH, 25 * COUNTS_PER_INCH, .6, 0, 1000);
-//        left_front.setPower(0);
-//        left_back.setPower(0);
-//        right_front.setPower(0);
-//        right_back.setPower(0);
-//        sleep(1000);
+        setZeroPower();
+
         goToPosition(25 * COUNTS_PER_INCH, 25 * COUNTS_PER_INCH, .7, 0, 1000);
-//        left_front.setPower(0);
-//        left_back.setPower(0);
-//        right_front.setPower(0);
-//        right_back.setPower(0);
-//        sleep(1000);
+        setZeroPower();
+
         goToPosition(25 * COUNTS_PER_INCH, 0 * COUNTS_PER_INCH, .6, 0, 1000);
-//        left_front.setPower(0);
-//        left_back.setPower(0);
-//        right_front.setPower(0);
-//        right_back.setPower(0);
-//        sleep(1000);
+        setZeroPower();
+
         goToPosition(0 * COUNTS_PER_INCH, 0 * COUNTS_PER_INCH, .7, 0, 1000);
-//        left_front.setPower(0);
-//        left_back.setPower(0);
-//        right_front.setPower(0);
-//        right_back.setPower(0);
-//        sleep(1000);
+        setZeroPower();
+        sleep(2000);
+
         goToPosition(25 * COUNTS_PER_INCH, 25 * COUNTS_PER_INCH, .7, 0, 1000);
+        setZeroPower();
+
 
         Shooter.shoot(.5);
         sleep(2000);
@@ -130,7 +121,7 @@ public class OdometryAutonomous extends LinearOpMode {
             }
             else{
                 if(Math.abs(pivot) > (Math.PI / 180)){
-                    pivotPower = Math.abs(pivot / 0.6) + 0.13;
+                    pivotPower = Math.abs(pivot / 0.6) + 0.2;
                 }
                 else{
                     pivotPower = 0;
@@ -233,6 +224,14 @@ public class OdometryAutonomous extends LinearOpMode {
 //                pivotPower = pivotPower * -1;
 //            }
 //        }
+    }
+
+    public void setZeroPower(){
+        left_front.setPower(0);
+        left_back.setPower(0);
+        right_front.setPower(0);
+        right_back.setPower(0);
+        sleep(200);
     }
 
 //    private void initDriveHardwareMap(String rfName, String rbName, String lfName, String lbName, String vlEncoderName, String vrEncoderName, String hEncoderName){
