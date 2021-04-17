@@ -88,55 +88,55 @@ public class OdometryBlueCorner extends LinearOpMode {
         Thread positionThread = new Thread(globalPositionUpdate);
         positionThread.start();
 
-//        initVuforia();
-//        initTfod(hardwareMap);
-//        vision = new MasterVision(parameters, hardwareMap, true, MasterVision.TFLiteAlgorithm.INFER_NONE);
-//        vision.enable();
-//
-//        if (tfod != null) {
-//            tfod.activate();
-//            tfod.setZoom(1, 16.0 / 9.0);
-//        }
-//
-//        sleep(500);
-//
-//        tfodRecogntions = tfod.getUpdatedRecognitions();
-//
-//        for (Recognition recognition : tfodRecogntions) {
-//            label = recognition.getLabel();
-//        }
-//
-//        if(tfodRecogntions.isEmpty()){
-//            label = "ZERO";
-//        }
-//
-//        telemetry.addData("Rings: ", label);
-//        telemetry.update();
-//
-//        while(!isStarted()) {
-//            sleep(500);
-//
-//            tfodRecogntions = tfod.getUpdatedRecognitions();
-//
-//
-//            for (Recognition recognition : tfodRecogntions) {
-//                label = recognition.getLabel();
-//            }
-//
-//            if(tfodRecogntions.isEmpty()){
-//                label = "ZERO";
-//            }
-//
-//            telemetry.addData("Rings: ", label);
-//            telemetry.update();
-//        }
+        initVuforia();
+        initTfod(hardwareMap);
+        vision = new MasterVision(parameters, hardwareMap, true, MasterVision.TFLiteAlgorithm.INFER_NONE);
+        vision.enable();
+
+        if (tfod != null) {
+            tfod.activate();
+            tfod.setZoom(1, 16.0 / 9.0);
+        }
+
+        sleep(500);
+
+        tfodRecogntions = tfod.getUpdatedRecognitions();
+
+        for (Recognition recognition : tfodRecogntions) {
+            label = recognition.getLabel();
+        }
+
+        if(tfodRecogntions.isEmpty()){
+            label = "ZERO";
+        }
+
+        telemetry.addData("Rings: ", label);
+        telemetry.update();
+
+        while(!isStarted()) {
+            sleep(500);
+
+            tfodRecogntions = tfod.getUpdatedRecognitions();
+
+
+            for (Recognition recognition : tfodRecogntions) {
+                label = recognition.getLabel();
+            }
+
+            if(tfodRecogntions.isEmpty()){
+                label = "ZERO";
+            }
+
+            telemetry.addData("Rings: ", label);
+            telemetry.update();
+        }
 
         waitForStart();
 
 
         if(label == null || label.equals("ZERO")) {
             ///Drive forward to drop wobble
-            goToPosition(0,67 * COUNTS_PER_INCH, 0.6, 0, 1000);
+            goToPosition(0,66.5 * COUNTS_PER_INCH, 0.45, 0, 1000);//0.6
             setZeroPower(1000);
 
             //Drop wobble
@@ -145,9 +145,14 @@ public class OdometryBlueCorner extends LinearOpMode {
             //Turn on shooter to prepare to shoot
             Shooter.shoot(Shooter.SHOOTER_POWER);
             sleep(200);
+            Shooter.setPosition("WHITE_LINE");
 
             //Drive over to shoot
-            goToPosition(25 * COUNTS_PER_INCH,64 * COUNTS_PER_INCH, 0.6, 0, 1000);
+            goToPosition(25 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.45, 0, 1000);//0.6
+            setZeroPower(1000);
+
+            //Line up to shoot
+            goToPosition(25 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.5, 0, 1000);//0.6
             setZeroPower(1000);
 
             //Shoot
@@ -161,7 +166,7 @@ public class OdometryBlueCorner extends LinearOpMode {
             sleep(800);
 
             //Go to second wobble
-            goToPosition(25 * COUNTS_PER_INCH,40 * COUNTS_PER_INCH, 0.6, 0, 1000);
+            goToPosition(22 * COUNTS_PER_INCH,32 * COUNTS_PER_INCH, 0.4, 0, 1000);//0.6
             setZeroPower(1000);
 
             //Pick up wobble
@@ -173,11 +178,11 @@ public class OdometryBlueCorner extends LinearOpMode {
             Wobble.wobbleMotor.setPower(-0.1);
 
             //Go to drop off wobble
-            goToPosition(18 * COUNTS_PER_INCH,73 * COUNTS_PER_INCH, 0.65, 0, 1000);
+            goToPosition(20 * COUNTS_PER_INCH,73 * COUNTS_PER_INCH, 0.5, 0, 1000); //0.65
             setZeroPower(1000);
 
             //Turn to drop wobble
-            goToPosition(18 * COUNTS_PER_INCH,73 * COUNTS_PER_INCH, 0.7, 90, 1000);
+            goToPosition(20 * COUNTS_PER_INCH,73 * COUNTS_PER_INCH, 0.5, 90, 1000);//0.7
             setZeroPower(1000);
 
             //Drop wobble
@@ -187,10 +192,102 @@ public class OdometryBlueCorner extends LinearOpMode {
             Wobble.open();
             sleep(250);
 
+            //Lift Arm
+            Wobble.raiseArm(Wobble.WOBBLE_UP_TICKS);
+            sleep(1000);
+
+            Wobble.wobbleMotor.setPower(-0.1);
+            Wobble.close();
+            sleep(300);
         }
 
         else if(label.equals("Single")) {
+            //Drive forward to shoot
+            goToPosition(0,59 * COUNTS_PER_INCH, 0.45, 0, 750);//0.6
+            setZeroPower(250);
 
+            //Turn on shooter to prepare to shoot
+            Shooter.shoot(Shooter.SHOOTER_POWER);
+            sleep(200);
+            Shooter.setPosition("WHITE_LINE");
+
+            //Go to shooting posiiton
+            goToPosition(27 * COUNTS_PER_INCH,59 * COUNTS_PER_INCH, 0.45, 0, 750);//0.6
+            setZeroPower(250);
+            goToPosition(27 * COUNTS_PER_INCH,59 * COUNTS_PER_INCH, 0.55, 0, 750);//0.6
+            setZeroPower(250);
+
+            //Shoot
+            Intake.releaseAll();
+            sleep(200);
+
+            //Drive forward to release wobble
+            goToPosition(35 * COUNTS_PER_INCH,88 * COUNTS_PER_INCH, 0.5, 0, 750);//0.6
+            setZeroPower(250);
+
+            //Drop wobble
+            Wobble.drop();
+
+            //Turn on intake
+            Intake.intake();
+
+            //Pick up ring
+            goToPosition(21 * COUNTS_PER_INCH,48 * COUNTS_PER_INCH, 0.55, 0, 750);//0.6
+            setZeroPower(250);
+
+            //Lower wobble arm
+            Wobble.open();
+
+            Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
+            sleep(800);
+
+            //Go to pick up second wobble
+            goToPosition(25 * COUNTS_PER_INCH,34.5 * COUNTS_PER_INCH, 0.45, 0, 750);//0.6
+            setZeroPower(250);
+
+
+            //Pick up wobble
+            Wobble.close();
+            sleep(600);
+
+            Wobble.raiseArm(Wobble.WOBBLE_UP_TICKS);
+            sleep(1000);
+            Wobble.wobbleMotor.setPower(-0.1);
+
+            //Line up to shoot
+            goToPosition(27 * COUNTS_PER_INCH,59 * COUNTS_PER_INCH, 0.45, 0, 750);//0.6
+            setZeroPower(250);
+            goToPosition(27 * COUNTS_PER_INCH,59 * COUNTS_PER_INCH, 0.55, 0, 750);//0.6
+            setZeroPower(250);
+
+
+            Intake.stop();
+            //Shoot
+            Intake.releaseAll();
+            sleep(200);
+
+            //Go to drop off wobble
+            goToPosition(27 * COUNTS_PER_INCH,76.5 * COUNTS_PER_INCH, 0.5, 0, 750);//0.6
+            setZeroPower(250);
+
+            //Turn
+            goToPosition(27 * COUNTS_PER_INCH,76.5 * COUNTS_PER_INCH, 0.5, 180, 750);//0.6
+            setZeroPower(250);
+
+            //Drop wobble
+            Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
+            sleep(1000);
+
+            Wobble.open();
+            sleep(250);
+
+            //Lift Arm
+            Wobble.raiseArm(Wobble.WOBBLE_UP_TICKS);
+            sleep(1000);
+
+            Wobble.wobbleMotor.setPower(-0.1);
+            Wobble.close();
+            sleep(300);
         }
 
         else if(label.equals("Quad")) {
@@ -245,6 +342,12 @@ public class OdometryBlueCorner extends LinearOpMode {
         double heldLeftEncoderCount = verticalLeft.getCurrentPosition();
         double heldRightEncoderCount= verticalRight.getCurrentPosition();
 
+        double pivotPower;
+        double pivotFf = 0.14;
+
+        double feedForward = 0.1;
+        double xMultiplier = 1.6;
+        double yMultiplier = 1.08;
 
         boolean turnFlag = false;
 
@@ -262,15 +365,23 @@ public class OdometryBlueCorner extends LinearOpMode {
             double robotMovementYComponent = calculateY(robotMovementAngle, power);
             double pivot = Math.toRadians(desiredOrientation - globalPositionUpdate.returnOrientation());
 
-            double pivotPower;
-            double pivotFf = 0.18;
+            if(Math.abs(distance - previousDistance) < 15){
+                xMultiplier += 0.02;
+                yMultiplier += 0.02;
+            }
+            if(Math.abs(pivot) > Math.PI / 180 && Math.abs(previousAngle - pivot) < Math.PI/90){
+                pivotFf += 0.005;
+            }
+            if(Math.abs(previousAngle - pivot) < Math.PI/360 || Math.abs(previousAngle - pivot) > Math.PI/90){
+                pivotFf = 0.14;
+            }
 
             if(Math.abs(pivot) > (Math.PI / 12)){
                 pivotPower = 0.40;
             }
             else{
                 if(Math.abs(pivot) > (Math.PI / 180)){
-                    pivotPower = Math.abs(pivot / 0.6) + pivotFf;
+                    pivotPower = Math.abs(pivot / 0.8) + pivotFf;
                 }
                 else{
                     pivotPower = 0;
@@ -280,19 +391,6 @@ public class OdometryBlueCorner extends LinearOpMode {
             if(pivot < 0){
                 pivotPower = pivotPower * -1;
             }
-
-
-            double feedForward = 0.1;
-            double xMultiplier = 1.6;
-            double yMultiplier = 1.08;
-            if(Math.abs(distance - previousDistance) < 1){
-                xMultiplier += 0.01;
-                yMultiplier += 0.005;
-            }
-            if(Math.abs(pivot) > Math.PI / 180 && Math.abs(previousAngle - pivot) < Math.PI/180 ){
-                pivotFf += 0.005;
-            }
-
 
             if((targetXPos == previousTargetX && targetYPos == getPreviousTargetY) ||  pivot > (Math.PI)/6){
                 left_front.setPower(pivotPower);
@@ -351,6 +449,12 @@ public class OdometryBlueCorner extends LinearOpMode {
             telemetry.addData("Target:", initialDistance);
             telemetry.addData("Distance:", distance);
             telemetry.addData("yeet", distance/initialDistance);
+
+            telemetry.addData("xMultiplier", xMultiplier);
+            telemetry.addData("yMultiplier", yMultiplier);
+            telemetry.addData("pivotFeedForward", pivotFf);
+
+
 
             telemetry.addData("Left Front Power:", left_front.getPower());
             telemetry.addData("Left Back Power:", left_back.getPower());
@@ -421,4 +525,22 @@ public class OdometryBlueCorner extends LinearOpMode {
         return distance;
     }
 }
+
+/*
+In order to reach our goal on continuous improvement, we've used the mechanical addition of dead wheel encoders to make our autonomous programs
+very consistent. We use our new encoders to increment our feed forward to make sure that we reach our target position with maximum precision.
+With our new Encoders, we are able to turn the playing field into a coordinate plane and drive to any position on the field using this coordinate system.
+We have also used the dead wheel encoders to determine our angle on the field. This allows us to auto align ourselves with
+the shooting tower in TeleOp.
+
+
+
+
+
+
+
+
+
+
+ */
 
