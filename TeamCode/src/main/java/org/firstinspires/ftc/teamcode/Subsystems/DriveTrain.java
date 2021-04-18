@@ -22,12 +22,13 @@ import java.util.Locale;
 
 public class DriveTrain {
 
-    //Motors
+    //Declare motors, servos, sensors, and imu
     public static DcMotor leftFrontMotor; //Expansion hub, port 0
     public static DcMotor leftBackMotor; //Expansion hub, port 1
     public static DcMotor rightFrontMotor; //Expansion hub, port 3
     public static DcMotor rightBackMotor; //Expansion hub, port 2
 
+    //These are the dead wheel encoders
     public static DcMotor verticalLeft;
     public static DcMotor verticalRight;
     public static DcMotor horizontal;
@@ -42,7 +43,6 @@ public class DriveTrain {
     public static double driveTrainError = 0;
     public static double driveTrainPower = 0;
 
-    //2m distance sensors
     public static DistanceSensor frontDistanceSensor; //Expansion hub, I2C Bus 2;
     public static DistanceSensor backDistanceSensor; //Control hub, I2C Bus 2
     public static DistanceSensor leftDistanceSensor; //Control hub, I2C Bus 3;
@@ -52,8 +52,10 @@ public class DriveTrain {
     public DriveTrain(){}
 
     public static void initDriveTrain(HardwareMap hwm) {
-
+        //Create hwm
         Constants.HwMap = hwm;
+
+        //Declare motors and stuff on the hardware map
         leftFrontMotor = Constants.HwMap.dcMotor.get("leftFrontMotor");
         leftBackMotor = Constants.HwMap.dcMotor.get("leftBackMotor");
         rightFrontMotor = Constants.HwMap.dcMotor.get("rightFrontMotor");
@@ -66,12 +68,14 @@ public class DriveTrain {
         leftDistanceSensor = Constants.HwMap.get(DistanceSensor.class, "leftDistanceSensor");
         rightDistanceSensor = Constants.HwMap.get(DistanceSensor.class, "rightDistanceSensor");
 
+        //The dead wheels are declared with the motor names of the ports they are plugged into
         verticalLeft = Constants.HwMap.dcMotor.get("rightBackMotor");
         verticalRight = Constants.HwMap.dcMotor.get("leftFrontMotor");
         horizontal = Constants.HwMap.dcMotor.get("rightFrontMotor");
 
         imu = Constants.HwMap.get(BNO055IMU.class, "imu");
 
+        //Set directions for motors and run modes
         leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -100,6 +104,7 @@ public class DriveTrain {
         verticalRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         horizontal.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        //Intialize imu with parameters
         BNO055IMU.Parameters parameters1 = new BNO055IMU.Parameters();
         parameters1.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         parameters1.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -112,6 +117,7 @@ public class DriveTrain {
         angles = DriveTrain.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
     }
 
+    //This is our main cartesian drive method that is used in teleop
     public static void cartesianDrive(double x, double y, double z){
         double speed = Math.sqrt(2) * Math.hypot(x, y);
         double command = Math.atan2(y, -x) + Math.PI/2;
@@ -151,6 +157,7 @@ public class DriveTrain {
 
     }
 
+    //This is our autonomous cartesian drive method. It utilizes the same math as the normal cartesian drive method
     public static void cartesianDriveTimer(double x, double y, int timerLength) throws InterruptedException {
         double speed = Math.sqrt(2) * Math.hypot(x, y);
         double command = Math.atan2(y, -x) + Math.PI/2;
@@ -198,6 +205,8 @@ public class DriveTrain {
         leftBackMotor.setPower(0);
         rightBackMotor.setPower(0);
     }
+
+    //This is similar to our normal method but it drives forward until the front distance sensor reads less than 10 cm
     public static void cartesianDriveRing(double x, double y) throws InterruptedException {
         double speed = Math.sqrt(2) * Math.hypot(x, y);
         double command = Math.atan2(y, -x) + Math.PI/2;
@@ -252,6 +261,7 @@ public class DriveTrain {
         rightBackMotor.setPower(0);
     }
 
+    //The method uses the distance sensors to drive until a certain distance sensors reads greater or less than a certain value
     public static void cartesianDriveDistance(double x, double y, String side, Telemetry telemetry, String greatOrLess) throws InterruptedException {
         double speed = Math.sqrt(2) * Math.hypot(x, y);
         double command = Math.atan2(y, -x) + Math.PI/2;
@@ -413,39 +423,7 @@ public class DriveTrain {
         rightBackMotor.setPower(0);
     }
 
-//    public static void DriveAndTwist(double x, double y, double z, int timer, Telemetry telemetry){
-//        double speed = Math.sqrt(2) * Math.hypot(x, y);
-//        double command = Math.atan2(y, -x) + Math.PI/2;
-//        double rotation = z;
-//
-//        angles = DriveTrain.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-//        double adjustedXHeading = Math.cos(command + angles.firstAngle + Math.PI/4);
-//        double adjustedYHeading = Math.sin(command + angles.firstAngle + Math.PI/4);
-//
-//        driveTrainError = angles.firstAngle - Math.PI;
-//
-//        while(timer > 0){
-//            driveTrainError = angles.firstAngle - Math.PI;
-//            if(Math.abs(driveTrainError) > (Math.PI / 30)){
-//                rotation = 0;
-//            }
-//            if(driveTrainError < 0){
-//                rotation = -z;
-//            }
-//
-//            DriveTrain.leftFrontMotor.setPower((speed * adjustedYHeading + rotation) * Constants.TELEOP_LIMITER);
-//            DriveTrain.rightFrontMotor.setPower((speed * adjustedXHeading - rotation) * Constants.TELEOP_LIMITER);
-//            DriveTrain.leftBackMotor.setPower((speed * adjustedXHeading + rotation) * Constants.TELEOP_LIMITER);
-//            DriveTrain.rightBackMotor.setPower((speed * adjustedYHeading - rotation) * Constants.TELEOP_LIMITER);
-//            timer--;
-//        }
-//
-//        DriveTrain.leftFrontMotor.setPower(0);
-//        DriveTrain.rightFrontMotor.setPower(0);
-//        DriveTrain.leftBackMotor.setPower(0);
-//        DriveTrain.rightBackMotor.setPower(0);
-//    }
-
+    //This method uses the gyro to automatically. set our orientation to 0 degrees. This is used to align ourselves in teleop.
     public static void autoAlign(){
         driveTrainError = angles.firstAngle - 0;
         if(Math.abs(driveTrainError) > (Math.PI / 6)){
@@ -467,6 +445,7 @@ public class DriveTrain {
         }
     }
 
+    //This does the same as the last method but in auto. It also allows you to change the desired orientation.
     public static void autoAlignAuto(double finalAngle){
         driveTrainError = angles.firstAngle - finalAngle;
         if(Math.abs(driveTrainError) > (Math.PI / 6)){
@@ -489,6 +468,7 @@ public class DriveTrain {
         }
     }
 
+    //This method drives until the color sensor on the bottom reads a certain value. We can use this to drive to the red, white, and blue lines on the field.
     public static void driveToLine(double power, String color, Telemetry telemetry) throws InterruptedException {
         double minBlue = Double.MAX_VALUE;
         double maxBlue = Double.MIN_VALUE;
@@ -554,6 +534,7 @@ public class DriveTrain {
         }
     }
 
+    //Set run mode for drive motors
     public static void setRunMode(String input) {
         if (input.equals("STOP_AND_RESET_ENCODER")) {
             leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -581,6 +562,7 @@ public class DriveTrain {
         }
     }
 
+    //Turn using the gyro in auto
     public static void gyroTurn(double finalAngle, int timer){
         int turnTimer = timer;
         while (Math.abs(DriveTrain.angles.firstAngle - (finalAngle)) > (Math.PI / 60) && turnTimer > 0){
@@ -611,19 +593,12 @@ public class DriveTrain {
         DriveTrain.leftBackMotor.setPower(0);
     }
 
+    //Telemetry for drive motors (this changes very often)
     public static void driveTelemetry(Telemetry telemetry){
         telemetry.addData("left front encoder", leftFrontMotor.getCurrentPosition());
         telemetry.addData("left back encoder", leftBackMotor.getCurrentPosition());
         telemetry.addData("right front encoder", rightFrontMotor.getCurrentPosition());
         telemetry.addData("right back encoder", rightBackMotor.getCurrentPosition());
-//        telemetry.addLine();
-//        telemetry.addData("left front power", leftFrontMotor.getPower());
-//        telemetry.addData("left back power", leftBackMotor.getPower());
-//        telemetry.addData("right front power", rightFrontMotor.getPower());
-//        telemetry.addData("right back power", rightBackMotor.getPower());
-//        telemetry.addData("DriveTrainError", driveTrainError);
-//        telemetry.addData("DriveTrainPower", driveTrainPower);
-//        telemetry.addLine();
         telemetry.addLine();
                     telemetry.addLine()
                     .addData("Red", "%.3f", (double) floorColorSensor.red())
@@ -639,6 +614,7 @@ public class DriveTrain {
         telemetry.addLine();
     }
 
+    //This is our favorite method by far. It sets the encoder positions to zero and stays there. This way, we can move at the end of auto.
     public static void SUMO_MODE(){
 
             DriveTrain.leftFrontMotor.setTargetPosition(0);
@@ -653,6 +629,7 @@ public class DriveTrain {
 
     }
 
+    //Telemetry for imu stuff (very boring)
     public static void composeTelemetry (Telemetry telemetry) {
 
         telemetry.addAction(new Runnable() {
@@ -713,6 +690,7 @@ public class DriveTrain {
                 });
     }
 
+    //More imu stuff (also very boring)
     static String formatAngle(AngleUnit angleUnit, double angle) {
         return formatDegrees(AngleUnit.RADIANS.fromUnit(angleUnit, angle));
     }

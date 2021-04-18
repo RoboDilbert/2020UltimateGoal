@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
-import org.firstinspires.ftc.teamcode.Autonomous.OdometryBlueCorner;
+import org.firstinspires.ftc.teamcode.Autonomous.OdometryBlueCornerDoubleWobble;
 
 import java.io.File;
 
@@ -74,8 +74,8 @@ public class OdometryGlobalCoordinatePosition implements Runnable{
         double rightChange;
 
         if(changeEncoderFlag){
-            verticalLeftEncoderWheelPosition = OdometryBlueCorner.heldLeftEncoderCount * verticalLeftEncoderPositionMultiplier;
-            verticalRightEncoderWheelPosition = OdometryBlueCorner.heldRightEncoderCount * verticalRightEncoderPositionMultiplier;
+            verticalLeftEncoderWheelPosition = OdometryBlueCornerDoubleWobble.heldLeftEncoderCount * verticalLeftEncoderPositionMultiplier;
+            verticalRightEncoderWheelPosition = OdometryBlueCornerDoubleWobble.heldRightEncoderCount * verticalRightEncoderPositionMultiplier;
         }
 
         leftChange = verticalLeftEncoderWheelPosition - previousVerticalLeftEncoderWheelPosition;

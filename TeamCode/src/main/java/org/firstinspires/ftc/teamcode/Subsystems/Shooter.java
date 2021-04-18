@@ -13,25 +13,22 @@ import org.firstinspires.ftc.teamcode.UtilOG.Constants;
 
 public class Shooter {
 
+    //Declare motors and servos
     public static DcMotorEx shooter; //Control hub, port 0
     public static Shooter mainShooter;
     private static Servo angleAdjust; //Control hub, port 2
 
+    //PID constants for the shooter
     private static double NEW_P;//18.6
     private static double NEW_I;
     private static double NEW_D;
     private static double NEW_F;
 
+    //Power constants
     public static final double SHOOTER_POWER = 0.525; //previous .575 w/o flywheel weight
-    public static final double POWER_SHOT_POWER = .45;
-
-    //private static PIDFCoefficients pidOrig;
-    //private static PIDFCoefficients pidModified;
 
     //Constructor
     public void Shooter(){
-
-        //PIDFCoefficients pidOrig = shooter.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
 
         NEW_P = 50;
         NEW_I = 1;
@@ -42,10 +39,12 @@ public class Shooter {
     }
 
     public static void initShooter(HardwareMap hwm){
+        //Declare motors in the hardware map
         Constants.HwMap = hwm;
         shooter = Constants.HwMap.get(DcMotorEx.class, "shooter");
         angleAdjust = Constants.HwMap.servo.get("angleAdjust");
 
+        //Set run modes and directions for the shooter
         shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         shooter.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -56,37 +55,31 @@ public class Shooter {
 
         mainShooter.setPosition("RINGS");
     }
+
+    //Update the PID constants in case we want to change them
     public static void updateShooterConstants(double p, double i, double d, double f){
         NEW_P = p;
         NEW_I = i;
         NEW_D = d;
         NEW_F = f;
 
-        // change coefficients using methods included with DcMotorEx class.
+        //Change coefficients using methods included with DcMotorEx class.
         PIDFCoefficients pidNew = new PIDFCoefficients(NEW_P, NEW_I, NEW_D, NEW_F);
         shooter.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidNew);
-
-        // re-read coefficients and verify change.
-        //PIDFCoefficients pidModified = shooter.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    //Shooter telemetry (this changes often)
     public static void shooterTelemetry(Telemetry telemetry){
-//        telemetry.addData("P,I,D (orig)", "%.04f, %.04f, %.0f",
-//                mainShooter.getOldP(), mainShooter.getOldI(), mainShooter.getOldD());
-//        telemetry.addData("P,I,D (modified)", "%.04f, %.04f, %.04f",
-//                mainShooter.getNewP(), mainShooter.getNewI(), mainShooter.getNewD());
-//        telemetry.addData("Real P: ", NEW_P);
-//        telemetry.addData("Real I: ", NEW_I);
-//        telemetry.addData("Shooty velo", shooter.getVelocity());
         telemetry.addData("Shooter angle", angleAdjust.getPosition());
         telemetry.addLine();
     }
 
-    //Methods
+    //Return the speed of the shooter
     public static double getShooterSpeed(){
         return shooter.getVelocity();
     }
 
+    //Set the height of the shooter using the angle adjust servo
     public static void setPosition(String position){
         if(position.equals("INDEX")){
             angleAdjust.setPosition(0.7);
@@ -97,9 +90,6 @@ public class Shooter {
         else if(position.equals("RINGS")){
             angleAdjust.setPosition(0.65); //.5
         }
-//        else if (position.equals("SHOOTING")){
-//            angleAdjust.setPosition(0.49); //white line = .53
-//        }
         else if(position.equals("RINGS_ADJUST")) {
             angleAdjust.setPosition(.7); //.5
         }
@@ -108,28 +98,12 @@ public class Shooter {
         }
     }
 
-//    public double getNewP(){
-//        return pidModified.p;
-//    }
-//    public double getNewI(){
-//        return pidModified.i;
-//    }
-//    public double getNewD(){
-//        return pidModified.d;
-//    }
-//    public double getOldP(){return pidOrig.p;}
-//    public double getOldI(){
-//        return pidOrig.i;
-//    }
-//    public double getOldD(){
-//        return pidOrig.d;
-//    }
-
+    //Set the shooter power using a parameter
     public static void shoot(double power){
-      //  shooter.setVelocity(0, AngleUnit.RADIANS);
         shooter.setPower(power);
    }
 
+   //Set the run mode of the shooter motor
     public static void shooterRunMode(String mode){
         if(mode.equals("RUN_USING_ENCODER")){
             shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

@@ -11,17 +11,21 @@ import java.util.ArrayList;
 
 public class Intake {
     //Instance Fields
+    //This is the array for the number of rings in our robot
     private static ArrayList rings = new ArrayList(4);
     private static boolean ringCountFlag = false;
     private static final double ringDistance = 13;
 
+    //Declare motors and sensors
     private static DistanceSensor indexSensor; //Expansion hub, port 1
 
     private static DcMotor frontIntakeMotor; //Control hub, port 2
     private static DcMotor rearIntakeMotor; //Control hub, port 3
 
+    //This is the servo that vibrates to push rings into the shooter
     private static Servo vibrator; //Control hub, port 0
 
+    //Constants for shooter claw
     private static final double VIBRATOR_CLOSED = 0.4;
     private static final double VIBRATOR_OPEN = 0.58;
 
@@ -36,8 +40,9 @@ public class Intake {
     //Constructor
     public Intake() {}
 
-    //Methods
+    //Init intake
     public static void initIntake(HardwareMap hwm){
+        //Declare the motors and servos in the hardware map
         Constants.HwMap = hwm;
         frontIntakeMotor = Constants.HwMap.dcMotor.get("frontIntakeMotor");
         rearIntakeMotor = Constants.HwMap.dcMotor.get("rearIntakeMotor");
@@ -47,11 +52,12 @@ public class Intake {
         vibrator = Constants.HwMap.servo.get("vibrator");
         vibrator.setPosition(VIBRATOR_OPEN);
 
+        //Set directions for the intake motors
         frontIntakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         rearIntakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
-    //Release 1
+    //Release one ring from the shooter
     public static void releaseOne() throws InterruptedException {
         if(rings.lastIndexOf(true) >= 0) {
             vibrator.setPosition(VIBRATOR_OPEN);
@@ -61,7 +67,8 @@ public class Intake {
             rings.remove(rings.lastIndexOf(true));
         }
     }
-    //Release All
+
+    //Release all of the rings in the shooter
     public static void releaseAll() throws InterruptedException {
         for(int i = 0; i < 8; i++) {
             vibrator.setPosition(VIBRATOR_OPEN);
@@ -74,6 +81,7 @@ public class Intake {
         rings.clear();
     }
 
+    //Release all of the rings from a further back position on the playing field
     public static void releaseAllRings() throws InterruptedException {
         Thread.sleep(250);
         vibrator.setPosition(VIBRATOR_OPEN);
@@ -91,6 +99,7 @@ public class Intake {
         Shooter.setPosition("WHITE_LINE");
         rings.clear();
     }
+    //This shoots all of the rings without clearing the array of rings in the robot
     public static void shootAllNoClear()  throws InterruptedException {
         vibrator.setPosition(VIBRATOR_OPEN);
         Thread.sleep(125);
@@ -106,8 +115,7 @@ public class Intake {
         Shooter.setPosition("WHITE_LINE");
     }
 
-
-    //Spit one ring
+    //Spit one ring in case we have 4 rings in the robot
     public static void spit() throws InterruptedException {
         Shooter.mainShooter.shoot(.2);
         Thread.sleep(500);
@@ -116,7 +124,6 @@ public class Intake {
         vibrator.setPosition(VIBRATOR_CLOSED);
         Thread.sleep(200);
         Shooter.mainShooter.shoot(Shooter.SHOOTER_POWER);
-//        rings.remove(rings.lastIndexOf(true));
     }
 
     //Check to see if there are 3 rings
@@ -129,60 +136,46 @@ public class Intake {
         }
     }
 
-        //Index
+    //Index one ring into the array of rings in our robot
      public static void index ()  throws InterruptedException {
         if (rings.lastIndexOf(true) < 2) {
             ringCountFlag = true;
         }
         else {
             ringCountFlag = true;
-//            spit();
         }
     }
+
+    //Turn on the intake
     public static void intake() throws InterruptedException {
-//        if (indexSensor.getDistance(DistanceUnit.CM) < ringDistance) {
-//            index();
-//        }
-//        else if (ringCountFlag) {
-//            rings.add(true);
-//            ringCountFlag = false;
-//        }
         frontIntakeMotor.setPower(0.95);
         rearIntakeMotor.setPower(0.95);
-
-//        if(isFull()){
-//            Shooter.shoot(0);
-//        }
     }
 
+    //Intake at a slower speed
     public static void intakeTwo(){
         frontIntakeMotor.setPower(.85);
         rearIntakeMotor.setPower(.85);
     }
 
+    //Telemtetry for the intake
     public static void intakeTelemetry(Telemetry telemetry){
-        //telemetry.addData("Vibrator:", vibrator.getPosition());
-//        telemetry.addLine();
-//        telemetry.addData("indexSensor", String.format("%.3f cm", Intake.indexSensor.getDistance(DistanceUnit.CM)));
-        //telemetry.addData("rings: ", rings);
         telemetry.addData("Vibrator Pos:", vibrator.getPosition());
-//        telemetry.addData("Ring Flag: ", ringCountFlag);
-//        telemetry.addData("Intake Array Size:", rings.lastIndexOf(true));
-//        telemetry.addLine();
     }
 
-    public static void setForward(){
-        frontIntakeMotor.setPower(.95);
-        rearIntakeMotor.setPower(.95);
-    }
+    //Intake backwards
     public static void setBackwards(){
         frontIntakeMotor.setPower(-.85);
         rearIntakeMotor.setPower(-.85);
     }
+
+    //Stop the intake
     public static void stop(){
         frontIntakeMotor.setPower(0);
         rearIntakeMotor.setPower(0);
     }
+
+    //Set run mode for the intake motors
     public static void intakeRunMode(String mode){
         if(mode.equals("RUN_USING_ENCODER")){
             rearIntakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -193,16 +186,21 @@ public class Intake {
             frontIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
     }
+
+    //This shoots one of the rings without clearing the array of rings in the robot
     public static void shootOneNoClear() throws InterruptedException{
         vibrator.setPosition(VIBRATOR_OPEN);
         Thread.sleep(200);
         vibrator.setPosition(VIBRATOR_CLOSED);
         Thread.sleep(100);
     }
+
+    //Sets the vibrator servo to the back position (open)
     public static void defaultPos(){
         vibrator.setPosition(VIBRATOR_OPEN);
     }
 
+    //States for the intake (Forward, backwards, stop)
     public static void intakeChangeState(String direction){
         if(currentState == INTAKE_STATE.OFF && direction.equals("FORWARD")){
             currentState = INTAKE_STATE.INTAKE;
@@ -218,6 +216,7 @@ public class Intake {
         }
     }
 
+    //Updates the powers for the intake based on the states above
     public static void intakeUpdatePosition() throws InterruptedException{
         if(currentState == INTAKE_STATE.OFF){
             stop();
