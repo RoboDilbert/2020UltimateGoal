@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.MasterVision;
+import org.firstinspires.ftc.teamcode.Odometry.GlobalCoordinatePositionUpdateSample;
 import org.firstinspires.ftc.teamcode.Odometry.OdometryGlobalCoordinatePosition;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
@@ -61,6 +63,8 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
     double getPreviousTargetY = 0;
 
     public static Orientation angles;
+
+    public static ElapsedTime timer = new ElapsedTime();
 
     final double COUNTS_PER_INCH = 465.701027285;
 
@@ -135,7 +139,6 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
 
         waitForStart();
 
-
         if(label == null || label.equals("ZERO")) {
             ///Drive forward to drop wobble
             goToPosition(0,64 * COUNTS_PER_INCH, 0.45, 0, 1000);//0.6
@@ -188,6 +191,13 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
             //Turn to drop wobble
             goToPosition(20 * COUNTS_PER_INCH,73 * COUNTS_PER_INCH, 0.5, 90, 1000);//0.7
 
+
+             positionThread.interrupt();
+             if(!positionThread.isAlive()){
+                 telemetry.addData("WE OUT THIS BaTCH", "WE OUT THIS BaTCH");
+                 telemetry.update();
+             }
+             sleep(1000);
             //Drop wobble
             Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
             sleep(1000);
@@ -230,7 +240,7 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
             //Drive forward to release wobble
             goToPosition(38 * COUNTS_PER_INCH,59 * COUNTS_PER_INCH, 0.55, 0, 1000);//0.6
 
-            Straighten();
+//            Straighten();
 
             goToPosition(38 * COUNTS_PER_INCH,85 * COUNTS_PER_INCH, 0.55, 0, 1000);//0.6
 
@@ -241,13 +251,15 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
             Intake.intake();
 
             //Pick up ring
+            Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
+
             goToPosition(21 * COUNTS_PER_INCH,48 * COUNTS_PER_INCH, 0.55, 0, 1000);//0.6
 
             //Lower wobble arm
             Wobble.open();
 
-            Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
-            sleep(800);
+//            Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
+//            sleep(800);
 
             //Go to pick up second wobble
             goToPosition(25 * COUNTS_PER_INCH,34.5 * COUNTS_PER_INCH, 0.45, 0, 1000);//0.6
@@ -273,15 +285,22 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
 
             Intake.stop();
             //Shoot
-            Intake.releaseAll();
+            Intake.releaseOne();
             sleep(200);
 
             //Go to drop off wobble
-            goToPosition(27 * COUNTS_PER_INCH,76.5 * COUNTS_PER_INCH, 0.5, 0, 1000);//0.6
+            goToPosition(27 * COUNTS_PER_INCH,75 * COUNTS_PER_INCH, 0.5, 0, 1000);//0.6
 
             //Turn
-            goToPosition(27 * COUNTS_PER_INCH,76.5 * COUNTS_PER_INCH, 0.5, 180, 1000);//0.6
+            goToPosition(27 * COUNTS_PER_INCH,75 * COUNTS_PER_INCH, 0.5, 180, 1000);//0.6
 
+            positionThread.interrupt();
+            if(!positionThread.isAlive()){
+                telemetry.addData("WE OUT THIS BaTCH", "WE OUT THIS BaTCH");
+                telemetry.update();
+            }
+
+            sleep(1000);
             //Drop wobble
             Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
             sleep(1000);
@@ -302,10 +321,11 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
 
         }
 
+        stop();
 //        DriveTrain.setRunMode("STOP_AND_RESET_ENCODER");
-        while(opModeIsActive()) {
-//            DriveTrain.SUMO_MODE();
-        }
+//        while(opModeIsActive()) {
+////            DriveTrain.SUMO_MODE();
+//        }
 
 
     }
@@ -329,8 +349,8 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
     public void Straighten(){
-        double turnPow = 0.3;
-        while(Math.abs(DriveTrain.angles.firstAngle) > Math.PI/90/*Math.abs(verticalLeft.getCurrentPosition() - verticalRight.getCurrentPosition()) > 100*/){
+        double turnPow = 0.32;
+        while( opModeIsActive() && Math.abs(DriveTrain.angles.firstAngle) > Math.PI/90/*Math.abs(verticalLeft.getCurrentPosition() - verticalRight.getCurrentPosition()) > 100*/){
             if(DriveTrain.angles.firstAngle > Math.PI/90/*verticalLeft.getCurrentPosition() < verticalRight.getCurrentPosition()*/){
                 left_front.setPower(turnPow);
                 right_front.setPower(-turnPow);
@@ -378,7 +398,7 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
 
         double pivotPower = 0;
         double pivotMultiplier = 1.25;
-        double pivotFf = 0.05;
+        double pivotFf = 0.055;
 
         double pivot = Double.MAX_VALUE;
 

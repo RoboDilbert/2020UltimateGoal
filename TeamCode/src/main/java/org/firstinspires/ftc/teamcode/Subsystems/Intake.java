@@ -59,17 +59,21 @@ public class Intake {
 
     //Release one ring from the shooter
     public static void releaseOne() throws InterruptedException {
-        if(rings.lastIndexOf(true) >= 0) {
-            vibrator.setPosition(VIBRATOR_OPEN);
-            Thread.sleep(125);
-            vibrator.setPosition(VIBRATOR_CLOSED);
-            Thread.sleep(100);
-            rings.remove(rings.lastIndexOf(true));
-        }
+        Shooter.setPosition("WHITE_LINE");
+        vibrator.setPosition(VIBRATOR_OPEN);
+        Thread.sleep(125);
+        vibrator.setPosition(VIBRATOR_CLOSED);
+        Thread.sleep(100);
+        vibrator.setPosition(VIBRATOR_OPEN);
+        Thread.sleep(125);
+        vibrator.setPosition(VIBRATOR_CLOSED);
+        Thread.sleep(100);
     }
 
     //Release all of the rings in the shooter
     public static void releaseAll() throws InterruptedException {
+        Shooter.unblock();
+        Thread.sleep(50);
         for(int i = 0; i < 8; i++) {
             vibrator.setPosition(VIBRATOR_OPEN);
             Thread.sleep(150);

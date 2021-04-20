@@ -33,7 +33,7 @@ public class Wobble {
     private static final double WOBBLE_MOTOR_ERROR = 0.1;
 
     //Constants for the wobble arm positions in encoder ticks
-    public static final int WOBBLE_UP_TICKS = -240;
+    public static final int WOBBLE_UP_TICKS = 0;
     public static final int WOBBLE_DOWN_TICKS = -1130;
     public static final int WOBBLE_INIT_TICKS = 0;
     public static final int WOBBLE_DROP_TICKS = -500;

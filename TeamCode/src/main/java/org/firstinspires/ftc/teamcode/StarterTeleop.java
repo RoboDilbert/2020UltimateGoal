@@ -126,17 +126,20 @@ public class StarterTeleop extends LinearOpMode {
             //Shoot in front of rings
             if (gamepad1.left_bumper) {
                 Shooter.setPosition("RINGS");
+                Shooter.unblock();
                 Intake.releaseAllRings();
             }else if (gamepad1.right_bumper) {
                 Shooter.setPosition("WHITE_LINE");
                 Intake.releaseAll();
             } else {
                 Intake.defaultPos();
+                Shooter.block();
             }
 
             //Shoot power shot
             if(gamepad1.dpad_right){
                 Shooter.setPosition("POWER_SHOT");
+                Shooter.unblock();
                 sleep(200);
                 Intake.shootOneNoClear();
             }
@@ -148,6 +151,14 @@ public class StarterTeleop extends LinearOpMode {
             }
             else if(!gamepad2.right_bumper && wobbleFlag){
                 wobbleFlag = false;
+            }
+
+            //Blocker
+            if(gamepad2.dpad_left){
+                Shooter.block();
+            }
+            else if(gamepad2.dpad_right){
+                Shooter.unblock();
             }
 
             //Wobble claw open and close
@@ -176,6 +187,8 @@ public class StarterTeleop extends LinearOpMode {
 
             //Spit one ring if we have 4 rings
             if(gamepad2.y){
+                Shooter.unblock();
+                sleep(50);
                 Intake.spit();
             }
 

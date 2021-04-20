@@ -17,6 +17,7 @@ public class Shooter {
     public static DcMotorEx shooter; //Control hub, port 0
     public static Shooter mainShooter;
     private static Servo angleAdjust; //Control hub, port 2
+    private static Servo blocker;
 
     //PID constants for the shooter
     private static double NEW_P;//18.6
@@ -43,6 +44,7 @@ public class Shooter {
         Constants.HwMap = hwm;
         shooter = Constants.HwMap.get(DcMotorEx.class, "shooter");
         angleAdjust = Constants.HwMap.servo.get("angleAdjust");
+        blocker = Constants.HwMap.servo.get("blocker");
 
         //Set run modes and directions for the shooter
         shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -71,6 +73,7 @@ public class Shooter {
     //Shooter telemetry (this changes often)
     public static void shooterTelemetry(Telemetry telemetry){
         telemetry.addData("Shooter angle", angleAdjust.getPosition());
+        telemetry.addData("Blocker Pos:", blocker.getPosition());
         telemetry.addLine();
     }
 
@@ -115,5 +118,13 @@ public class Shooter {
             shooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         }
+    }
+
+    public static void block(){
+        blocker.setPosition(.2);
+    }
+
+    public static void unblock(){
+        blocker.setPosition(.42);
     }
 }
