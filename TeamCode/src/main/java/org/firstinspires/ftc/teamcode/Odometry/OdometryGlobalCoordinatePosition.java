@@ -122,6 +122,16 @@ public class OdometryGlobalCoordinatePosition implements Runnable{
     public double returnOrientation(){ return Math.toDegrees(robotOrientationRadians) % 360; }
 
     /**
+     * Resets encoders and the coordinate plane on the field
+     */
+
+    public void resetEncoders(){
+        verticalEncoderLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        verticalEncoderRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        horizontalEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    /**
      * Stops the position update thread
      */
     public void stop(){ isRunning = false; }

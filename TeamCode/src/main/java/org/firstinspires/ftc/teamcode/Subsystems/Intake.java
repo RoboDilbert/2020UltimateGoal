@@ -87,20 +87,17 @@ public class Intake {
 
     //Release all of the rings from a further back position on the playing field
     public static void releaseAllRings() throws InterruptedException {
-        Thread.sleep(250);
-        vibrator.setPosition(VIBRATOR_OPEN);
-        Thread.sleep(150);
-        vibrator.setPosition(VIBRATOR_CLOSED);
-        Thread.sleep(100);
-        Shooter.setPosition("RINGS_ADJUST");
-        //Thread.sleep(100);
-        for(int i = 0; i < 5; i++) {
+        Shooter.setPosition("RINGS");
+        Shooter.unblock();
+        Thread.sleep(50);
+        for(int i = 0; i < 8; i++) {
             vibrator.setPosition(VIBRATOR_OPEN);
             Thread.sleep(150);
             vibrator.setPosition(VIBRATOR_CLOSED);
             Thread.sleep(100);
         }
         Shooter.setPosition("WHITE_LINE");
+        vibrator.setPosition(VIBRATOR_OPEN);
         rings.clear();
     }
     //This shoots all of the rings without clearing the array of rings in the robot
@@ -193,6 +190,8 @@ public class Intake {
 
     //This shoots one of the rings without clearing the array of rings in the robot
     public static void shootOneNoClear() throws InterruptedException{
+        Shooter.unblock();
+        Thread.sleep(50);
         vibrator.setPosition(VIBRATOR_OPEN);
         Thread.sleep(200);
         vibrator.setPosition(VIBRATOR_CLOSED);
