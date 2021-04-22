@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 public class OdometryGlobalCoordinatePosition implements Runnable{
     //Odometry wheels
     private DcMotor verticalEncoderLeft, verticalEncoderRight, horizontalEncoder;
-
     //Thead run condition
     private boolean isRunning = true;
 
@@ -168,6 +167,7 @@ public class OdometryGlobalCoordinatePosition implements Runnable{
     public void run() {
         while(isRunning) {
             globalCoordinatePositionUpdate();
+
             try {
                 Thread.sleep(sleepTime);
             } catch (InterruptedException e) {

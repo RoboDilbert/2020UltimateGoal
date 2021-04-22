@@ -37,7 +37,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Wobble;
 import java.util.List;
 
 
-    @Autonomous(name= "ChuckStinks", group= "Autonomous")
+//    @Autonomous(name= "ChuckStinks", group= "Autonomous")
     public class DropWheelEncoderTest extends LinearOpMode{
         public String label;
 

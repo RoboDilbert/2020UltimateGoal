@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Wobble;
 import java.util.List;
 
 
-@Autonomous(name= "JustinIsBeautiful", group= "Autonomous")
+//@Autonomous(name= "JustinIsBeautiful", group= "Autonomous")
 
 public class EncoderTest extends LinearOpMode{
         public String label;

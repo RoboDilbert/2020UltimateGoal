@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Wobble;
 import org.firstinspires.ftc.teamcode.UtilOG.Rolling;
 
-@Autonomous(name= "BlueComplete", group= "Autonomous")
+//@Autonomous(name= "BlueComplete", group= "Autonomous")
 public class BlueComplete extends LinearOpMode{
 
     public Rolling Distance1 = new Rolling(20);

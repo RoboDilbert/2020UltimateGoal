@@ -59,6 +59,8 @@ public class Intake {
 
     //Release one ring from the shooter
     public static void releaseOne() throws InterruptedException {
+        Shooter.unblock();
+        Thread.sleep(50);
         Shooter.setPosition("WHITE_LINE");
         vibrator.setPosition(VIBRATOR_OPEN);
         Thread.sleep(125);
@@ -67,6 +69,8 @@ public class Intake {
         vibrator.setPosition(VIBRATOR_OPEN);
         Thread.sleep(125);
         vibrator.setPosition(VIBRATOR_CLOSED);
+        Thread.sleep(100);
+        vibrator.setPosition(VIBRATOR_OPEN);
         Thread.sleep(100);
     }
 

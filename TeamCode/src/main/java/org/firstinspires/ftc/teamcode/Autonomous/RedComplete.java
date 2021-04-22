@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.UtilOG.Rolling;
 
 import java.util.List;
 
-@Autonomous(name= "RedComplete", group= "Autonomous")
+//@Autonomous(name= "RedComplete", group= "Autonomous")
 public class RedComplete extends LinearOpMode {
 
     public Rolling Distance1 = new Rolling(20);

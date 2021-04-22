@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Wobble;
 
 
-@Autonomous(name= "BlueEdge", group= "Autonomous")
+//@Autonomous(name= "BlueEdge", group= "Autonomous")
 public class BlueEdge extends LinearOpMode{
     public String label;
 

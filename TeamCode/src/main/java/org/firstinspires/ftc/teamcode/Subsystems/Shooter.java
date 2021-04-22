@@ -88,7 +88,7 @@ public class Shooter {
             angleAdjust.setPosition(0.7);
         }
         else if(position.equals("WHITE_LINE")){
-            angleAdjust.setPosition(.46); //.44
+            angleAdjust.setPosition(.5); //.44
         }
         else if(position.equals("RINGS")){
             angleAdjust.setPosition(0.52); //.5

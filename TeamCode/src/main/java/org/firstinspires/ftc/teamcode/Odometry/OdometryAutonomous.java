@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Wobble;
 /**
  * Created by Sarthak on 10/4/2019.
  */
-@Autonomous(name = "OdometryAuto", group= "Autonomous")
+//@Autonomous(name = "OdometryAuto", group= "Autonomous")
 public class OdometryAutonomous extends LinearOpMode {
     DcMotor left_back;
     DcMotor left_front;

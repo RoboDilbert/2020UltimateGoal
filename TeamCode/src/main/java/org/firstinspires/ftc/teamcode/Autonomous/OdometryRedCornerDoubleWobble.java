@@ -7,36 +7,22 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.MasterVision;
-import org.firstinspires.ftc.teamcode.Odometry.GlobalCoordinatePositionUpdateSample;
 import org.firstinspires.ftc.teamcode.Odometry.OdometryGlobalCoordinatePosition;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Wobble;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import java.util.List;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.teamcode.Subsystems.DriveTrain;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import org.firstinspires.ftc.teamcode.MasterVision;
-import org.firstinspires.ftc.teamcode.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
-import org.firstinspires.ftc.teamcode.Subsystems.Wobble;
 
 import java.util.List;
-@Autonomous(name= "BlueCornerDoubleWobble", group= "Autonomous")
-public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
+
+@Autonomous(name= "RedCornerDoubleWobble", group= "Autonomous")
+public class OdometryRedCornerDoubleWobble extends LinearOpMode {
     public String label;
 
     private static MasterVision vision;
@@ -120,6 +106,7 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
         telemetry.update();
 
         while(!isStarted()) {
+
             sleep(500);
 
             tfodRecogntions = tfod.getUpdatedRecognitions();
@@ -138,12 +125,15 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
         }
 
         waitForStart();
+        super.resetStartTime();
 
         if(label == null || label.equals("ZERO")) {
             ///Drive forward to drop wobble
-            goToPosition(0,50 * COUNTS_PER_INCH, 0.4, 0, 8000);//0.6
+            goToPosition(5 * COUNTS_PER_INCH,0 * COUNTS_PER_INCH, 0.8, 0, 1000);//0.6
 
-            goToPosition(0,64 * COUNTS_PER_INCH, 0.3, 0, 1000);//0.6
+            goToPosition(5 * COUNTS_PER_INCH,50 * COUNTS_PER_INCH, 0.5, 0, 8000);//0.6
+
+            goToPosition(5 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.3, 0, 1200);//0.6
 
             //Drop wobble
             Wobble.drop();
@@ -154,12 +144,9 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
             Shooter.setPosition("WHITE_LINE");
 
             //Drive over to shoot
-            goToPosition(25 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.35, 0, 1000);//0.6
+            goToPosition(-15 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.4, 0, 1000);//0.6
 
             //Line up to shoot
-            telemetry.addData("heading lmao", DriveTrain.angles.firstAngle);
-            telemetry.update();
-            sleep(1000);
 
             Straighten();
 
@@ -174,14 +161,11 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
             sleep(800);
 
             //Go to second wobble
-            goToPosition(22 * COUNTS_PER_INCH,47 * COUNTS_PER_INCH, 0.35, 0, 8000);//0.6
+            goToPosition(-37 * COUNTS_PER_INCH,47 * COUNTS_PER_INCH, 0.4, 0, 8000);//0.6
 
-            goToPosition(22 * COUNTS_PER_INCH,36 * COUNTS_PER_INCH, 0.25, 0, 1000);//0.6
+            goToPosition(-37 * COUNTS_PER_INCH,32 * COUNTS_PER_INCH, 0.4, 0, 1000);//0.6
 
-            Straighten();
-
-            goToPosition(22 * COUNTS_PER_INCH,32 * COUNTS_PER_INCH, 0.25, 0, 1000);//0.6
-
+//            goToPosition(-37 * COUNTS_PER_INCH,32 * COUNTS_PER_INCH, 0.3, 0, 1000);//0.6
 
             //Pick up wobble
             Wobble.close();
@@ -192,18 +176,11 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
             Wobble.wobbleMotor.setPower(-0.1);
 
             //Go to drop off wobble
-            goToPosition(20 * COUNTS_PER_INCH,73 * COUNTS_PER_INCH, 0.4, 0, 1000); //0.65
+            goToPosition(-20 * COUNTS_PER_INCH,73 * COUNTS_PER_INCH, 0.4, 0, 1000); //0.65
 
             //Turn to drop wobble
-            goToPosition(20 * COUNTS_PER_INCH,73 * COUNTS_PER_INCH, 0.5, 102, 1000);//0.7
+            goToPosition(-20 * COUNTS_PER_INCH,73 * COUNTS_PER_INCH, 0.55, -88, 2000);//0.7
 
-
-             positionThread.interrupt();
-             if(!positionThread.isAlive()){
-                 telemetry.addData("WE OUT THIS BaTCH", "WE OUT THIS BaTCH");
-                 telemetry.update();
-             }
-             sleep(1000);
             //Drop wobble
             Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
             sleep(1000);
@@ -218,13 +195,22 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
             Wobble.wobbleMotor.setPower(-0.1);
             Wobble.close();
             sleep(300);
+
+            goToPosition(-20 * COUNTS_PER_INCH,73 * COUNTS_PER_INCH, 0.55, 0, 2000);//0.7
+
+
+            positionThread.interrupt();
+            if(!positionThread.isAlive()){
+                telemetry.addData("WE OUT THIS BaTCH", "WE OUT THIS BaTCH");
+                telemetry.update();
+            }
         }
 
         else if(label.equals("Single")) {
             //Drive forward to shoot
-            goToPosition(0,50 * COUNTS_PER_INCH, 0.4, 0, 8000);//0.6
+            goToPosition(0,50 * COUNTS_PER_INCH, 0.5, 0, 8000);//0.6
 
-            goToPosition(0,59 * COUNTS_PER_INCH, 0.3, 0, 1000);//0.6
+            goToPosition(0,62 * COUNTS_PER_INCH, 0.4, 0, 1300);//0.6
 
             //Turn on shooter to prepare to shoot
             Shooter.shoot(Shooter.SHOOTER_POWER);
@@ -232,7 +218,7 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
             Shooter.setPosition("WHITE_LINE");
 
             //Go to shooting posiiton
-            goToPosition(25 * COUNTS_PER_INCH,59 * COUNTS_PER_INCH, 0.3, 0, 1200);//0.6
+            goToPosition(-17 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.4, 0, 1300);//0.6
 
             Straighten();
 
@@ -245,45 +231,40 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
 
 //            Straighten();
 
-            goToPosition(38 * COUNTS_PER_INCH,82 * COUNTS_PER_INCH, 0.35, 0, 1000);//0.6
+            goToPosition(-22 * COUNTS_PER_INCH,82 * COUNTS_PER_INCH, 0.4, 0, 1300);//0.6
 
             //Drop wobble
             Wobble.drop();
 
-            //Turn on intake
             Intake.intake();
 
-            //Pick up ring
             Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
+            sleep(1000);
 
-            goToPosition(19 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.4, 0, 8000);//0.6
+            goToPosition(-23 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.45, 0, 4000);//0.6
 
-            goToPosition(18 * COUNTS_PER_INCH,48 * COUNTS_PER_INCH, 0.35, 0, 1000);//0.6
+            goToPosition(-23 * COUNTS_PER_INCH,44 * COUNTS_PER_INCH, 0.32, 0, 1200);//0.6
 
             //Lower wobble arm
             Wobble.open();
 
-//            Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
-//            sleep(800);
+            //Go to second wobble
+            goToPosition(-37 * COUNTS_PER_INCH,47 * COUNTS_PER_INCH, 0.4, 0, 1500);//0.6
 
-            //Go to pick up second wobble
-            goToPosition(22.5 * COUNTS_PER_INCH,36 * COUNTS_PER_INCH, .2, 0, 2000);//0.6
+            goToPosition(-37 * COUNTS_PER_INCH,33 * COUNTS_PER_INCH, 0.4, 0, 1300);//0.6
 
-            //Straighten();
-
-
-            goToPosition(22.5 * COUNTS_PER_INCH,32 * COUNTS_PER_INCH, .2, 0, 1000);//0.6   //25, 32
+//            goToPosition(-37 * COUNTS_PER_INCH,32 * COUNTS_PER_INCH, 0.3, 0, 1000);//0.6
 
             //Pick up wobble
             Wobble.close();
-            sleep(600);
+            sleep(300);
 
             Wobble.raiseArm(Wobble.WOBBLE_UP_TICKS);
             sleep(1000);
             Wobble.wobbleMotor.setPower(-0.1);
 
             //Line up to shoot
-            goToPosition(27 * COUNTS_PER_INCH,59 * COUNTS_PER_INCH, 0.35, 0, 1000);//0.6    //27, 59
+            goToPosition(-17 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.4, 0, 1300);//0.6
             sleep(100);
 
             Straighten();
@@ -294,10 +275,10 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
             sleep(200);
 
             //Go to drop off wobble
-            goToPosition(27 * COUNTS_PER_INCH,69 * COUNTS_PER_INCH, 0.35, 0, 1000);//0.6   //27, 75
+            goToPosition(-17 * COUNTS_PER_INCH,69 * COUNTS_PER_INCH, 0.4, 0, 1300);//0.6   //27, 75
 
             //Turn
-            goToPosition(27 * COUNTS_PER_INCH,69 * COUNTS_PER_INCH, 0.5, 183, 1000);//0.6    //27, 75
+            goToPosition(-17 * COUNTS_PER_INCH,69 * COUNTS_PER_INCH, 0.5, 183, 1300);//0.6    //27, 75
 
             positionThread.interrupt();
             if(!positionThread.isAlive()){
@@ -366,7 +347,6 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
             goToPosition(48 * COUNTS_PER_INCH,75 * COUNTS_PER_INCH, .35, 0, 1000);//0.6
 
         }
-
         stop();
     }
 
@@ -374,7 +354,7 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
         parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parameters.cameraDirection = CameraDirection.BACK;
 
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
     }
@@ -443,7 +423,7 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
 
         double pivotPower = 0;
         double pivotMultiplier = 1.25;
-        double pivotFf = 0.055;
+        double pivotFf = 0.06;
 
         double pivot = Double.MAX_VALUE;
 
@@ -453,7 +433,7 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
 
         boolean turnFlag = false;
 
-        while(opModeIsActive() && (distance > allowedError /*&& timeyBoi.seconds() < 15*/ || pivot > (Math.PI)/240) /*&& timeyBoi.seconds() < 15*/){
+        while(opModeIsActive() && (distance > allowedError /*&& timeyBoi.seconds() < 15*/ || pivot > (Math.PI)/240 || pivot < -(Math.PI)/240) /*&& timeyBoi.seconds() < 15*/){
             distanceToXTarget = targetXPos - globalPositionUpdate.returnXCoordinate();
             distanceToYTarget = targetYPos - globalPositionUpdate.returnYCoordinate();
             distance = Math.hypot(distanceToXTarget, distanceToYTarget);
@@ -469,7 +449,7 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
                 xMultiplier += 0.02;
                 yMultiplier += 0.04;
             }
-            if(Math.abs(pivot) > Math.PI / 360 && Math.abs(previousAngle - pivot) < Math.PI/90){
+            if(Math.abs(pivot) > Math.PI / 360 && Math.abs(previousAngle - pivot) < Math.PI/90 && targetXPos == previousTargetX && targetYPos == getPreviousTargetY){
                 pivotMultiplier += 0.01;
             }
             else if(Math.abs(previousAngle - pivot) < Math.PI/360 || Math.abs(previousAngle - pivot) > Math.PI/90){
@@ -522,42 +502,47 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
             // * (distance/initialDistance)
             //* (distance/initialDistance)
             //* (distance/initialDistance)
+            telemetry.addData("Timer", super.getRuntime());
+            telemetry.addData("Vertical Left Position", -verticalLeft.getCurrentPosition());
+            telemetry.addData("Vertical Right Position", verticalRight.getCurrentPosition());
 
-//            telemetry.addData("Vertical Left Position", -verticalLeft.getCurrentPosition());
-//            telemetry.addData("Vertical Right Position", verticalRight.getCurrentPosition());
-//
-//            telemetry.addData("Current Angle:", globalPositionUpdate.returnOrientation());
-//
-//            telemetry.addLine();
-//
-//            telemetry.addData("Command Horiz Position", robotMovementXComponent);
-//            telemetry.addData("Command Vert Position", robotMovementYComponent);
-//
-//            telemetry.addLine();
-//
-//            telemetry.addData("Distance To X", distanceToXTarget);
-//            telemetry.addData("Distance To Y", distanceToYTarget);
-//            telemetry.addData("Hypotenuse Distance", distance);
-//
-//            telemetry.addLine();
-//
-//            telemetry.addData("Target:", initialDistance);
-//            telemetry.addData("Distance:", distance);
-//            telemetry.addData("yeet", distance/initialDistance);
-//
-//            telemetry.addData("xMultiplier", xMultiplier);
-//            telemetry.addData("yMultiplier", yMultiplier);
-//            telemetry.addData("pivotMultiplier", pivotMultiplier);
-//
-//            telemetry.addData("Left Front Power:", left_front.getPower());
-//            telemetry.addData("Left Back Power:", left_back.getPower());
-//            telemetry.addData("Right Front Power:", right_front.getPower());
-//            telemetry.addData("Right Back Power:", right_back.getPower());
-//
-//            telemetry.addData("Left Front Commanded Power:", ((robotMovementYComponent * ((distance/initialDistance) * yMultiplier) + (xMultiplier * robotMovementXComponent)) + pivotPower));
-//            telemetry.addData("Left Back Commanded Power:",  ((robotMovementYComponent * ((distance/initialDistance) * yMultiplier) - (xMultiplier * robotMovementXComponent)) - pivotPower));
-//            telemetry.addData("Right Front Commanded Power:",((robotMovementYComponent * ((distance/initialDistance) * yMultiplier) - (xMultiplier * robotMovementXComponent)) + pivotPower));
-//            telemetry.addData("Right Back Commanded Power:", ((robotMovementYComponent * ((distance/initialDistance) * yMultiplier) + (xMultiplier * robotMovementXComponent)) - pivotPower));
+            telemetry.addData("Current Angle:", globalPositionUpdate.returnOrientation());
+
+            telemetry.addLine();
+
+            telemetry.addData("Command Horiz Position", robotMovementXComponent);
+            telemetry.addData("Command Vert Position", robotMovementYComponent);
+
+            telemetry.addLine();
+
+            telemetry.addData("Distance To X", distanceToXTarget);
+            telemetry.addData("Distance To Y", distanceToYTarget);
+            telemetry.addData("Hypotenuse Distance", distance);
+
+            telemetry.addLine();
+
+            telemetry.addData("Pivot:", pivot);
+            telemetry.addData("PivotMultiplier:", pivotMultiplier);
+
+            telemetry.addLine();
+
+            telemetry.addData("Target:", initialDistance);
+            telemetry.addData("Distance:", distance);
+            telemetry.addData("yeet", distance/initialDistance);
+
+            telemetry.addData("xMultiplier", xMultiplier);
+            telemetry.addData("yMultiplier", yMultiplier);
+            telemetry.addData("pivotMultiplier", pivotMultiplier);
+
+            telemetry.addData("Left Front Power:", left_front.getPower());
+            telemetry.addData("Left Back Power:", left_back.getPower());
+            telemetry.addData("Right Front Power:", right_front.getPower());
+            telemetry.addData("Right Back Power:", right_back.getPower());
+
+            telemetry.addData("Left Front Commanded Power:", ((robotMovementYComponent * ((distance/initialDistance) * yMultiplier) + (xMultiplier * robotMovementXComponent)) + pivotPower));
+            telemetry.addData("Left Back Commanded Power:",  ((robotMovementYComponent * ((distance/initialDistance) * yMultiplier) - (xMultiplier * robotMovementXComponent)) - pivotPower));
+            telemetry.addData("Right Front Commanded Power:",((robotMovementYComponent * ((distance/initialDistance) * yMultiplier) - (xMultiplier * robotMovementXComponent)) + pivotPower));
+            telemetry.addData("Right Back Commanded Power:", ((robotMovementYComponent * ((distance/initialDistance) * yMultiplier) + (xMultiplier * robotMovementXComponent)) - pivotPower));
             telemetry.addData("Timer Timey Timo boyo", timeyBoi.seconds());
             telemetry.update();
 
