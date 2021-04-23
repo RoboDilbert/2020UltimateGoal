@@ -97,7 +97,7 @@ public class Shooter {
             angleAdjust.setPosition(.7); //.5
         }
         else if(position.equals("POWER_SHOT")){
-            angleAdjust.setPosition(.3); //First: .35
+            angleAdjust.setPosition(.35); //First: .35
         }
     }
 

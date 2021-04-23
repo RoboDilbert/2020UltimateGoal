@@ -34,6 +34,8 @@ public class OdometryRedCornerDoubleWobble extends LinearOpMode {
     private static final String LABEL_FIRST_ELEMENT = "Quad";
     private static final String LABEL_SECOND_ELEMENT = "Single";
 
+    public static final double timerLimit = 29;
+
     private static List<Recognition> tfodRecogntions;
 
     DcMotor left_back;
@@ -125,6 +127,7 @@ public class OdometryRedCornerDoubleWobble extends LinearOpMode {
         }
 
         waitForStart();
+
         super.resetStartTime();
 
         if(label == null || label.equals("ZERO")) {
@@ -180,6 +183,15 @@ public class OdometryRedCornerDoubleWobble extends LinearOpMode {
 
             //Turn to drop wobble
             goToPosition(-20 * COUNTS_PER_INCH,73 * COUNTS_PER_INCH, 0.55, -88, 2000);//0.7
+
+            if(super.getRuntime() > 25.5){
+                left_front.setPower(0);
+                right_front.setPower(0);
+                left_back.setPower(0);
+                right_back.setPower(0);
+                Shooter.shoot(0);
+                stop();
+            }
 
             //Drop wobble
             Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
@@ -286,6 +298,15 @@ public class OdometryRedCornerDoubleWobble extends LinearOpMode {
                 telemetry.update();
             }
 
+            if(super.getRuntime() > 25.5){
+                left_front.setPower(0);
+                right_front.setPower(0);
+                left_back.setPower(0);
+                right_back.setPower(0);
+                Shooter.shoot(0);
+                stop();
+            }
+
             //Drop wobble
             Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
             sleep(1000);
@@ -369,8 +390,17 @@ public class OdometryRedCornerDoubleWobble extends LinearOpMode {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
     public void Straighten(){
-        double turnPow = 0.32;
+        double turnPow = 0.3;
         while(opModeIsActive() && Math.abs(DriveTrain.angles.firstAngle) > Math.PI/90 /*&& timeyBoi.seconds() < 15*/){
+            if(super.getRuntime() > timerLimit){
+                left_front.setPower(0);
+                right_front.setPower(0);
+                left_back.setPower(0);
+                right_back.setPower(0);
+                Shooter.shoot(0);
+                stop();
+                break;
+            }
             if(DriveTrain.angles.firstAngle > Math.PI/90/*verticalLeft.getCurrentPosition() < verticalRight.getCurrentPosition()*/){
                 left_front.setPower(turnPow);
                 right_front.setPower(-turnPow);
@@ -434,6 +464,15 @@ public class OdometryRedCornerDoubleWobble extends LinearOpMode {
         boolean turnFlag = false;
 
         while(opModeIsActive() && (distance > allowedError /*&& timeyBoi.seconds() < 15*/ || pivot > (Math.PI)/240 || pivot < -(Math.PI)/240) /*&& timeyBoi.seconds() < 15*/){
+            if(super.getRuntime() > timerLimit){
+                left_front.setPower(0);
+                right_front.setPower(0);
+                left_back.setPower(0);
+                right_back.setPower(0);
+                Shooter.shoot(0);
+                stop();
+                break;
+            }
             distanceToXTarget = targetXPos - globalPositionUpdate.returnXCoordinate();
             distanceToYTarget = targetYPos - globalPositionUpdate.returnYCoordinate();
             distance = Math.hypot(distanceToXTarget, distanceToYTarget);

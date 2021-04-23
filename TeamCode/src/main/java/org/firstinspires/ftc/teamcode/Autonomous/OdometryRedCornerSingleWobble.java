@@ -44,6 +44,8 @@ public class OdometryRedCornerSingleWobble extends LinearOpMode {
     DcMotor verticalRight;
     DcMotor horizontal;
 
+    public static final double timerLimit = 29;
+
     double robotGlobalXPosition = 0, robotGlobalYPosition = 0, robotOrientationRadians = 0;
     double previousTargetX = 0;
     double getPreviousTargetY = 0;
@@ -125,9 +127,11 @@ public class OdometryRedCornerSingleWobble extends LinearOpMode {
 
         waitForStart();
 
+        super.resetStartTime();
+
         if(label == null || label.equals("ZERO")) {
             ///Drive forward to drop wobble
-            goToPosition(6 * COUNTS_PER_INCH,0 * COUNTS_PER_INCH, 0.4, 0, 1000);//0.6
+            goToPosition(6 * COUNTS_PER_INCH,0 * COUNTS_PER_INCH, 0.8, 0, 1000);//0.6
 
             goToPosition(6 * COUNTS_PER_INCH,50 * COUNTS_PER_INCH, 0.4, 0, 8000);//0.6
 
@@ -145,10 +149,6 @@ public class OdometryRedCornerSingleWobble extends LinearOpMode {
             goToPosition(-15 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.35, 0, 1000);//0.6
 
             //Line up to shoot
-            telemetry.addData("heading lmao", DriveTrain.angles.firstAngle);
-            telemetry.update();
-            sleep(1000);
-
             Straighten();
 
             //Shoot
@@ -160,11 +160,11 @@ public class OdometryRedCornerSingleWobble extends LinearOpMode {
 
             Straighten();
 
-             positionThread.interrupt();
-             if(!positionThread.isAlive()){
-                 telemetry.addData("WE OUT THIS BaTCH", "WE OUT THIS BaTCH");
-                 telemetry.update();
-             }
+            positionThread.interrupt();
+            if(!positionThread.isAlive()){
+                telemetry.addData("WE OUT THIS BaTCH", "WE OUT THIS BaTCH");
+                telemetry.update();
+            }
 
         }
 
@@ -225,17 +225,19 @@ public class OdometryRedCornerSingleWobble extends LinearOpMode {
         else if(label.equals("Quad")) {
 
             //Drive to corner
-            goToPosition(0 * COUNTS_PER_INCH,80 * COUNTS_PER_INCH, 0.4, 0, 8000);//0.6
+            goToPosition(6 * COUNTS_PER_INCH,0 * COUNTS_PER_INCH, 0.8, 0, 1000);//0.6
 
-            goToPosition(0 * COUNTS_PER_INCH,112 * COUNTS_PER_INCH, 0.35, 0, 1500);//0.6
+            goToPosition(6 * COUNTS_PER_INCH,95 * COUNTS_PER_INCH, 0.6, 0, 8000);//0.6
+
+            goToPosition(6 * COUNTS_PER_INCH,112 * COUNTS_PER_INCH, 0.45, 0, 1000);//0.6
 
             // Drop wobble
             Wobble.drop();
             Shooter.shoot(Shooter.SHOOTER_POWER);
             //drive to shooting position
-            goToPosition(0 * COUNTS_PER_INCH,70 * COUNTS_PER_INCH, .3, 0, 3000);//0.6
+            goToPosition(6 * COUNTS_PER_INCH,70 * COUNTS_PER_INCH, 0.5, 0, 3000);//0.6
 
-            goToPosition(25 * COUNTS_PER_INCH,58 * COUNTS_PER_INCH, .3, 0, 1200);//0.6
+            goToPosition(-16 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.4, 0, 1200);//0.6
 
             //Shoot
             Straighten();
@@ -245,26 +247,28 @@ public class OdometryRedCornerSingleWobble extends LinearOpMode {
             //Back up to collect rings
             Intake.intake();
 
-            goToPosition(18 * COUNTS_PER_INCH,57 * COUNTS_PER_INCH, 0.25, 0, 1200);//0.6
+            goToPosition(-23 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.45, 0, 1000);//0.6
 
-            goToPosition(18 * COUNTS_PER_INCH,50 * COUNTS_PER_INCH, 0.3, 0, 1200);//0.6
+            goToPosition(-23 * COUNTS_PER_INCH,44 * COUNTS_PER_INCH, 0.3, 0, 1000);//0.6
+
+            goToPosition(-23 * COUNTS_PER_INCH,45.5 * COUNTS_PER_INCH, 0.32, 5, 1000);//0.6
+
             //Shoot
-            Straighten();
             Intake.releaseAllRings();
             sleep(200);
             //Collect Rings
-            goToPosition(18 * COUNTS_PER_INCH,28 * COUNTS_PER_INCH, 0.2, 0, 1200);//0.6
+            goToPosition(-23 * COUNTS_PER_INCH,25 * COUNTS_PER_INCH, 0.26, 0, 1200);//0.6
 
             //Shoot
-            goToPosition(25 * COUNTS_PER_INCH,58 * COUNTS_PER_INCH, .3, 0, 1200);//0.6
+            goToPosition(-23 * COUNTS_PER_INCH,58 * COUNTS_PER_INCH, .45, 5, 1200);//0.6
 
-            Straighten();
+            //Straighten();
 
             Intake.releaseAll();
             sleep(200);
             Intake.stop();
             //Move to white line
-            goToPosition(48 * COUNTS_PER_INCH,75 * COUNTS_PER_INCH, .35, 0, 1200);//0.6
+            goToPosition(-48 * COUNTS_PER_INCH,75 * COUNTS_PER_INCH, .4, 0, 1200);//0.6
 
         }
 
@@ -290,8 +294,17 @@ public class OdometryRedCornerSingleWobble extends LinearOpMode {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
     public void Straighten(){
-        double turnPow = 0.32;
+        double turnPow = 0.3;
         while(opModeIsActive() && Math.abs(DriveTrain.angles.firstAngle) > Math.PI/90 /*&& timeyBoi.seconds() < 15*/){
+            if(super.getRuntime() > timerLimit){
+                left_front.setPower(0);
+                right_front.setPower(0);
+                left_back.setPower(0);
+                right_back.setPower(0);
+                Shooter.shoot(0);
+                stop();
+                break;
+            }
             if(DriveTrain.angles.firstAngle > Math.PI/90/*verticalLeft.getCurrentPosition() < verticalRight.getCurrentPosition()*/){
                 left_front.setPower(turnPow);
                 right_front.setPower(-turnPow);
@@ -355,6 +368,15 @@ public class OdometryRedCornerSingleWobble extends LinearOpMode {
         boolean turnFlag = false;
 
         while(opModeIsActive() && (distance > allowedError /*&& timeyBoi.seconds() < 15*/ || pivot > (Math.PI)/240) /*&& timeyBoi.seconds() < 15*/){
+            if(super.getRuntime() > timerLimit){
+                left_front.setPower(0);
+                right_front.setPower(0);
+                left_back.setPower(0);
+                right_back.setPower(0);
+                Shooter.shoot(0);
+                stop();
+                break;
+            }
             distanceToXTarget = targetXPos - globalPositionUpdate.returnXCoordinate();
             distanceToYTarget = targetYPos - globalPositionUpdate.returnYCoordinate();
             distance = Math.hypot(distanceToXTarget, distanceToYTarget);

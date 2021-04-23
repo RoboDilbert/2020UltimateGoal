@@ -14,6 +14,7 @@ public class Intake {
     //This is the array for the number of rings in our robot
     private static ArrayList rings = new ArrayList(4);
     private static boolean ringCountFlag = false;
+    private static boolean flickerPush = true;
     private static final double ringDistance = 13;
 
     //Declare motors and sensors
@@ -200,6 +201,14 @@ public class Intake {
         Thread.sleep(200);
         vibrator.setPosition(VIBRATOR_CLOSED);
         Thread.sleep(100);
+        if(flickerPush) {
+            vibrator.setPosition(VIBRATOR_OPEN);
+            Thread.sleep(200);
+            vibrator.setPosition(VIBRATOR_CLOSED);
+            Thread.sleep(100);
+            flickerPush = false;
+        }
+        defaultPos();
     }
 
     //Sets the vibrator servo to the back position (open)
