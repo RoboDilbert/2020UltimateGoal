@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -12,11 +13,13 @@ import org.firstinspires.ftc.teamcode.UtilOG.Constants;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.Locale;
 
@@ -33,6 +36,8 @@ public class DriveTrain {
     public static DcMotor verticalRight;
     public static DcMotor horizontal;
 
+    public static RevBlinkinLedDriver blinkinLedDriver;
+
     public static ColorSensor floorColorSensor; //Expansion hub, I2C Bus 3
 
     public static BNO055IMU imu; //Control hub, I2C Bus 0
@@ -42,6 +47,8 @@ public class DriveTrain {
 
     public static double driveTrainError = 0;
     public static double driveTrainPower = 0;
+
+//    private static Servo blinkin;
 
     public static DistanceSensor frontDistanceSensor; //Expansion hub, I2C Bus 2;
     public static DistanceSensor backDistanceSensor; //Control hub, I2C Bus 2
@@ -60,6 +67,9 @@ public class DriveTrain {
         leftBackMotor = Constants.HwMap.dcMotor.get("leftBackMotor");
         rightFrontMotor = Constants.HwMap.dcMotor.get("rightFrontMotor");
         rightBackMotor = Constants.HwMap.dcMotor.get("rightBackMotor");
+
+//        blinkin = Constants.HwMap.servo.get("blinkin");
+        blinkinLedDriver = Constants.HwMap.get(RevBlinkinLedDriver.class, "blinkin");
 
         floorColorSensor = Constants.HwMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "floorColorSensor");
 
@@ -103,6 +113,8 @@ public class DriveTrain {
         verticalLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         verticalRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         horizontal.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.VIOLET);//AQUA
 
         //Intialize imu with parameters
         BNO055IMU.Parameters parameters1 = new BNO055IMU.Parameters();
@@ -629,6 +641,9 @@ public class DriveTrain {
 
     }
 
+//    public static void ledOn(){
+//        blinkin.setPosition(.5);
+//    }
     //Telemetry for imu stuff (very boring)
     public static void composeTelemetry (Telemetry telemetry) {
 

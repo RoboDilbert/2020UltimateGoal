@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -28,12 +29,13 @@ public class StarterTeleop extends LinearOpMode {
     private boolean intakeFlagFoward = false;
     private boolean intakeFlagReverse = false;
 
+    private final static int LED_PERIOD = 10;
+
     FtcDashboard dashboard = FtcDashboard.getInstance();
     Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
     @Override
     public void runOpMode() throws InterruptedException {
-
         //Init motors and servos
         DriveTrain.initDriveTrain(hardwareMap);
         Wobble.initWobble(hardwareMap);
@@ -155,7 +157,7 @@ public class StarterTeleop extends LinearOpMode {
 
             //Blocker
             if(gamepad2.dpad_left){
-                Shooter.block();
+                DriveTrain.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
             }
             else if(gamepad2.dpad_right){
                 Shooter.unblock();
@@ -197,6 +199,12 @@ public class StarterTeleop extends LinearOpMode {
                 Intake.shootOneNoClear();
             }
 
+            if(gamepad2.dpad_up){
+                DriveTrain.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.DARK_BLUE);
+            }
+            else if(gamepad2.left_bumper){
+                DriveTrain.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
+            }
             //Set shooter PID constants
             Shooter.updateShooterConstants(P, I, D,0);
 

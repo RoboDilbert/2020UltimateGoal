@@ -103,7 +103,7 @@ public class Wobble {
             wobbleMotor.setPower(.4);
         }
         if (Math.abs(lifterTP - Wobble.wobbleMotor.getCurrentPosition()) < (-lifterTP * WOBBLE_MOTOR_ERROR)) {
-            Wobble.wobbleMotor.setPower(-0.1);
+            wobbleMotor.setPower(0);
         }
     }
 

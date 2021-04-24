@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -28,6 +29,7 @@ public class Intake {
 
     //Constants for shooter claw
     private static final double VIBRATOR_CLOSED = 0.4;
+    private static final double VIBRATOR_CLOSED_AUTO = .3;
     private static final double VIBRATOR_OPEN = 0.58;
 
     private static INTAKE_STATE currentState = INTAKE_STATE.OFF;
@@ -75,6 +77,33 @@ public class Intake {
         Thread.sleep(100);
     }
 
+    public static void oneRingdumbidiot() throws InterruptedException {
+        Shooter.unblock();
+        Thread.sleep(50);
+        Shooter.setPosition("RINGS_ADJUST");
+        vibrator.setPosition(VIBRATOR_OPEN);
+        Thread.sleep(125);
+        vibrator.setPosition(VIBRATOR_CLOSED);
+        Thread.sleep(100);
+        vibrator.setPosition(VIBRATOR_OPEN);
+        Thread.sleep(125);
+        vibrator.setPosition(VIBRATOR_CLOSED);
+        Thread.sleep(100);
+        vibrator.setPosition(VIBRATOR_OPEN);
+        Thread.sleep(100);
+    }
+
+    public static void powerShotAuto() throws InterruptedException {
+        Shooter.unblock();
+        Shooter.setPosition("POWER_SHOT");
+        Thread.sleep(50);
+        vibrator.setPosition(VIBRATOR_CLOSED_AUTO);
+        Thread.sleep(125);
+        vibrator.setPosition(VIBRATOR_OPEN);
+        Thread.sleep(200);
+        defaultPos();
+    }
+
     //Release all of the rings in the shooter
     public static void releaseAll() throws InterruptedException {
         Shooter.unblock();
@@ -88,6 +117,7 @@ public class Intake {
         Shooter.setPosition("WHITE_LINE");
         vibrator.setPosition(VIBRATOR_OPEN);
         rings.clear();
+        //DriveTrain.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
     }
 
     //Release all of the rings from a further back position on the playing field

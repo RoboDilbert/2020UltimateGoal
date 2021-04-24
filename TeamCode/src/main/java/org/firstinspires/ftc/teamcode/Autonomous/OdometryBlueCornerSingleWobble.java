@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Wobble;
 
 import java.util.List;
 
-@Autonomous(name= "BlueCornerSingleWobble", group= "Autonomous")
+@Autonomous(name= "BLUESingle", group= "Autonomous")
 public class OdometryBlueCornerSingleWobble extends LinearOpMode {
     public String label;
 
@@ -178,7 +178,7 @@ public class OdometryBlueCornerSingleWobble extends LinearOpMode {
             Shooter.setPosition("WHITE_LINE");
 
             //Go to shooting posiiton
-            goToPosition(25 * COUNTS_PER_INCH,59 * COUNTS_PER_INCH, 0.3, 0, 1200);//0.6
+            goToPosition(25 * COUNTS_PER_INCH,59 * COUNTS_PER_INCH, 0.3, 0, 1000);//0.6
 
             Straighten();
 
@@ -188,9 +188,9 @@ public class OdometryBlueCornerSingleWobble extends LinearOpMode {
 
             Intake.intake();
 
-            goToPosition(19 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.4, 0, 4000);//0.6
+            goToPosition(17 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.4, 0, 4000);//0.6
 
-            goToPosition(18 * COUNTS_PER_INCH,44 * COUNTS_PER_INCH, 0.3, 0, 1000);//0.6
+            goToPosition(17 * COUNTS_PER_INCH,44 * COUNTS_PER_INCH, 0.3, 0, 1000);//0.6
 
             //Shoot
             goToPosition(25 * COUNTS_PER_INCH,59 * COUNTS_PER_INCH, 0.3, 0, 1200);//0.6
@@ -246,12 +246,15 @@ public class OdometryBlueCornerSingleWobble extends LinearOpMode {
             goToPosition(18 * COUNTS_PER_INCH,57 * COUNTS_PER_INCH, 0.25, 0, 1000);//0.6
 
             goToPosition(18 * COUNTS_PER_INCH,50 * COUNTS_PER_INCH, 0.2, 0, 1000);//0.6
+
+            goToPosition(18 * COUNTS_PER_INCH,51.5 * COUNTS_PER_INCH, 0.2, 0, 1000);//0.6
+
             //Shoot
             Straighten();
             Intake.releaseAllRings();
             sleep(200);
             //Collect Rings
-            goToPosition(18 * COUNTS_PER_INCH,28 * COUNTS_PER_INCH, 0.2, 0, 1000);//0.6
+            goToPosition(18 * COUNTS_PER_INCH,28 * COUNTS_PER_INCH, 0.15, 0, 1000);//0.6
 
             //Shoot
             goToPosition(25 * COUNTS_PER_INCH,58 * COUNTS_PER_INCH, .3, 0, 1000);//0.6
@@ -262,8 +265,9 @@ public class OdometryBlueCornerSingleWobble extends LinearOpMode {
             sleep(200);
             Intake.stop();
             //Move to white line
-            goToPosition(48 * COUNTS_PER_INCH,75 * COUNTS_PER_INCH, .35, 0, 1000);//0.6
+            goToPosition(46  * COUNTS_PER_INCH,75 * COUNTS_PER_INCH, .35, 0, 1000);//0.6
 
+            Straighten();
         }
 
         stop();

@@ -35,7 +35,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Wobble;
 
 import java.util.List;
-@Autonomous(name= "BlueCornerDoubleWobble", group= "Autonomous")
+@Autonomous(name= "BLUEDouble", group= "Autonomous")
 public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
     public String label;
 
@@ -237,7 +237,7 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
             //Drive forward to shoot
             goToPosition(0,50 * COUNTS_PER_INCH, 0.4, 0, 8000);//0.6
 
-            goToPosition(0,59 * COUNTS_PER_INCH, 0.3, 0, 1000);//0.6
+            goToPosition(0,59 * COUNTS_PER_INCH, 0.3, 0, 1200);//0.6
 
             //Turn on shooter to prepare to shoot
             Shooter.shoot(Shooter.SHOOTER_POWER);
@@ -269,9 +269,9 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
             //Pick up ring
             Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
 
-            goToPosition(19 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.4, 0, 8000);//0.6
+            goToPosition(18 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.4, 0, 2000);//0.6
 
-            goToPosition(18 * COUNTS_PER_INCH,48 * COUNTS_PER_INCH, 0.35, 0, 1000);//0.6
+            goToPosition(18 * COUNTS_PER_INCH,52 * COUNTS_PER_INCH, 0.35, 0, 1000);//0.6
 
             //Lower wobble arm
             Wobble.open();
@@ -280,12 +280,12 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
 //            sleep(800);
 
             //Go to pick up second wobble
-            goToPosition(22.5 * COUNTS_PER_INCH,36 * COUNTS_PER_INCH, .2, 0, 2000);//0.6
+            goToPosition(22.5 * COUNTS_PER_INCH,35 * COUNTS_PER_INCH, .35, 0, 2000);//0.6
 
             //Straighten();
 
 
-            goToPosition(22.5 * COUNTS_PER_INCH,32 * COUNTS_PER_INCH, .2, 0, 1000);//0.6   //25, 32
+            goToPosition(22.5 * COUNTS_PER_INCH,32 * COUNTS_PER_INCH, .25, 0, 1000);//0.6   //25, 32
 
             //Pick up wobble
             Wobble.close();
@@ -310,7 +310,7 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
             goToPosition(27 * COUNTS_PER_INCH,69 * COUNTS_PER_INCH, 0.35, 0, 1000);//0.6   //27, 75
 
             //Turn
-            goToPosition(27 * COUNTS_PER_INCH,69 * COUNTS_PER_INCH, 0.5, 183, 1000);//0.6    //27, 75
+            goToPosition(27 * COUNTS_PER_INCH,69 * COUNTS_PER_INCH, 0.5, 172, 1000);//0.6    //27, 75
 
             positionThread.interrupt();
             if(!positionThread.isAlive()){
@@ -329,7 +329,7 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
 
             //Drop wobble
             Wobble.lowerArm(Wobble.WOBBLE_DOWN_TICKS);
-            sleep(1000);
+            sleep(1200);
 
             Wobble.open();
             sleep(250);
@@ -369,12 +369,15 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
             goToPosition(18 * COUNTS_PER_INCH,57 * COUNTS_PER_INCH, 0.25, 0, 1000);//0.6
 
             goToPosition(18 * COUNTS_PER_INCH,50 * COUNTS_PER_INCH, 0.2, 0, 1000);//0.6
+
+            goToPosition(18 * COUNTS_PER_INCH,51.5 * COUNTS_PER_INCH, 0.2, 0, 1000);//0.6
+
             //Shoot
             Straighten();
             Intake.releaseAllRings();
             sleep(200);
             //Collect Rings
-            goToPosition(18 * COUNTS_PER_INCH,28 * COUNTS_PER_INCH, 0.2, 0, 1000);//0.6
+            goToPosition(18 * COUNTS_PER_INCH,28 * COUNTS_PER_INCH, 0.15, 0, 1000);//0.6
 
             //Shoot
             goToPosition(25 * COUNTS_PER_INCH,58 * COUNTS_PER_INCH, .3, 0, 1000);//0.6
@@ -385,8 +388,9 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
             sleep(200);
             Intake.stop();
             //Move to white line
-            goToPosition(48 * COUNTS_PER_INCH,75 * COUNTS_PER_INCH, .35, 0, 1000);//0.6
+            goToPosition(46  * COUNTS_PER_INCH,75 * COUNTS_PER_INCH, .35, 0, 1000);//0.6
 
+            Straighten();
         }
 
         stop();
@@ -517,7 +521,7 @@ public class OdometryBlueCornerDoubleWobble extends LinearOpMode {
                 pivotMultiplier = 1.25;
             }
 
-            if(Math.abs(pivot) > (Math.PI / 12)){
+            if(Math.abs(pivot) > (Math.PI / 18)){
                 pivotPower = 0.40;
             }
             else{

@@ -136,26 +136,39 @@ public class OdometryBluePowerShot extends LinearOpMode {
             sleep(200);
 
             // drive to power shot position
-            goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.35, 2, 1000);//0.6
+            goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.25, 0, 2500);//0.6
 
-            Shooter.setPosition("POWER_SHOT");
-            Shooter.unblock();
-            sleep(200);
-            Intake.shootOneNoClear();
+            //goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.3, 2, 500);//0.6
 
-            goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.55, 5, 1000);//0.6
+            Straighten();
 
-            Shooter.setPosition("POWER_SHOT");
-            Shooter.unblock();
-            sleep(200);
-            Intake.shootOneNoClear();
+            goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.25, 3, 2500);//0.6
+
+            sleep(500);
+            Intake.powerShotAuto();
 
             goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.55, 9, 1000);//0.6
 
-            Shooter.setPosition("POWER_SHOT");
-            Shooter.unblock();
             sleep(200);
-            Intake.shootOneNoClear();
+
+            goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.55, 9, 1000);//0.6
+
+
+            sleep(500);
+            Intake.powerShotAuto();
+
+            goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.55, 15, 1000);//0.6
+
+            sleep(200);
+
+            goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.55, 15, 1000);//0.6
+
+            sleep(500);
+            Intake.powerShotAuto();
+
+            goToPosition(1 * COUNTS_PER_INCH, 74 * COUNTS_PER_INCH, .4, 15, 1200);
+
+            Straighten();
 
             positionThread.interrupt();
              if(!positionThread.isAlive()){
@@ -267,6 +280,10 @@ public class OdometryBluePowerShot extends LinearOpMode {
         double pivotMultiplier = 1.5;
         double pivotFf = 0.06;
 
+        if((targetXPos == previousTargetX && targetYPos == getPreviousTargetY)){
+            pivotFf = .13;
+        }
+
         double pivot = Double.MAX_VALUE;
 
         double feedForward = 0.1;
@@ -275,7 +292,7 @@ public class OdometryBluePowerShot extends LinearOpMode {
 
         boolean turnFlag = false;
 
-        while(opModeIsActive() && (distance > allowedError /*&& timeyBoi.seconds() < 15*/ || pivot > (Math.PI)/180) /*&& timeyBoi.seconds() < 15*/){
+        while(opModeIsActive() && (distance > allowedError /*&& timeyBoi.seconds() < 15*/ || Math.abs(pivot) > (Math.PI)/360) /*&& timeyBoi.seconds() < 15*/){
             if(super.getRuntime() > timerLimit){
                 left_front.setPower(0);
                 right_front.setPower(0);
@@ -296,9 +313,14 @@ public class OdometryBluePowerShot extends LinearOpMode {
             double robotMovementYComponent = calculateY(robotMovementAngle, power);
             pivot = Math.toRadians(desiredOrientation - globalPositionUpdate.returnOrientation());
 
+            if(targetXPos == 0){
+                robotMovementXComponent = 0;
+                distanceToXTarget = 0;
+            }
+
             if(Math.abs(distance - previousDistance) < 30){
-                xMultiplier += 0.02;
-                yMultiplier += 0.03;
+                xMultiplier += 0.04;
+                yMultiplier += 0.05;
             }
             if(Math.abs(pivot) > Math.PI / 360 && Math.abs(previousAngle - pivot) < Math.PI/90){
                 pivotMultiplier += 0.03;
@@ -320,6 +342,11 @@ public class OdometryBluePowerShot extends LinearOpMode {
             }
             if(pivot < 0){
                 pivotPower = pivotPower * -1;
+            }
+
+            if(targetXPos == 0 && desiredOrientation == 0 && targetYPos == 62 * COUNTS_PER_INCH){
+                pivotPower = 0;
+                pivot = desiredOrientation;
             }
 
             if((targetXPos == previousTargetX && targetYPos == getPreviousTargetY) ||  pivot > (Math.PI)/6){

@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Wobble;
 
 import java.util.List;
 
-@Autonomous(name= "RedCornerSingleWobble", group= "Autonomous")
+@Autonomous(name= "REDSingle", group= "Autonomous")
 public class OdometryRedCornerSingleWobble extends LinearOpMode {
     public String label;
 
@@ -180,7 +180,7 @@ public class OdometryRedCornerSingleWobble extends LinearOpMode {
             Shooter.setPosition("WHITE_LINE");
 
             //Go to shooting posiiton
-            goToPosition(-17 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.4, 0, 1200);//0.6
+            goToPosition(-15 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.4, 0, 1200);//0.6
 
             Straighten();
 
@@ -192,19 +192,21 @@ public class OdometryRedCornerSingleWobble extends LinearOpMode {
 
             goToPosition(-23 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.45, 0, 4000);//0.6
 
-            goToPosition(-23 * COUNTS_PER_INCH,44 * COUNTS_PER_INCH, 0.32, 0, 1000);//0.6
+            goToPosition(-23 * COUNTS_PER_INCH,44 * COUNTS_PER_INCH, 0.35, 0, 1200);//0.6
 
             //Shoot
-            goToPosition(-15 * COUNTS_PER_INCH,59 * COUNTS_PER_INCH, 0.32, 0, 1200);//0.6
+            goToPosition(-15 * COUNTS_PER_INCH,59 * COUNTS_PER_INCH, 0.35, 0, 1200);//0.6
 
             Straighten();
 
+            sleep(1000);
+
             //Shoot
-            Intake.releaseOne();
+            Intake.oneRingdumbidiot();
             sleep(200);
             //Drive forward to release wobble
 
-            goToPosition(-22 * COUNTS_PER_INCH,82 * COUNTS_PER_INCH, 0.38, 0, 1000);//0.6
+            goToPosition(-22 * COUNTS_PER_INCH,82 * COUNTS_PER_INCH, 0.38, 0, 1400);//0.6
 
             //Drop wobble
             Wobble.drop();
@@ -249,18 +251,18 @@ public class OdometryRedCornerSingleWobble extends LinearOpMode {
 
             goToPosition(-23 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.45, 0, 1000);//0.6
 
-            goToPosition(-23 * COUNTS_PER_INCH,44 * COUNTS_PER_INCH, 0.3, 0, 1000);//0.6
+            goToPosition(-23 * COUNTS_PER_INCH,44 * COUNTS_PER_INCH, 0.2, 0, 1000);//0.6
 
-            goToPosition(-23 * COUNTS_PER_INCH,45.5 * COUNTS_PER_INCH, 0.32, 5, 1000);//0.6
+            goToPosition(-23 * COUNTS_PER_INCH,45.5 * COUNTS_PER_INCH, 0.2, 5, 1000);//0.6
 
             //Shoot
             Intake.releaseAllRings();
             sleep(200);
             //Collect Rings
-            goToPosition(-23 * COUNTS_PER_INCH,25 * COUNTS_PER_INCH, 0.26, 0, 1200);//0.6
+            goToPosition(-23 * COUNTS_PER_INCH,25 * COUNTS_PER_INCH, 0.2, 0, 1200);//0.6
 
             //Shoot
-            goToPosition(-23 * COUNTS_PER_INCH,58 * COUNTS_PER_INCH, .45, 5, 1200);//0.6
+            goToPosition(-24 * COUNTS_PER_INCH,58 * COUNTS_PER_INCH, .45, 5, 1200);//0.6
 
             //Straighten();
 
