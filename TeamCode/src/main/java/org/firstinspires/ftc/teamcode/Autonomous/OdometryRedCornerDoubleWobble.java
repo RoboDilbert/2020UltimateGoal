@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -67,6 +68,8 @@ public class OdometryRedCornerDoubleWobble extends LinearOpMode {
         Wobble.initWobble(hardwareMap);
 
         Shooter.updateShooterConstants(50, 1, 2,0);
+
+        DriveTrain.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
 
         left_front = DriveTrain.leftFrontMotor;
         left_back = DriveTrain.leftBackMotor;

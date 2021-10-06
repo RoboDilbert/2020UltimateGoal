@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -69,6 +70,8 @@ public class OdometryBluePowerShot extends LinearOpMode {
 
         Shooter.updateShooterConstants(50, 1, 2,0);
 
+        DriveTrain.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.DARK_BLUE);
+
         left_front = DriveTrain.leftFrontMotor;
         left_back = DriveTrain.leftBackMotor;
         right_front = DriveTrain.rightFrontMotor;
@@ -130,7 +133,10 @@ public class OdometryBluePowerShot extends LinearOpMode {
 
         super.resetStartTime();
 
+        sleep(5000);
+
         if(label == null || label.equals("ZERO")) {
+            Shooter.unblock();
 
             Shooter.shoot(Shooter.SHOOTER_POWER);
             sleep(200);
@@ -166,7 +172,7 @@ public class OdometryBluePowerShot extends LinearOpMode {
             sleep(500);
             Intake.powerShotAuto();
 
-            goToPosition(1 * COUNTS_PER_INCH, 74 * COUNTS_PER_INCH, .4, 15, 1200);
+            //goToPosition(1 * COUNTS_PER_INCH, 74 * COUNTS_PER_INCH, .4, 15, 1200);
 
             Straighten();
 
@@ -179,7 +185,45 @@ public class OdometryBluePowerShot extends LinearOpMode {
         }
 
         else if(label.equals("Single")) {
+            Shooter.unblock();
 
+            Shooter.shoot(Shooter.SHOOTER_POWER);
+            sleep(200);
+
+            // drive to power shot position
+            goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.25, 0, 2500);//0.6
+
+            //goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.3, 2, 500);//0.6
+
+            Straighten();
+
+            goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.25, 3, 2500);//0.6
+
+            sleep(500);
+            Intake.powerShotAuto();
+
+            goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.55, 9, 1000);//0.6
+
+            sleep(200);
+
+            goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.55, 9, 1000);//0.6
+
+
+            sleep(500);
+            Intake.powerShotAuto();
+
+            goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.55, 15, 1000);//0.6
+
+            sleep(200);
+
+            goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.55, 15, 1000);//0.6
+
+            sleep(500);
+            Intake.powerShotAuto();
+
+            //goToPosition(1 * COUNTS_PER_INCH, 74 * COUNTS_PER_INCH, .4, 15, 1200);
+
+            Straighten();
 
             positionThread.interrupt();
             if(!positionThread.isAlive()){
@@ -190,7 +234,51 @@ public class OdometryBluePowerShot extends LinearOpMode {
         }
 
         else if(label.equals("Quad")) {
+            Shooter.unblock();
 
+            Shooter.shoot(Shooter.SHOOTER_POWER);
+            sleep(200);
+
+            // drive to power shot position
+            goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.25, 0, 2500);//0.6
+
+            //goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.3, 2, 500);//0.6
+
+            Straighten();
+
+            goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.25, 3, 2500);//0.6
+
+            sleep(500);
+            Intake.powerShotAuto();
+
+            goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.55, 9, 1000);//0.6
+
+            sleep(200);
+
+            goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.55, 9, 1000);//0.6
+
+
+            sleep(500);
+            Intake.powerShotAuto();
+
+            goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.55, 15, 1000);//0.6
+
+            sleep(200);
+
+            goToPosition(0 * COUNTS_PER_INCH,62 * COUNTS_PER_INCH, 0.55, 15, 1000);//0.6
+
+            sleep(500);
+            Intake.powerShotAuto();
+
+            //goToPosition(1 * COUNTS_PER_INCH, 74 * COUNTS_PER_INCH, .4, 15, 1200);
+
+            Straighten();
+
+            positionThread.interrupt();
+            if(!positionThread.isAlive()){
+                telemetry.addData("WE OUT THIS BaTCH", "WE OUT THIS BaTCH");
+                telemetry.update();
+            }
         }
 
         stop();
@@ -215,7 +303,7 @@ public class OdometryBluePowerShot extends LinearOpMode {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
     public void Straighten(){
-        double turnPow = 0.3;
+        double turnPow = 0.28;
         while(opModeIsActive() && Math.abs(DriveTrain.angles.firstAngle) > Math.PI/90 /*&& timeyBoi.seconds() < 15*/){
             if(super.getRuntime() > timerLimit){
                 left_front.setPower(0);
@@ -281,7 +369,7 @@ public class OdometryBluePowerShot extends LinearOpMode {
         double pivotFf = 0.06;
 
         if((targetXPos == previousTargetX && targetYPos == getPreviousTargetY)){
-            pivotFf = .13;
+            pivotFf = .12;
         }
 
         double pivot = Double.MAX_VALUE;

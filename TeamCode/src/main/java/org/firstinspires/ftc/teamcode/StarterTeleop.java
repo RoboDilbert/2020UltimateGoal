@@ -141,9 +141,9 @@ public class StarterTeleop extends LinearOpMode {
             //Shoot power shot
             if(gamepad1.dpad_right){
                 Shooter.setPosition("POWER_SHOT");
-                Shooter.unblock();
                 sleep(200);
-                Intake.shootOneNoClear();
+                Shooter.unblock();
+                Intake.powerShotAuto();
             }
 
             //Lifter

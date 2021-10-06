@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -67,6 +68,8 @@ public class OdometryRedCornerSingleWobble extends LinearOpMode {
         Wobble.initWobble(hardwareMap);
 
         Shooter.updateShooterConstants(50, 1, 2,0);
+
+        DriveTrain.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
 
         left_front = DriveTrain.leftFrontMotor;
         left_back = DriveTrain.leftBackMotor;
@@ -253,7 +256,7 @@ public class OdometryRedCornerSingleWobble extends LinearOpMode {
 
             goToPosition(-23 * COUNTS_PER_INCH,44 * COUNTS_PER_INCH, 0.2, 0, 1000);//0.6
 
-            goToPosition(-23 * COUNTS_PER_INCH,45.5 * COUNTS_PER_INCH, 0.2, 5, 1000);//0.6
+            goToPosition(-23 * COUNTS_PER_INCH,45.5 * COUNTS_PER_INCH, 0.2, 4, 1000);//0.6
 
             //Shoot
             Intake.releaseAllRings();
@@ -262,7 +265,7 @@ public class OdometryRedCornerSingleWobble extends LinearOpMode {
             goToPosition(-23 * COUNTS_PER_INCH,25 * COUNTS_PER_INCH, 0.2, 0, 1200);//0.6
 
             //Shoot
-            goToPosition(-24 * COUNTS_PER_INCH,58 * COUNTS_PER_INCH, .45, 5, 1200);//0.6
+            goToPosition(-15 * COUNTS_PER_INCH,58 * COUNTS_PER_INCH, .45, 0, 1200);//0.6
 
             //Straighten();
 
@@ -296,7 +299,7 @@ public class OdometryRedCornerSingleWobble extends LinearOpMode {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
     public void Straighten(){
-        double turnPow = 0.3;
+        double turnPow = 0.28;
         while(opModeIsActive() && Math.abs(DriveTrain.angles.firstAngle) > Math.PI/90 /*&& timeyBoi.seconds() < 15*/){
             if(super.getRuntime() > timerLimit){
                 left_front.setPower(0);
